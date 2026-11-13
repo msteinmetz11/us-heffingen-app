@@ -78,7 +78,10 @@ h2.sec{font:600 13px var(--f-body); letter-spacing:.08em; text-transform:upperca
 .hero{background:var(--hero-bg); color:var(--hero-ink); border-radius:18px; padding:18px; display:grid; gap:14px; min-width:0}
 .hero .eyebrow{font:600 12px var(--f-body); letter-spacing:.1em; text-transform:uppercase; color:var(--hero-accent)}
 .hero .when{font:700 46px/.95 var(--f-display); text-transform:uppercase; letter-spacing:.01em}
-.hero .vs{font:600 26px/1.1 var(--f-display); margin-top:6px; text-wrap:balance}
+.herologos{display:flex; align-items:center; gap:16px; margin-top:14px}
+.hvs{font:600 16px var(--f-display); letter-spacing:.1em; text-transform:uppercase; color:var(--hero-sub)}
+.crest.xl{width:80px; height:80px}
+.crest.xl.ph{font-size:24px}
 .hero .meta{color:var(--hero-sub); font-size:14px; margin-top:6px}
 .hero .chip{border-color:rgba(255,255,255,.4); color:var(--hero-sub)}
 .hero :focus-visible{outline-color:#fff}
@@ -162,7 +165,8 @@ th,td{padding:9px 6px; text-align:right; border-bottom:1px solid var(--line); wh
 th:first-child,td:first-child{text-align:left}
 td.tm, th.tm{text-align:left; white-space:normal}
 th{font:600 11px var(--f-body); text-transform:uppercase; letter-spacing:.06em; color:var(--muted)}
-tr.me td{font-weight:700; background:var(--soft)}
+tr.me td{font-weight:700; background:var(--soft); background:color-mix(in srgb, var(--accent) 16%, transparent)}
+tr.me td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
 tbody tr:last-child td{border-bottom:0}
 
 /* squad */
@@ -382,7 +386,7 @@ function vStart(){
     var ng=up[0], d=pd(ng.date);
     h+='<section class="hero" aria-label="Next game"><div><div class="eyebrow">Next game · '+when(daysTo(d))+'</div>'
       +'<div class="when" style="margin-top:8px">'+short(d)+' · '+ng.time+'</div>'
-      +'<div class="vs">'+title(ng)+'</div>'
+      +'<div class="herologos" role="img" aria-label="'+esc(ng.h+' versus '+ng.a)+'">'+crestBig(ng.h)+'<span class="hvs">vs</span>'+crestBig(ng.a)+'</div>'
       +'<div class="meta">'+sub(ng)+(ng.addr?'<br>'+esc(ng.addr):'')+'</div></div>'
       +'</section>';
   } else {
@@ -432,6 +436,11 @@ function crest(name){
   var img=src?'<img class="crest'+(LOGOS[name]?' bg':'')+'" src="'+esc(src)+'" alt="">'
     :'<span class="crest ph" style="--c:hsl('+hue(name)+' 45% 55%)">'+esc(ab)+'</span>';
   return '<div class="side">'+img+'<span>'+esc(ab)+'</span></div>';
+}
+function crestBig(name){
+  var ab=ABBR[name]||name.replace(/[^A-Za-z]/g,'').slice(0,3).toUpperCase(), src=logoOf(name);
+  return src?'<img class="crest xl bg" src="'+esc(src)+'" alt="">'
+    :'<span class="crest xl ph" style="--c:hsl('+hue(name)+' 45% 55%)">'+esc(ab)+'</span>';
 }
 function recMap(){var m={};standings().forEach(function(x){m[x.t]=x.w+'–'+x.l});return m}
 function dayEvents(ds,recs,nextId){
