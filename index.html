@@ -483,18 +483,6 @@ function vStart(){
   } else {
     h+=empty('No more games','There are no upcoming games in the schedule.');
   }
-  if(r.length){
-    var st=standings(), rank=st.findIndex(function(x){return x.me})+1, me=st[rank-1];
-    var lr=r.filter(function(g){return g.lg===LEAGUE});
-    var w=lr.filter(function(g){return g.us>g.them}).length, l=lr.length-w;
-    h+='<section class="card" aria-label="Season record"><div class="stats">'
-      +'<div class="stat"><b>'+w+'–'+l+'</b><span>Record</span></div>'
-      +'<div class="stat"><b>'+ord(rank)+'</b><span>Standings</span></div>'
-      +'<div class="stat"><b>'+signed(me.d)+'</b><span>Pt diff.</span></div></div>'
-      +'<div class="formrow"><span>'+LEAGUE+' · Form</span><div class="form">'
-      +lr.slice(0,5).reverse().map(function(g){var win=g.us>g.them;return '<span class="dot '+(win?'w':'l')+'" title="'+(win?'Win':'Loss')+'">'+(win?'W':'L')+'</span>'}).join('')
-      +'</div></div></section>';
-  }
   var more=ng?up.filter(function(g){return g!==ng&&startOf(g)>startOf(ng)}).slice(0,4):[];
   if(more.length){
     h+='<h2 class="sec">After that</h2><div class="card list">';
