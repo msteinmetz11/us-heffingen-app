@@ -515,7 +515,7 @@ function calendar(){
   }
   var sd=pd(selDay), items=dayEvents(selDay,recs,nextId);
   var n=(items.match(/class="tl/g)||[]).length;
-  return '<div class="calhead"><b>'+MONTH[sd.getMonth()]+' '+sd.getFullYear()+'</b><span>'+LEAGUE+' · first team</span></div>'
+  return '<div class="calhead"><b>'+MONTH[sd.getMonth()]+' '+sd.getFullYear()+'</b><span>'+LEAGUE+'</span></div>'
     +'<div class="strip" aria-label="Pick a day">'+strip+'</div>'
     +'<div class="dayline"><b>'+(selDay===dstr(today)?'Today':short(sd))+'</b><span>'+n+(n===1?' event':' events')+'</span></div>'
     +(n?items:empty('Nothing planned','No game or training on this day.'));
