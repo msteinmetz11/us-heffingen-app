@@ -95,10 +95,10 @@ h2.sec{font:600 13px var(--f-body); letter-spacing:.08em; text-transform:upperca
 .formrow{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid var(--line); font-size:13px; color:var(--muted)}
 .form{display:flex; gap:6px}
 
-.count{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:16px}
-.count > div{background:rgba(255,255,255,.14); border-radius:12px; padding:10px 6px 8px; text-align:center}
-.count b{display:block; font:700 34px/1 var(--f-display); font-variant-numeric:tabular-nums; color:var(--hero-ink)}
-.count span{display:block; margin-top:4px; font:600 11px var(--f-body); letter-spacing:.1em; text-transform:uppercase; color:var(--hero-sub)}
+.count{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:14px}
+.count > div{background:rgba(255,255,255,.14); border-radius:10px; padding:7px 4px 6px; text-align:center}
+.count b{display:block; font:700 24px/1 var(--f-display); font-variant-numeric:tabular-nums; color:var(--hero-ink)}
+.count span{display:block; margin-top:3px; font:600 10px var(--f-body); letter-spacing:.08em; text-transform:uppercase; color:var(--hero-sub)}
 .count.live{display:block; background:rgba(255,255,255,.14); border-radius:12px; padding:14px; text-align:center; font:700 22px var(--f-display); letter-spacing:.04em; text-transform:uppercase}
 .maplink{display:inline-flex; align-items:flex-start; gap:6px; color:var(--accent); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; padding-block:3px}
 .maplink .pin{flex:none; margin-top:3px}
@@ -426,9 +426,9 @@ function tickCountdown(){
   var el=document.getElementById('cd'); if(!el) return;
   var diff=+el.dataset.ts-Date.now();
   if(diff<=0){el.classList.add('live');el.textContent='Game under way';return}
-  var m=Math.floor(diff/6e4), dd=Math.floor(m/1440), hh=Math.floor((m%1440)/60), mm=m%60;
-  var b=el.querySelectorAll('b'); if(b.length===3){b[0].textContent=dd;b[1].textContent=hh;b[2].textContent=mm}
-  var l=el.querySelectorAll('span'); if(l.length===3){l[0].textContent=dd===1?'day':'days';l[1].textContent=hh===1?'hour':'hours'}
+  var ts=Math.floor(diff/1000), m=Math.floor(ts/60), ss=ts%60, dd=Math.floor(m/1440), hh=Math.floor((m%1440)/60), mm=m%60;
+  var b=el.querySelectorAll('b'); if(b.length===4){b[0].textContent=dd;b[1].textContent=hh;b[2].textContent=String(mm).padStart(2,'0');b[3].textContent=String(ss).padStart(2,'0')}
+  var l=el.querySelectorAll('span'); if(l.length===4){l[0].textContent=dd===1?'day':'days';l[1].textContent=hh===1?'hour':'hours'}
 }
 
 function teamStats(name){
@@ -477,7 +477,7 @@ function vStart(){
     h+='<section class="hero" aria-label="Next game"><div><div class="eyebrow">Next game</div>'
       +'<div class="when" style="margin-top:8px">'+short(d)+' · '+ng.time+'</div>'
       +'<div class="herologos" role="img" aria-label="'+esc(ng.h+' versus '+ng.a)+'">'+crestBig(ng.h)+'<span class="hvs">vs</span>'+crestBig(ng.a)+'</div>'
-      +'<div class="count" id="cd" data-ts="'+startOf(ng).getTime()+'" role="timer" aria-label="Time until tip-off"><div><b>0</b><span>days</span></div><div><b>0</b><span>hours</span></div><div><b>0</b><span>min</span></div></div>'
+      +'<div class="count" id="cd" data-ts="'+startOf(ng).getTime()+'" role="timer" aria-label="Time until tip-off"><div><b>0</b><span>days</span></div><div><b>0</b><span>hours</span></div><div><b>0</b><span>min</span></div><div><b>0</b><span>sec</span></div></div>'
       +'<div class="meta">'+sub(ng)+(ng.addr?'<br>'+maplink(ng.addr):'')+'</div></div>'
       +'</section>'+scout(ng);
   } else {
@@ -666,7 +666,8 @@ window.addEventListener('hashchange',function(){render();window.scrollTo(0,0)});
 
 /* ---------- Start ---------- */
 render();
-setInterval(function(){tickCountdown();if(document.getElementById('cd')&&document.getElementById('cd').classList.contains('live'))render()},20000);
+setInterval(tickCountdown,1000);
+setInterval(function(){var c=document.getElementById('cd');if(c&&c.classList.contains('live'))render()},20000);
 })();
 </script>
 
