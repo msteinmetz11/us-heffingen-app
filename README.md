@@ -13,6 +13,5 @@ No build step. Everything is in `index.html`.
 All data is in the script at the top of `index.html`: `PLAYED` (finished league games), `FIXTURES` (upcoming games), `BOX` (box scores), `PLAYERS`, `TRAINING_WEEK`.
 
 ## Notes
-- "Going / Maybe / Not going" replies are stored on each person's own device only. They are not shared between users.
 - Data comes from luxembourg.basketball and extranet.flbb.lu (as of 11 Nov 2026). The standings are calculated from the results and can differ from the official table.
 - The club logo belongs to US Heffingen.

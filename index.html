@@ -81,11 +81,6 @@ h2.sec{font:600 13px var(--f-body); letter-spacing:.08em; text-transform:upperca
 .hero .vs{font:600 26px/1.1 var(--f-display); margin-top:6px; text-wrap:balance}
 .hero .meta{color:var(--hero-sub); font-size:14px; margin-top:6px}
 .hero .chip{border-color:rgba(255,255,255,.4); color:var(--hero-sub)}
-.hero .counts, .hero details summary{color:var(--hero-sub)}
-.hero .counts strong{color:var(--hero-ink)}
-.hero details summary{color:var(--hero-ink)}
-.hero .rsvp button{border-color:rgba(255,255,255,.4); color:var(--hero-ink)}
-.hero .rsvp button[aria-pressed="true"]{background:#fff; color:#8F0311; border-color:#fff}
 .hero :focus-visible{outline-color:#fff}
 
 /* season strip */
@@ -177,16 +172,7 @@ tbody tr:last-child td{border-bottom:0}
 .pl .nm{font-weight:600; margin-top:4px}
 .pl .ps{font-size:13px; color:var(--muted)}
 
-/* rsvp */
-.rsvp{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
-.rsvp button{min-height:44px; padding:6px 4px; border:1.5px solid var(--line); background:transparent; color:var(--ink); border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; transition:background-color .12s, border-color .12s}
-.rsvp button[aria-pressed="true"][data-v="yes"]{background:var(--win); border-color:var(--win); color:var(--solid-ink)}
-.rsvp button[aria-pressed="true"][data-v="maybe"]{background:var(--court); border-color:var(--court); color:var(--solid-ink)}
-.rsvp button[aria-pressed="true"][data-v="no"]{background:var(--loss); border-color:var(--loss); color:var(--solid-ink)}
-.counts{display:flex; flex-wrap:wrap; gap:2px 14px; margin-top:10px; font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums}
-.counts strong{color:var(--ink)}
-details.whoD summary{cursor:pointer; font-size:13px; font-weight:600; margin-top:8px; color:var(--court)}
-.who p{margin:4px 0 0; font-size:13px}
+/* info card */
 .info{display:grid; gap:4px}
 .info b{font-weight:600}
 .info span{color:var(--muted)}
@@ -381,58 +367,23 @@ function standings(){
 }
 
 /* ---------- Zustand ---------- */
-var LS='heffingen-rsvp-v1';
-var answers=loadLocal();
-var all={}, myId=null, user=null, db=null, canSync=false, ready=false, slow=false, writeFailed=false;
-var writing=false, dirty=false, whoTok=0;
 var openKeys=new Set();
 var selDay=null;
-function loadLocal(){try{var v=JSON.parse(localStorage.getItem(LS)||'{}');return v&&typeof v==='object'?v:{}}catch(e){return {}}}
-function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(answers))}catch(e){}}
-function selfKey(){return canSync?myId:'me'}
-function tally(eid){
-  var merged=canSync?Object.assign({},all):{};
-  merged[selfKey()]={answers:answers};
-  var t={yes:[],maybe:[],no:[]};
-  Object.keys(merged).forEach(function(uid){
-    var a=merged[uid]&&merged[uid].answers, v=a&&a[eid];
-    if(t[v]) t[v].push(uid);
-  });
-  return t;
-}
 
 /* ---------- Bausteine ---------- */
-function rsvp(eid,names){
-  var cur=answers[eid];
-  function b(v,l){return '<button type="button" data-rsvp="'+eid+'" data-v="'+v+'" aria-pressed="'+(cur===v)+'">'+l+'</button>'}
-  var t=tally(eid), total=t.yes.length+t.maybe.length+t.no.length;
-  var h='<div><div class="rsvp" role="group" aria-label="Your response">'+b('yes','Going')+b('maybe','Maybe')+b('no','Not going')+'</div>'
-    +'<div class="counts"><span><strong>'+t.yes.length+'</strong> going</span><span><strong>'+t.maybe.length+'</strong> maybe</span><span><strong>'+t.no.length+'</strong> not going</span></div>';
-  if(names&&total>0){
-    h+='<details class="whoD" data-key="who-'+eid+'"><summary>Who has replied?</summary><div class="who" data-eid="'+eid+'"></div></details>';
-  }
-  return h+'</div>';
-}
-function note(){
-  if(!ready) return '';
-  if(!canSync) return '<p class="note">Responses are saved on this device only.</p>';
-  if(writeFailed) return '<p class="note">Your last response could not be saved for the team. It stays on this device.</p>';
-  if(slow) return '<p class="note">Team responses are still loading.</p>';
-  return '';
-}
 function dateBox(d){return '<div class="date"><b>'+d.getDate()+'</b><span>'+MO[d.getMonth()]+'</span></div>'}
 function empty(head,text){return '<div class="card empty"><b>'+head+'</b><p>'+text+'</p></div>'}
 
 /* ---------- Ansichten ---------- */
 function vStart(){
-  var up=upcoming(), r=results(), h=note();
+  var up=upcoming(), r=results(), h='';
   if(up.length){
     var ng=up[0], d=pd(ng.date);
     h+='<section class="hero" aria-label="Next game"><div><div class="eyebrow">Next game · '+when(daysTo(d))+'</div>'
       +'<div class="when" style="margin-top:8px">'+short(d)+' · '+ng.time+'</div>'
       +'<div class="vs">'+title(ng)+'</div>'
       +'<div class="meta">'+sub(ng)+(ng.addr?'<br>'+esc(ng.addr):'')+'</div></div>'
-      +rsvp(ng.id,false)+'</section>';
+      +'</section>';
   } else {
     h+=empty('No more games','There are no upcoming games in the schedule.');
   }
@@ -493,9 +444,9 @@ function dayEvents(ds,recs,nextId){
       var g=e.g; isNext=g.id===nextId;
       body='<article class="card ev game'+(isNext?' next':'')+'"><div class="evt"><b>'+esc(g.lg||LEAGUE)+'</b> · '+venue(g)+(g.place?' · '+esc(g.place):'')+'</div>'
         +'<div class="vsrow" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+crest(g.h)+'<div class="rec">'+(recs[g.h]||'')+'</div><div class="big">'+g.time+'</div><div class="rec">'+(recs[g.a]||'')+'</div>'+crest(g.a)+'</div>'
-        +(g.addr?'<p class="addr">'+esc(g.addr)+'</p>':'')+rsvp(g.id,true)+'</article>';
+        +(g.addr?'<p class="addr">'+esc(g.addr)+'</p>':'')+'</article>';
     } else {
-      body='<article class="card ev game"><div class="evt"><b>Training</b> · '+esc(e.tr.t)+'</div>'+rsvp('t'+ds.replace(/-/g,''),true)+'</article>';
+      body='<article class="card ev game"><div class="evt"><b>Training</b> · '+esc(e.tr.t)+'</div>'+'</article>';
     }
     return '<div class="tl'+(isNext?' next':'')+'"><div class="tt">'+e.t+'</div><div class="tc">'+body+'</div></div>';
   }).join('');
@@ -522,7 +473,7 @@ function calendar(){
 }
 function vSpiele(){
   var r=results();
-  var h=note()+calendar();
+  var h=calendar();
   h+='<h2 class="sec">Results</h2>';
   if(!r.length) h+=empty('No results yet','Results will appear here once they are entered.');
   r.forEach(function(g){
@@ -584,14 +535,14 @@ function vKader(){
 
 function vTraining(){
   var list=trainings();
-  var h=note()+'<div class="card info"><b>Weekly training</b>'
+  var h='<div class="card info"><b>Weekly training</b>'
     +TRAINING_WEEK.map(function(w){return '<span>'+WD[w.d]+' · '+w.t+'</span>'}).join('')+'</div>'
     +'<h2 class="sec">Upcoming sessions</h2>';
   list.forEach(function(s){
     var gm=GAMES.filter(function(g){return g.date===dstr(s.date)})[0];
     h+='<article class="card game"><div class="ghead">'+dateBox(s.date)
       +'<div><h3>'+short(s.date)+'</h3><p>'+esc(s.time)+' · '+when(daysTo(s.date))+'</p>'
-      +(gm?'<p>Game day · '+gm.time+' · '+title(gm)+'</p>':'')+'</div></div>'+rsvp(s.id,true)+'</article>';
+      +(gm?'<p>Game day · '+gm.time+' · '+title(gm)+'</p>':'')+'</div></div>'+'</article>';
   });
   return h;
 }
@@ -611,60 +562,9 @@ function render(){
   el.querySelectorAll('details[data-key]').forEach(function(d){d.open=openKeys.has(d.dataset.key)});
   var dsel=el.querySelector('.day[aria-pressed="true"]');
   if(dsel&&dsel.scrollIntoView) dsel.scrollIntoView({inline:'center',block:'nearest'});
-  fillWho();
 }
-function fillWho(){
-  var tok=++whoTok;
-  var nodes=Array.prototype.slice.call(document.querySelectorAll('.who[data-eid]'));
-  if(!nodes.length) return;
-  var ids={};
-  nodes.forEach(function(n){var t=tally(n.dataset.eid);t.yes.concat(t.maybe,t.no).forEach(function(i){ids[i]=1})});
-  var ask=(user&&canSync)?user.profiles(Object.keys(ids)):Promise.resolve({});
-  ask.catch(function(){return {}}).then(function(ps){
-    if(tok!==whoTok) return;
-    function nm(id){var p=ps&&ps[id];return id===selfKey()?'You':((p&&p.name)||'Team member')}
-    nodes.forEach(function(n){
-      var t=tally(n.dataset.eid);
-      n.textContent='';
-      [['yes','Going'],['maybe','Maybe'],['no','Not going']].forEach(function(k){
-        if(!t[k[0]].length) return;
-        var p=document.createElement('p'), s=document.createElement('strong');
-        s.textContent=k[1]+': ';
-        p.appendChild(s);
-        p.appendChild(document.createTextNode(t[k[0]].map(nm).join(', ')));
-        n.appendChild(p);
-      });
-    });
-  });
-}
-
-/* ---------- Antworten speichern ---------- */
-function setAnswer(eid,v){
-  var next=Object.assign({},answers);
-  if(next[eid]===v) delete next[eid]; else next[eid]=v;
-  answers=next; saveLocal(); render();
-  var f=document.querySelector('[data-rsvp="'+eid+'"][data-v="'+v+'"]');
-  if(f&&f.focus) f.focus({preventScroll:true});
-  if(canSync) flush();
-}
-function flush(){
-  if(writing){dirty=true;return}
-  writing=true;
-  (function loop(){
-    dirty=false;
-    db.doc('rsvp/'+myId).set({answers:answers}).then(function(){
-      writeFailed=false;
-      if(dirty) loop(); else {writing=false;render()}
-    },function(){
-      writeFailed=true;writing=false;render();
-    });
-  })();
-}
-
 /* ---------- Events ---------- */
 document.addEventListener('click',function(e){
-  var b=e.target.closest&&e.target.closest('[data-rsvp]');
-  if(b) setAnswer(b.dataset.rsvp,b.dataset.v);
   var dd=e.target.closest&&e.target.closest('[data-day]');
   if(dd){selDay=dd.dataset.day;render();}
 });
@@ -676,30 +576,6 @@ window.addEventListener('hashchange',function(){render();window.scrollTo(0,0)});
 
 /* ---------- Start ---------- */
 render();
-(async function boot(){
-  try{
-    var c=window.claude;
-    if(c&&c.use){ user=await c.use('user'); db=await c.use('db'); }
-    if(user) myId=await user.id();
-  }catch(e){}
-  canSync=!!(db&&myId&&user);
-  ready=true;
-  if(canSync){
-    var timer=setTimeout(function(){slow=true;render()},10000);
-    try{
-      db.collection('rsvp').onSnapshot(function(snap){
-        if(!snap.metadata.fromCache){clearTimeout(timer);slow=false}
-        var next={};
-        snap.docs.forEach(function(d){next[d.id]=d.data()});
-        all=next;
-        var mine=all[myId];
-        if(mine&&mine.answers&&!writing){answers=Object.assign({},mine.answers);saveLocal()}
-        render();
-      },function(){clearTimeout(timer);slow=false;canSync=false;render()});
-    }catch(e){clearTimeout(timer);canSync=false}
-  }
-  render();
-})();
 })();
 </script>
 
