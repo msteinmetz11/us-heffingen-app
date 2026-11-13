@@ -95,6 +95,15 @@ h2.sec{font:600 13px var(--f-body); letter-spacing:.08em; text-transform:upperca
 .formrow{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid var(--line); font-size:13px; color:var(--muted)}
 .form{display:flex; gap:6px}
 
+.count{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:16px}
+.count > div{background:rgba(255,255,255,.14); border-radius:12px; padding:10px 6px 8px; text-align:center}
+.count b{display:block; font:700 34px/1 var(--f-display); font-variant-numeric:tabular-nums; color:var(--hero-ink)}
+.count span{display:block; margin-top:4px; font:600 11px var(--f-body); letter-spacing:.1em; text-transform:uppercase; color:var(--hero-sub)}
+.count.live{display:block; background:rgba(255,255,255,.14); border-radius:12px; padding:14px; text-align:center; font:700 22px var(--f-display); letter-spacing:.04em; text-transform:uppercase}
+.maplink{display:inline-flex; align-items:flex-start; gap:6px; color:var(--accent); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; padding-block:3px}
+.maplink .pin{flex:none; margin-top:3px}
+.hero .maplink{color:var(--hero-ink)}
+
 /* games */
 .game{display:grid; gap:14px}
 .ghead{display:flex; gap:14px; align-items:center; min-width:0}
@@ -156,7 +165,7 @@ h2.sec{font:600 13px var(--f-body); letter-spacing:.08em; text-transform:upperca
 .crest{width:52px; height:52px; border-radius:50%; display:block; object-fit:cover}
 .crest.bg{background:#fff; object-fit:contain}
 .crest.ph{display:grid; place-items:center; border:2px solid var(--c,var(--line)); background:var(--soft); font:700 16px var(--f-display); letter-spacing:.03em}
-.addr{margin:0; font-size:13px; color:var(--muted)}
+.addr{margin:0; padding-top:6px; font-size:13px; color:var(--muted)}
 
 /* tables */
 .scroll{overflow-x:auto}
@@ -380,14 +389,35 @@ function dateBox(d){return '<div class="date"><b>'+d.getDate()+'</b><span>'+MO[d
 function empty(head,text){return '<div class="card empty"><b>'+head+'</b><p>'+text+'</p></div>'}
 
 /* ---------- Ansichten ---------- */
+var PIN='<svg class="pin" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>';
+function isApple(){var u=navigator.userAgent||'';return /iPad|iPhone|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)}
+function mapsUrl(addr){
+  var q=encodeURIComponent(addr);
+  return isApple()?'https://maps.apple.com/?q='+q:'https://www.google.com/maps/search/?api=1&query='+q;
+}
+function maplink(addr){return '<a class="maplink" href="'+esc(mapsUrl(addr))+'" target="_blank" rel="noopener">'+PIN+'<span>'+esc(addr)+'</span></a>'}
+function startOf(g){var d=pd(g.date),t=g.time.split(':');return new Date(d.getFullYear(),d.getMonth(),d.getDate(),+t[0],+t[1])}
+function nextGame(){
+  var cut=new Date().getTime()-3*36e5;
+  return upcoming().filter(function(g){return startOf(g).getTime()>=cut})[0]||null;
+}
+function tickCountdown(){
+  var el=document.getElementById('cd'); if(!el) return;
+  var diff=+el.dataset.ts-Date.now();
+  if(diff<=0){el.classList.add('live');el.textContent='Game under way';return}
+  var m=Math.floor(diff/6e4), dd=Math.floor(m/1440), hh=Math.floor((m%1440)/60), mm=m%60;
+  var b=el.querySelectorAll('b'); if(b.length===3){b[0].textContent=dd;b[1].textContent=hh;b[2].textContent=mm}
+  var l=el.querySelectorAll('span'); if(l.length===3){l[0].textContent=dd===1?'day':'days';l[1].textContent=hh===1?'hour':'hours'}
+}
 function vStart(){
-  var up=upcoming(), r=results(), h='';
-  if(up.length){
-    var ng=up[0], d=pd(ng.date);
-    h+='<section class="hero" aria-label="Next game"><div><div class="eyebrow">Next game · '+when(daysTo(d))+'</div>'
+  var up=upcoming(), ng=nextGame(), r=results(), h='';
+  if(ng){
+    var d=pd(ng.date);
+    h+='<section class="hero" aria-label="Next game"><div><div class="eyebrow">Next game</div>'
       +'<div class="when" style="margin-top:8px">'+short(d)+' · '+ng.time+'</div>'
       +'<div class="herologos" role="img" aria-label="'+esc(ng.h+' versus '+ng.a)+'">'+crestBig(ng.h)+'<span class="hvs">vs</span>'+crestBig(ng.a)+'</div>'
-      +'<div class="meta">'+sub(ng)+(ng.addr?'<br>'+esc(ng.addr):'')+'</div></div>'
+      +'<div class="count" id="cd" data-ts="'+startOf(ng).getTime()+'" role="timer" aria-label="Time until tip-off"><div><b>0</b><span>days</span></div><div><b>0</b><span>hours</span></div><div><b>0</b><span>min</span></div></div>'
+      +'<div class="meta">'+sub(ng)+(ng.addr?'<br>'+maplink(ng.addr):'')+'</div></div>'
       +'</section>';
   } else {
     h+=empty('No more games','There are no upcoming games in the schedule.');
@@ -404,7 +434,7 @@ function vStart(){
       +lr.slice(0,5).reverse().map(function(g){var win=g.us>g.them;return '<span class="dot '+(win?'w':'l')+'" title="'+(win?'Win':'Loss')+'">'+(win?'W':'L')+'</span>'}).join('')
       +'</div></div></section>';
   }
-  var more=up.slice(1,5);
+  var more=ng?up.filter(function(g){return g!==ng&&startOf(g)>startOf(ng)}).slice(0,4):[];
   if(more.length){
     h+='<h2 class="sec">After that</h2><div class="card list">';
     more.forEach(function(g){
@@ -454,7 +484,7 @@ function dayEvents(ds,recs,nextId){
       var g=e.g; isNext=g.id===nextId;
       body='<article class="card ev game'+(isNext?' next':'')+'"><div class="evt"><b>'+esc(g.lg||LEAGUE)+'</b> · '+venue(g)+(g.place?' · '+esc(g.place):'')+'</div>'
         +'<div class="vsrow" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+crest(g.h)+'<div class="rec">'+(recs[g.h]||'')+'</div><div class="big">'+g.time+'</div><div class="rec">'+(recs[g.a]||'')+'</div>'+crest(g.a)+'</div>'
-        +(g.addr?'<p class="addr">'+esc(g.addr)+'</p>':'')+'</article>';
+        +(g.addr?'<p class="addr">'+maplink(g.addr)+'</p>':'')+'</article>';
     } else {
       body='<article class="card ev game"><div class="evt"><b>Training</b> · '+esc(e.tr.t)+'</div>'+'</article>';
     }
@@ -462,7 +492,7 @@ function dayEvents(ds,recs,nextId){
   }).join('');
 }
 function calendar(){
-  var up=upcoming(), nextId=up.length?up[0].id:null, recs=recMap();
+  var up=upcoming(), ng0=nextGame(), nextId=ng0?ng0.id:null, recs=recMap();
   if(!selDay) selDay=up.length?up[0].date:dstr(today);
   var last=up.length?up[up.length-1].date:dstr(today);
   var end=pd(last); var min=new Date(today.getFullYear(),today.getMonth(),today.getDate()+13); if(end<min) end=min;
@@ -572,6 +602,7 @@ function render(){
   el.querySelectorAll('details[data-key]').forEach(function(d){d.open=openKeys.has(d.dataset.key)});
   var dsel=el.querySelector('.day[aria-pressed="true"]');
   if(dsel&&dsel.scrollIntoView) dsel.scrollIntoView({inline:'center',block:'nearest'});
+  tickCountdown();
 }
 /* ---------- Events ---------- */
 document.addEventListener('click',function(e){
@@ -586,6 +617,7 @@ window.addEventListener('hashchange',function(){render();window.scrollTo(0,0)});
 
 /* ---------- Start ---------- */
 render();
+setInterval(function(){tickCountdown();if(document.getElementById('cd')&&document.getElementById('cd').classList.contains('live'))render()},20000);
 })();
 </script>
 
