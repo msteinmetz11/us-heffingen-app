@@ -360,13 +360,56 @@ var TEAM_ORDER=['men','menb','menc','women'];
 TEAMS.men={key:'men',label:'Men A',club:'US Heffingen',league:'Nationale 2',heading:'Nationale 2 Men',sub:'Men A · Nationale 2 · 2026/27',live:true,
   T:T,PLAYED:PLAYED,META:META,CUPGAMES:CUPGAMES,FIXTURES:FIXTURES,TRAINING_WEEK:TRAINING_WEEK,PLAYERS:PLAYERS,BOX:BOX};
 TEAMS.menb={key:'menb',label:'Men B',club:'US Heffingen B',league:'Division 1',heading:'Division 1 Men',sub:'Men B · Division 1 · 2026/27',live:false,
-  note:'Only part of the schedule is in the app so far. More games are being added.',
-  T:{},PLAYED:[],META:{},CUPGAMES:[{id:'bp1',date:'2026-11-11',time:'20:30',place:'Heffingen',addr:HALL,h:'US Heffingen B',a:'Musel Pikes B',us:92,them:68,lg:'Division 1'}],FIXTURES:[{id:'bf1',date:'2026-11-18',time:'20:30',place:'Heffingen',addr:HALL,h:'US Heffingen B',a:'AB Contern B',lg:'Division 1'}],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
+  T:{},PLAYED:[],META:{},CUPGAMES:[
+    {id:'bp1',date:'2026-09-27',time:'18:00',place:"Larochette",addr:"Hall Sportif Centre Filano, Larochette",h:"Arantia Larochette B",a:"US Heffingen B",us:88,them:79,lg:'Division 1'},
+    {id:'bp2',date:'2026-10-03',time:'15:30',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"BC Mess B",us:76,them:61,lg:'Division 1'},
+    {id:'bp3',date:'2026-10-11',time:'17:30',place:"Bertrange",addr:"salle Niki Bettendorf, 2, beim Schlass, 8058 Bertrange",h:"Sparta Bertrange B",a:"US Heffingen B",us:127,them:64,lg:'Division 1'},
+    {id:'bp4',date:'2026-10-18',time:'15:30',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"Basket Esch B",us:81,them:67,lg:'Division 1'},
+    {id:'bp5',date:'2026-10-25',time:'17:45',place:"Contern",addr:"Centre Scolaire et Sportif, 40, rue de Syren, 5316 Contern",h:"AB Contern B",a:"US Heffingen B",us:78,them:83,lg:'Division 1'},
+    {id:'bp6',date:'2026-11-11',time:'20:30',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"Musel Pikes B",us:92,them:68,lg:'Division 1'}
+  ],FIXTURES:[
+    {id:'bf1',date:'2026-11-18',time:'20:30',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"AB Contern B",lg:CUP},
+    {id:'bf2',date:'2026-11-27',time:'20:30',place:"Mamer",addr:"Ecole Primaire 'Kinneksbond', 42, route d'Arlon, 8210 Mamer",h:"Mambra Mamer B",a:"US Heffingen B",lg:'Division 1'},
+    {id:'bf3',date:'2026-12-06',time:'17:00',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"Racing Luxembourg C",lg:'Division 1'},
+    {id:'bf4',date:'2026-12-12',time:'19:30',place:"Luxembourg-Limpertsberg",addr:"Tramsschapp Luxembourg, 47a, rue Ermesinde, 1469 Luxembourg-Limpertsberg",h:"Racing Luxembourg B",a:"US Heffingen B",lg:'Division 1'},
+    {id:'bf5',date:'2027-01-09',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"Gréngewald Hueschtert B",lg:'Division 1'},
+    {id:'bf6',date:'2027-01-16',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"Arantia Larochette B",lg:'Division 1'},
+    {id:'bf7',date:'2027-01-30',h:"BC Mess B",a:"US Heffingen B",lg:'Division 1'},
+    {id:'bf8',date:'2027-02-06',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"Sparta Bertrange B",lg:'Division 1'},
+    {id:'bf9',date:'2027-02-20',h:"Basket Esch B",a:"US Heffingen B",lg:'Division 1'},
+    {id:'bf10',date:'2027-02-27',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"AB Contern B",lg:'Division 1'},
+    {id:'bf11',date:'2027-03-06',h:"Musel Pikes B",a:"US Heffingen B",lg:'Division 1'},
+    {id:'bf12',date:'2027-04-10',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"Mambra Mamer B",lg:'Division 1'},
+    {id:'bf13',date:'2027-04-17',h:"Racing Luxembourg C",a:"US Heffingen B",lg:'Division 1'},
+    {id:'bf14',date:'2027-04-24',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"Racing Luxembourg B",lg:'Division 1'},
+    {id:'bf15',date:'2027-05-01',h:"Gréngewald Hueschtert B",a:"US Heffingen B",lg:'Division 1'}
+  ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
   table:[["Racing Luxembourg C", 6, 5, 1, 536, 376, 11], ["Mambra Mamer B", 6, 4, 2, 419, 406, 10], ["AB Contern B", 5, 4, 1, 382, 334, 9], ["US Heffingen B", 5, 4, 1, 450, 354, 9], ["Racing Luxembourg B", 5, 4, 1, 413, 323, 9], ["Arantia Larochette B", 5, 3, 2, 377, 385, 8], ["BC Mess B", 6, 2, 4, 388, 432, 8], ["Musel Pikes B", 4, 3, 1, 318, 270, 7], ["Sparta Bertrange B", 6, 0, 6, 353, 596, 6], ["Basket Esch B", 5, 0, 5, 346, 422, 5], ["Gréngewald Hueschtert B", 5, 0, 5, 313, 397, 5]]};
 TEAMS.menc={key:'menc',label:'Men C',club:'US Heffingen C',league:'Division 2',heading:'Division 2 Men',sub:'Men C · Division 2 · 2026/27',live:false,
-  note:'Only part of the schedule is in the app so far. More games are being added.',
-  T:{},PLAYED:[],META:{},CUPGAMES:[],FIXTURES:[{id:'cf1',date:'2026-11-20',time:'20:30',place:'Bettembourg',h:'Nitia Bettembourg B',a:'US Heffingen C',lg:'Division 2'},{id:'cf2',date:'2026-12-12',h:'Racing Luxembourg D',a:'US Heffingen C',lg:'Division 2'}],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
-  table:[]};
+  T:{},PLAYED:[],META:{},CUPGAMES:[
+    {id:'cp1',date:'2026-09-27',time:'16:30',place:"Oberanven",addr:"Sportzenter Jos Mouton, am Sand, 6999 Oberanven",h:"Gréngewald Hueschtert C",a:"US Heffingen C",us:51,them:45,lg:'Division 2'},
+    {id:'cp2',date:'2026-10-03',time:'17:00',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Black Star Mersch B",us:65,them:74,lg:'Division 2'},
+    {id:'cp3',date:'2026-10-11',time:'19:00',place:"Bertrange",addr:"salle Niki Bettendorf, 2, beim Schlass, 8058 Bertrange",h:"Sparta Bertrange C",a:"US Heffingen C",us:88,them:71,lg:'Division 2'},
+    {id:'cp4',date:'2026-10-18',time:'17:00',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"T71 Dudelange B",us:64,them:87,lg:'Division 2'},
+    {id:'cp5',date:'2026-10-24',time:'18:30',place:"Soleuvre",addr:"KUSS Scheierhaff, rue Jean Anen, 4413 Soleuvre",h:"AS Soleuvre C",a:"US Heffingen C",us:50,them:98,lg:'Division 2'},
+    {id:'cp6',date:'2026-11-08',time:'17:00',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Musel Pikes C",us:71,them:72,lg:'Division 2'}
+  ],FIXTURES:[
+    {id:'cf1',date:'2026-11-20',time:'20:30',place:"Bettembourg",addr:"centre sportif hall, 30, rue J. H. Polk, 3275 Bettembourg",h:"Nitia Bettembourg B",a:"US Heffingen C",lg:'Division 2'},
+    {id:'cf2',date:'2026-12-06',time:'18:30',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Bascharage Hedgehogs B",lg:'Division 2'},
+    {id:'cf3',date:'2026-12-13',time:'18:30',place:"Luxembourg-Limpertsberg",addr:"Tramsschapp Luxembourg, 47a, rue Ermesinde, 1469 Luxembourg-Limpertsberg",h:"Racing Luxembourg D",a:"US Heffingen C",lg:'Division 2'},
+    {id:'cf4',date:'2027-01-09',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Amicale Steesel B",lg:'Division 2'},
+    {id:'cf5',date:'2027-01-16',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Gréngewald Hueschtert C",lg:'Division 2'},
+    {id:'cf6',date:'2027-01-30',h:"Black Star Mersch B",a:"US Heffingen C",lg:'Division 2'},
+    {id:'cf7',date:'2027-02-06',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Sparta Bertrange C",lg:'Division 2'},
+    {id:'cf8',date:'2027-02-20',h:"T71 Dudelange B",a:"US Heffingen C",lg:'Division 2'},
+    {id:'cf9',date:'2027-02-27',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"AS Soleuvre C",lg:'Division 2'},
+    {id:'cf10',date:'2027-03-06',h:"Musel Pikes C",a:"US Heffingen C",lg:'Division 2'},
+    {id:'cf11',date:'2027-03-20',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Nitia Bettembourg B",lg:'Division 2'},
+    {id:'cf12',date:'2027-04-17',h:"Bascharage Hedgehogs B",a:"US Heffingen C",lg:'Division 2'},
+    {id:'cf13',date:'2027-04-24',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Racing Luxembourg D",lg:'Division 2'},
+    {id:'cf14',date:'2027-05-01',h:"Amicale Steesel B",a:"US Heffingen C",lg:'Division 2'}
+  ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
+  table:[["T71 Dudelange B", 6, 6, 0, 487, 336, 12], ["Black Star Mersch B", 6, 5, 1, 345, 266, 11], ["Musel Pikes C", 5, 4, 1, 291, 276, 9], ["Sparta Bertrange C", 6, 3, 3, 402, 368, 9], ["Racing Luxembourg D", 5, 3, 2, 272, 266, 8], ["US Heffingen C", 6, 2, 4, 389, 447, 8], ["Amicale Steesel B", 5, 2, 3, 247, 254, 6], ["Gréngewald Hueschtert C", 5, 1, 4, 286, 308, 6], ["AS Soleuvre C", 4, 2, 2, 272, 224, 6], ["Nitia Bettembourg B", 5, 1, 4, 194, 267, 5], ["Bascharage Hedgehogs B", 5, 0, 5, 256, 429, 5]]};
 TEAMS.women={key:'women',label:'Women A',club:'US Heffingen',league:'Nationale 2',heading:'Nationale 2 Women',sub:'Women A · Nationale 2 · 2026/27',live:false,
   T:{SO:"AS Soleuvre",AR:"Arantia Larochette",EP:"BBC East Side Pirates",ME:"BC Mess",BS:"Black Star Mersch",ET:"Etzella Ettelbruck",KS:"Kordall Steelers",RW:"Résidence Walferdange",TH:"Telstar Hesperange",US:"US Heffingen"},
   PLAYED:[
