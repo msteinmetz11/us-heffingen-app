@@ -99,7 +99,12 @@ h2.sec{font:600 13px var(--f-body); letter-spacing:.08em; text-transform:upperca
 .count > div{background:rgba(255,255,255,.14); border-radius:10px; padding:7px 4px 6px; text-align:center}
 .count b{display:block; font:700 24px/1 var(--f-display); font-variant-numeric:tabular-nums; color:var(--hero-ink)}
 .count span{display:block; margin-top:3px; font:600 10px var(--f-body); letter-spacing:.08em; text-transform:uppercase; color:var(--hero-sub)}
-.count.live{display:block; background:rgba(255,255,255,.14); border-radius:12px; padding:14px; text-align:center; font:700 22px var(--f-display); letter-spacing:.04em; text-transform:uppercase}
+.count.live{display:block; padding:0; background:none}
+.livebtn{display:flex; align-items:center; justify-content:center; gap:10px; min-height:52px; padding:12px 16px; border-radius:12px; background:var(--hero-ink); color:var(--hero-bg); text-decoration:none; font:700 17px/1.1 var(--f-display); letter-spacing:.06em; text-transform:uppercase}
+.livebtn span{display:inline; margin:0; font:inherit; letter-spacing:inherit; text-transform:inherit; color:inherit}
+.livebtn .rec{width:12px; height:12px; border-radius:50%; background:#E5202E; flex:none; animation:recpulse 1.4s ease-in-out infinite}
+@keyframes recpulse{0%,100%{box-shadow:0 0 0 0 rgba(229,32,46,.55)}50%{box-shadow:0 0 0 7px rgba(229,32,46,0)}}
+@media (prefers-reduced-motion:reduce){.livebtn .rec{animation:none}}
 .maplink{display:inline-flex; align-items:flex-start; gap:6px; color:var(--accent); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; padding-block:3px}
 .maplink .pin{flex:none; margin-top:3px}
 .hero .maplink{color:var(--hero-ink)}
@@ -422,10 +427,18 @@ function nextGame(){
   var cut=new Date().getTime()-3*36e5;
   return upcoming().filter(function(g){return startOf(g).getTime()>=cut})[0]||null;
 }
+var LIVE_URL='https://www.youtube.com/@usheffingen1677/live';
+var LIVE_LEAD=5*6e4;
 function tickCountdown(){
   var el=document.getElementById('cd'); if(!el) return;
   var diff=+el.dataset.ts-Date.now();
-  if(diff<=0){el.classList.add('live');el.textContent='Game under way';return}
+  if(diff<=LIVE_LEAD){
+    if(el.dataset.mode!=='live'){
+      el.dataset.mode='live'; el.classList.add('live');
+      el.innerHTML='<a class="livebtn" href="'+LIVE_URL+'" target="_blank" rel="noopener"><i class="rec" aria-hidden="true"></i><span>Watch live on YouTube</span></a>';
+    }
+    return;
+  }
   var ts=Math.floor(diff/1000), m=Math.floor(ts/60), ss=ts%60, dd=Math.floor(m/1440), hh=Math.floor((m%1440)/60), mm=m%60;
   var b=el.querySelectorAll('b'); if(b.length===4){b[0].textContent=dd;b[1].textContent=hh;b[2].textContent=String(mm).padStart(2,'0');b[3].textContent=String(ss).padStart(2,'0')}
   var l=el.querySelectorAll('span'); if(l.length===4){l[0].textContent=dd===1?'day':'days';l[1].textContent=hh===1?'hour':'hours'}
@@ -667,7 +680,7 @@ window.addEventListener('hashchange',function(){render();window.scrollTo(0,0)});
 /* ---------- Start ---------- */
 render();
 setInterval(tickCountdown,1000);
-setInterval(function(){var c=document.getElementById('cd');if(c&&c.classList.contains('live'))render()},20000);
+setInterval(function(){var c=document.getElementById('cd');if(c&&Date.now()>+c.dataset.ts+3*36e5)render()},20000);
 })();
 </script>
 
