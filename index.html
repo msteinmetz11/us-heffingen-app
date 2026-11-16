@@ -403,7 +403,22 @@ function standings(){
     if(r[3]>r[4]){h.w++;a.l++}else{a.w++;h.l++}
   });
   var rows=Object.keys(m).map(function(k){var x=m[k];x.sp=x.w+x.l;x.pts=2*x.w+x.l;x.d=x.pf-x.pa;return x});
-  rows.sort(function(a,b){return b.pts-a.pts||b.d-a.d});
+  /* Gleichstand: wie die FLBB zuerst Mini-Tabelle (direkte Duelle der punktgleichen Teams), dann Gesamt-Korbdifferenz */
+  var byPts={};
+  rows.forEach(function(x){(byPts[x.pts]=byPts[x.pts]||[]).push(x)});
+  Object.keys(byPts).forEach(function(k){
+    var grp=byPts[k]; if(grp.length<2) return;
+    var names=grp.map(function(x){return x.t});
+    grp.forEach(function(x){x.mp=0;x.md=0});
+    PLAYED.forEach(function(r){
+      var h=T[r[1]], a=T[r[2]];
+      if(names.indexOf(h)<0||names.indexOf(a)<0) return;
+      var hx=grp[names.indexOf(h)], ax=grp[names.indexOf(a)];
+      hx.mp+=r[3]>r[4]?2:1; ax.mp+=r[3]>r[4]?1:2;
+      hx.md+=r[3]-r[4]; ax.md+=r[4]-r[3];
+    });
+  });
+  rows.sort(function(a,b){return b.pts-a.pts||(b.mp||0)-(a.mp||0)||(b.md||0)-(a.md||0)||b.d-a.d});
   return rows;
 }
 
@@ -611,7 +626,7 @@ function vTabelle(){
   st.forEach(function(x,i){
     h+='<tr'+(x.me?' class="me"':'')+'><td>'+(i+1)+'</td><td class="tm">'+esc(x.t)+'</td><td>'+x.sp+'</td><td>'+x.w+'</td><td>'+x.l+'</td><td>'+signed(x.d)+'</td><td>'+x.pts+'</td></tr>';
   });
-  return h+'</tbody></table></div></div><p class="note">Calculated from the results on luxembourg.basketball (as of 16 Nov 2026): two points for a win, one for a loss, ties broken by point difference. The official table may differ.</p>';
+  return h+'</tbody></table></div></div><p class="note">Calculated from the results on luxembourg.basketball (as of 16 Nov 2026): two points for a win, one for a loss, ties broken by the head-to-head games of the teams involved, then by point difference (same rules as the official table).</p>';
 }
 
 function squadStats(){
