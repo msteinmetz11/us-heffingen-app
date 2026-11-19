@@ -1,4 +1,4 @@
-// node --test test/   — prüft Abruf und Mitteilungen mit nachgebauten FLBB-Daten (Format wie am 19.11.2026 gesehen).
+// node --test test/abruf.test.mjs   — prüft Abruf und Mitteilungen mit nachgebauten FLBB-Daten (Format wie am 19.11.2026 gesehen).
 import test from "node:test";
 import assert from "node:assert/strict";
 import { icsLesen, spielAusEreignis, teamsTrennen, klubLinks, icsCodeFuer, tabellenLesen, tabelleRechnen, mannschaftHolen, aktuellesLabel, icsUrl, BASIS } from "../tools/abruf.mjs";

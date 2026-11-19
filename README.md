@@ -17,7 +17,7 @@ Kalender-Abo, Mitteilungen aufs Handy, anonyme Statistik. Sprachen: Deutsch, Fra
 | `tools/cloudflare-worker.js` | Worker: Takt, Statistik, Mitteilungen |
 | `.github/workflows/daten.yml` | GitHub Action, die den Abruf laufen lässt und speichert |
 | `sw.js` | Service Worker, nur für Mitteilungen |
-| `test/` | Tests (`node --test test/`) |
+| `test/` | Tests (`node --test test/abruf.test.mjs`) |
 
 ## Woher die Daten kommen
 
