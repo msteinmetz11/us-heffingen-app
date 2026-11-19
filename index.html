@@ -887,7 +887,7 @@ function vSettings(){
   return '<h2 class="sec">'+L('Settings')+'</h2>'+coachCard()
     +'<div class="card info"><b>'+L('Language')+'</b><div class="filt" role="group" aria-label="'+L('Language')+'" style="margin-top:8px">'+[['de','Deutsch'],['fr','Français'],['en','English']].map(function(x){return '<button type="button" data-lang="'+x[0]+'" aria-pressed="'+(LANG===x[0])+'">'+x[1]+'</button>'}).join('')+'</div></div>'
     +'<div class="card info"><b>'+L('Team')+'</b><span>'+L('Choose the team shown when the app opens.')+'</span><div class="teampick" style="margin:8px 0 0"><div class="sel"><select data-setteam aria-label="'+L('Team')+'">'+TEAM_ORDER.map(function(k){return '<option value="'+k+'"'+(k===TEAM.key?' selected':'')+'>'+esc(TEAMS[k].label)+' · '+esc(TEAMS[k].league)+'</option>'}).join('')+'</select></div></div></div>'
-    +shareCard()+'<div class="card info"><b>'+L('About')+'</b><span>'+L('Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.')+'</span><div style="margin-top:6px"><a class="maplink" href="http://www.usheffingen.com" target="_blank" rel="noopener">usheffingen.com</a></div></div>'+socialFoot();
+    +shareCard()+socialFoot();
 }
 function vNews(){var l=coachEvents('club',dstr(today));return '<h2 class="sec">'+L('Club events')+'</h2>'+(l.length?'<div class="card list">'+l.map(function(e){return coachRow(e,false)}).join('')+'</div>':'<div class="card empty"><b>'+L('No club events yet')+'</b><p>'+L('Events organised by the club will appear here.')+'</p></div>')+socialFoot()}
 function teamNote(){return TEAM.note?'<p class="note">'+esc(TEAM.note)+'</p>':''}
