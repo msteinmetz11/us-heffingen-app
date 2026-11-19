@@ -661,6 +661,20 @@ var POS={PG:'Point Guard',SG:'Shooting Guard',SF:'Small Forward',PF:'Power Forwa
 
 /* ---------- Hilfsfunktionen ---------- */
 var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var LANG='en';
+try{LANG=localStorage.getItem('ush-lang')||''}catch(e){}
+if(['de','fr','en'].indexOf(LANG)<0){var nl=((navigator.language||'en')+'').slice(0,2).toLowerCase();LANG=(nl==='de'||nl==='fr')?nl:'en'}
+var I18N={
+ de:{'Home':'Heim','Away':'Auswärts','Watch live on YouTube':'Live auf YouTube ansehen','Game day':'Spieltag','Opponent preview':'Gegner-Vorschau','Standings':'Tabelle','Record':'Bilanz','Points / game':'Punkte / Spiel','Allowed / game':'Gegenpunkte / Spiel','Last 5':'Letzte 5','This season vs':'Diese Saison gegen','No meeting yet this season.':'Noch keine Begegnung in dieser Saison.','Cup':'Pokal','Subscribe':'Abonnieren','Download .ics':'.ics herunterladen','Calendar subscription':'Kalender-Abo','Add all games to your phone calendar. It updates automatically.':'Alle Spiele in deinen Handy-Kalender übernehmen. Wird automatisch aktualisiert.','Settings':'Einstellungen','Team':'Team','Choose the team shown when the app opens.':'Das Team, das beim Öffnen der App angezeigt wird.','About':'Info','Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.':'Spielplan und Ergebnisse von US Heffingen. Daten von luxembourg.basketball, täglich aktualisiert.','Language':'Sprache','Club news':'Club-News','Coming soon':'Demnächst','News from US Heffingen will appear here.':'Neuigkeiten von US Heffingen erscheinen hier.','Next game':'Nächstes Spiel','Time tbc':'Zeit offen','day':'Tag','days':'Tage','hour':'Stunde','hours':'Stunden','min':'Min','sec':'Sek','No more games':'Keine weiteren Spiele','There are no upcoming games in the schedule.':'Im Spielplan stehen keine kommenden Spiele.','Next':'Danach','Today':'Heute','game':'Spiel','games':'Spiele','All':'Alle','Previous month':'Vorheriger Monat','Next month':'Nächster Monat','No games':'Keine Spiele','Nothing scheduled on this day.':'An diesem Tag ist nichts geplant.','TBC':'offen','Calendar':'Kalender','News':'News','W':'S','L':'N','Round of 32':'Sechzehntelfinale','Round of 16':'Achtelfinale','1/16 finals':'Sechzehntelfinale','1/8 finals':'Achtelfinale','As of':'Stand','Data from':'Daten von','Men':'Herren','Women':'Damen'},
+ fr:{'Home':'Domicile','Away':'Extérieur','Watch live on YouTube':'Regarder en direct sur YouTube','Game day':'Jour de match','Opponent preview':'Aperçu de l’adversaire','Standings':'Classement','Record':'Bilan','Points / game':'Points / match','Allowed / game':'Points encaissés / match','Last 5':'5 derniers','This season vs':'Cette saison contre','No meeting yet this season.':'Pas encore de rencontre cette saison.','Cup':'Coupe','Subscribe':'S’abonner','Download .ics':'Télécharger .ics','Calendar subscription':'Abonnement au calendrier','Add all games to your phone calendar. It updates automatically.':'Ajoutez tous les matchs à votre calendrier. Mise à jour automatique.','Settings':'Réglages','Team':'Équipe','Choose the team shown when the app opens.':'L’équipe affichée à l’ouverture de l’application.','About':'À propos','Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.':'Calendrier et résultats de l’US Heffingen. Données de luxembourg.basketball, mises à jour chaque jour.','Language':'Langue','Club news':'Actualités du club','Coming soon':'Bientôt disponible','News from US Heffingen will appear here.':'Les actualités de l’US Heffingen apparaîtront ici.','Next game':'Prochain match','Time tbc':'Heure à confirmer','day':'jour','days':'jours','hour':'heure','hours':'heures','min':'min','sec':'s','No more games':'Plus de matchs','There are no upcoming games in the schedule.':'Aucun match à venir au calendrier.','Next':'Ensuite','Today':'Aujourd’hui','game':'match','games':'matchs','All':'Tous','Previous month':'Mois précédent','Next month':'Mois suivant','No games':'Aucun match','Nothing scheduled on this day.':'Rien de prévu ce jour-là.','TBC':'à conf.','Calendar':'Calendrier','News':'Actualités','W':'V','L':'D','Round of 32':'16es de finale','Round of 16':'8es de finale','1/16 finals':'1/16 de finale','1/8 finals':'1/8 de finale','As of':'État au','Data from':'Données de','Men':'Hommes','Women':'Dames'}
+};
+function L(s){var d=I18N[LANG];return (d&&d[s])||s}
+var LANGDATA={
+ en:{WD:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MO:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],MONTH:['January','February','March','April','May','June','July','August','September','October','November','December']},
+ de:{WD:['So','Mo','Di','Mi','Do','Fr','Sa'],MO:['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'],MONTH:['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember']},
+ fr:{WD:['dim','lun','mar','mer','jeu','ven','sam'],MO:['janv','févr','mars','avr','mai','juin','juil','août','sept','oct','nov','déc'],MONTH:['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']}
+};
+
 var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var TABS=['home','games','news','settings'];
 function tabOk(t){return t==='squad'?Object.keys(PLAYERS||{}).length>0:t==='training'?TRAINING_WEEK.length>0:true}
@@ -671,7 +685,7 @@ var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
 function daysTo(d){return Math.round((d-today)/864e5)}
 function when(n){return n<=0?'today':n===1?'tomorrow':'in '+n+' days'}
 function short(d){return WD[d.getDay()]+' '+d.getDate()+' '+MO[d.getMonth()]}
-function ord(n){var v=n%100,x=['th','st','nd','rd'];return n+(x[(v-20)%10]||x[v]||x[0])}
+function ord(n){if(LANG==='de')return n+'.';if(LANG==='fr')return n===1?'1er':n+'e';var v=n%100,x=['th','st','nd','rd'];return n+(x[(v-20)%10]||x[v]||x[0])}
 function signed(n){return n>0?'+'+n:n<0?'−'+Math.abs(n):'0'}
 function isHome(g){return g.h.indexOf(CLUB)===0}
 function opp(g){return isHome(g)?g.a:g.h}
@@ -682,8 +696,8 @@ function miniLogo(name){
     :'<span class="mini ph" title="'+esc(name)+'" style="--c:hsl('+hue(name)+' 45% 55%)">'+esc(abbr(name).slice(0,3))+'</span>';
 }
 function vsTitle(g){return '<span class="vs"><span class="vsl">'+miniLogo(g.h)+miniLogo(g.a)+'</span><span class="vst">'+title(g)+'</span></span>'}
-function venue(g){return isHome(g)?'Home':'Away'}
-function sub(g){return (g.lg===CUP?'<span class="chip">Cup</span>':'')+(g.round?esc(g.round)+' · ':'')+venue(g)+(g.place?' · '+esc(g.place):'')}
+function venue(g){return isHome(g)?L('Home'):L('Away')}
+function sub(g){return (g.lg===CUP?'<span class="chip">'+L('Cup')+'</span>':'')+(g.round?esc(L(g.round))+' · ':'')+venue(g)+(g.place?' · '+esc(g.place):'')}
 function score(g){return isHome(g)?g.us+':'+g.them:g.them+':'+g.us}
 function sorted(list){return list.slice().sort(function(a,b){return (a.date+(a.time||''))<(b.date+(b.time||''))?-1:1})}
 function buildGames(){
@@ -773,14 +787,14 @@ function tickCountdown(){
   if(diff<=LIVE_LEAD){
     if(el.dataset.mode!=='live'){
       el.dataset.mode='live'; el.classList.add('live');
-      el.innerHTML=TEAM.live?'<a class="livebtn" href="'+LIVE_URL+'" target="_blank" rel="noopener"><i class="rec" aria-hidden="true"></i><span>Watch live on YouTube</span></a>'
-        :'<div class="livebtn plain"><span>Game day</span></div>';
+      el.innerHTML=TEAM.live?'<a class="livebtn" href="'+LIVE_URL+'" target="_blank" rel="noopener"><i class="rec" aria-hidden="true"></i><span>'+L('Watch live on YouTube')+'</span></a>'
+        :'<div class="livebtn plain"><span>'+L('Game day')+'</span></div>';
     }
     return;
   }
   var ts=Math.floor(diff/1000), m=Math.floor(ts/60), ss=ts%60, dd=Math.floor(m/1440), hh=Math.floor((m%1440)/60), mm=m%60;
   var b=el.querySelectorAll('b'); if(b.length===4){b[0].textContent=dd;b[1].textContent=hh;b[2].textContent=String(mm).padStart(2,'0');b[3].textContent=String(ss).padStart(2,'0')}
-  var l=el.querySelectorAll('span'); if(l.length===4){l[0].textContent=dd===1?'day':'days';l[1].textContent=hh===1?'hour':'hours'}
+  var l=el.querySelectorAll('span'); if(l.length===4){l[0].textContent=L(dd===1?'day':'days');l[1].textContent=L(hh===1?'hour':'hours')}
 }
 
 function teamStats(name){
@@ -800,7 +814,7 @@ function teamStats(name){
   return {w:w,l:l,rank:rank,ppg:pf/n,opg:pa/n,d:pf-pa,form:form.slice(-5),n:rows.length};
 }
 function formDots(f,right){
-  return '<div class="fm'+(right?' r':'')+'">'+f.map(function(x){return '<span class="dot '+(x==='W'?'w':'l')+'">'+x+'</span>'}).join('')+'</div>';
+  return '<div class="fm'+(right?' r':'')+'">'+f.map(function(x){return '<span class="dot '+(x==='W'?'w':'l')+'">'+L(x)+'</span>'}).join('')+'</div>';
 }
 function scout(g){
   var name=opp(g), a=teamStats(CLUB), b=teamStats(name);
@@ -809,21 +823,21 @@ function scout(g){
   function row(label,l,r,lLead,rLead){
     return '<div class="v'+(lLead?' lead':'')+'">'+l+'</div><div class="lb">'+label+'</div><div class="v r'+(rLead?' lead':'')+'">'+r+'</div>';
   }
-  var h='<section class="card scout" aria-label="Opponent preview"><h2>Opponent preview</h2><div class="sg">'
+  var h='<section class="card scout" aria-label="'+L('Opponent preview')+'"><h2>'+L('Opponent preview')+'</h2><div class="sg">'
     +'<div class="hd">'+crestBig(CLUB).replace('crest xl','crest')+'<span>'+esc(abbr(CLUB))+'</span></div><div></div>'
     +'<div class="hd r"><span>'+esc(abbr(name))+'</span>'+crestBig(name).replace('crest xl','crest')+'</div>'
-    +row('Standings',ord(a.rank),ord(b.rank),a.rank<b.rank,b.rank<a.rank)
-    +row('Record',a.w+'–'+a.l,b.w+'–'+b.l,a.w>b.w,b.w>a.w)
-    +row('Points / game',f1(a.ppg),f1(b.ppg),a.ppg>b.ppg,b.ppg>a.ppg)
-    +row('Allowed / game',f1(a.opg),f1(b.opg),a.opg<b.opg,b.opg<a.opg)
-    +(a.form.length||b.form.length?'<div>'+formDots(a.form,false)+'</div><div class="lb">Last 5</div><div>'+formDots(b.form,true)+'</div>':'')
+    +row(L('Standings'),ord(a.rank),ord(b.rank),a.rank<b.rank,b.rank<a.rank)
+    +row(L('Record'),a.w+'–'+a.l,b.w+'–'+b.l,a.w>b.w,b.w>a.w)
+    +row(L('Points / game'),f1(a.ppg),f1(b.ppg),a.ppg>b.ppg,b.ppg>a.ppg)
+    +row(L('Allowed / game'),f1(a.opg),f1(b.opg),a.opg<b.opg,b.opg<a.opg)
+    +(a.form.length||b.form.length?'<div>'+formDots(a.form,false)+'</div><div class="lb">'+L('Last 5')+'</div><div>'+formDots(b.form,true)+'</div>':'')
     +'</div>';
   var met=results().filter(function(x){return opp(x)===name}).reverse();
-  h+='<div class="h2h"><div class="t">This season vs '+esc(name)+'</div>';
-  if(!met.length) h+='<div class="none">No meeting yet this season.</div>';
+  h+='<div class="h2h"><div class="t">'+L('This season vs')+' '+esc(name)+'</div>';
+  if(!met.length) h+='<div class="none">'+L('No meeting yet this season.')+'</div>';
   met.forEach(function(x){
     var win=x.us>x.them, d=pd(x.date);
-    h+='<div class="g"><span>'+short(d)+' · '+(x.lg===CUP?'Cup · ':'')+venue(x)+'</span><span><b>'+score(x)+'</b> <span class="dot '+(win?'w':'l')+'" style="display:inline-grid;vertical-align:middle;margin-left:6px">'+(win?'W':'L')+'</span></span></div>';
+    h+='<div class="g"><span>'+short(d)+' · '+(x.lg===CUP?L('Cup')+' · ':'')+venue(x)+'</span><span><b>'+score(x)+'</b> <span class="dot '+(win?'w':'l')+'" style="display:inline-grid;vertical-align:middle;margin-left:6px">'+L(win?'W':'L')+'</span></span></div>';
   });
   return h+'</div></section>';
 }
@@ -833,35 +847,46 @@ function teamSelect(){
     +'</select></div></div>';
 }
 var ICS_BASE='www.luxembourg.basketball/layout/themes/flbb/calendar/';
-function calLink(t){return t.ics?'<a class="maplink" href="webcal://'+ICS_BASE+t.ics+'.ics" style="margin-right:14px">Subscribe</a><a class="maplink" href="https://'+ICS_BASE+t.ics+'.ics" target="_blank" rel="noopener">Download .ics</a>':''}
-function calSub(){return TEAM.ics?'<h2 class="sec">Calendar subscription</h2><div class="card info"><b>'+esc(TEAM.label)+' · '+esc(TEAM.league)+'</b><span>Add all games to your phone calendar. It updates automatically.</span><div style="margin-top:6px">'+calLink(TEAM)+'</div></div>':''}
-function vSettings(){
-  return '<h2 class="sec">Settings</h2>'
-    +'<div class="card info"><b>Team</b><span>Choose the team shown when the app opens.</span><div class="teampick" style="margin:8px 0 0"><div class="sel"><select data-setteam aria-label="Team">'+TEAM_ORDER.map(function(k){return '<option value="'+k+'"'+(k===TEAM.key?' selected':'')+'>'+esc(TEAMS[k].label)+' · '+esc(TEAMS[k].league)+'</option>'}).join('')+'</select></div></div></div>'
-    +'<div class="card info"><b>About</b><span>Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.</span><div style="margin-top:6px"><a class="maplink" href="http://www.usheffingen.com" target="_blank" rel="noopener">usheffingen.com</a></div></div>';
+
+function applyLang(){
+  var d=LANGDATA[LANG]||LANGDATA.en; WD=d.WD; MO=d.MO; MONTH=d.MONTH;
+  document.documentElement.lang=LANG;
+  TEAM_ORDER.forEach(function(k){var t=TEAMS[k]; if(!t.lab0) t.lab0=t.label; t.label=t.lab0.replace(/^Men/,L('Men')).replace(/^Women/,L('Women'))});
+  var nm={home:LANG==='de'?'Start':LANG==='fr'?'Accueil':'Home',games:L('Calendar'),news:L('News'),settings:L('Settings')};
+  document.querySelectorAll('.tabs a').forEach(function(a){var n=nm[a.dataset.tab]||'';if(n){a.setAttribute('aria-label',n);a.title=n}});
+  var af=document.querySelector('.asof'); if(af) af.textContent=L('As of')+' 19 Nov 2026 · '+L('Data from')+' luxembourg.basketball';
+  var sel=document.getElementById('teamsel'); if(sel) sel.innerHTML='';
 }
-function vNews(){return '<h2 class="sec">Club news</h2><div class="card empty"><b>Coming soon</b><p>News from US Heffingen will appear here.</p></div>'}
+function calLink(t){return t.ics?'<a class="maplink" href="webcal://'+ICS_BASE+t.ics+'.ics" style="margin-right:14px">'+L('Subscribe')+'</a><a class="maplink" href="https://'+ICS_BASE+t.ics+'.ics" target="_blank" rel="noopener">'+L('Download .ics')+'</a>':''}
+function calSub(){return TEAM.ics?'<h2 class="sec">'+L('Calendar subscription')+'</h2><div class="card info"><b>'+esc(TEAM.label)+' · '+esc(TEAM.league)+'</b><span>'+L('Add all games to your phone calendar. It updates automatically.')+'</span><div style="margin-top:6px">'+calLink(TEAM)+'</div></div>':''}
+function vSettings(){
+  return '<h2 class="sec">'+L('Settings')+'</h2>'
+    +'<div class="card info"><b>'+L('Language')+'</b><div class="filt" role="group" aria-label="'+L('Language')+'" style="margin-top:8px">'+[['de','Deutsch'],['fr','Français'],['en','English']].map(function(x){return '<button type="button" data-lang="'+x[0]+'" aria-pressed="'+(LANG===x[0])+'">'+x[1]+'</button>'}).join('')+'</div></div>'
+    +'<div class="card info"><b>'+L('Team')+'</b><span>'+L('Choose the team shown when the app opens.')+'</span><div class="teampick" style="margin:8px 0 0"><div class="sel"><select data-setteam aria-label="'+L('Team')+'">'+TEAM_ORDER.map(function(k){return '<option value="'+k+'"'+(k===TEAM.key?' selected':'')+'>'+esc(TEAMS[k].label)+' · '+esc(TEAMS[k].league)+'</option>'}).join('')+'</select></div></div></div>'
+    +'<div class="card info"><b>'+L('About')+'</b><span>'+L('Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.')+'</span><div style="margin-top:6px"><a class="maplink" href="http://www.usheffingen.com" target="_blank" rel="noopener">usheffingen.com</a></div></div>';
+}
+function vNews(){return '<h2 class="sec">'+L('Club news')+'</h2><div class="card empty"><b>'+L('Coming soon')+'</b><p>'+L('News from US Heffingen will appear here.')+'</p></div>'}
 function teamNote(){return TEAM.note?'<p class="note">'+esc(TEAM.note)+'</p>':''}
 function vStart(){
   var up=upcoming(), ng=nextGame(), r=results(), h='';
   if(ng){
     var d=pd(ng.date);
-    h+='<section class="hero" aria-label="Next game"><div><div class="eyebrow">Next game</div>'
-      +'<div class="when" style="margin-top:8px">'+short(d)+' · '+(ng.time||'Time tbc')+'</div>'
+    h+='<section class="hero" aria-label="'+L('Next game')+'"><div><div class="eyebrow">'+L('Next game')+'</div>'
+      +'<div class="when" style="margin-top:8px">'+short(d)+' · '+(ng.time||L('Time tbc'))+'</div>'
       +'<div class="herologos" role="img" aria-label="'+esc(ng.h+' versus '+ng.a)+'">'+crestBig(ng.h)+'<span class="hvs">vs</span>'+crestBig(ng.a)+'</div>'
-      +'<div class="count" id="cd" data-ts="'+startOf(ng).getTime()+'" role="timer" aria-label="Time until tip-off"><div><b>0</b><span>days</span></div><div><b>0</b><span>hours</span></div><div><b>0</b><span>min</span></div><div><b>0</b><span>sec</span></div></div>'
+      +'<div class="count" id="cd" data-ts="'+startOf(ng).getTime()+'" role="timer" aria-label="Time until tip-off"><div><b>0</b><span>'+L('days')+'</span></div><div><b>0</b><span>'+L('hours')+'</span></div><div><b>0</b><span>'+L('min')+'</span></div><div><b>0</b><span>'+L('sec')+'</span></div></div>'
       +'<div class="meta">'+sub(ng)+(ng.addr?'<br>'+maplink(ng.addr):'')+'</div></div>'
       +'</section>'+scout(ng);
   } else {
-    h+=empty('No more games','There are no upcoming games in the schedule.');
+    h+=empty(L('No more games'),L('There are no upcoming games in the schedule.'));
   }
   h+=teamNote();
   var more=ng?up.filter(function(g){return g!==ng&&startOf(g)>startOf(ng)}).slice(0,3):[];
   if(more.length){
-    h+='<h2 class="sec">Next</h2><div class="card list">';
+    h+='<h2 class="sec">'+L('Next')+'</h2><div class="card list">';
     more.forEach(function(g){
       var gd=pd(g.date);
-      h+='<a class="row" href="#games">'+dateBox(gd)+'<div><h3>'+vsTitle(g)+'</h3><p>'+WD[gd.getDay()]+' · '+(g.time||'Time tbc')+' · '+sub(g)+'</p></div></a>';
+      h+='<a class="row" href="#games">'+dateBox(gd)+'<div><h3>'+vsTitle(g)+'</h3><p>'+WD[gd.getDay()]+' · '+(g.time||L('Time tbc'))+' · '+sub(g)+'</p></div></a>';
     });
     h+='</div>';
   }
@@ -942,8 +967,8 @@ function calGames(){
     GAMES.forEach(function(g){
       var d=pd(g.date), played=g.us!=null;
       out.push({k:k,t:t,g:g,date:g.date,time:g.time||'',played:played,
-        html:'<article class="card ev game"><div class="evt">'+(calAll?'<b>'+esc(t.label)+'</b> · ':'')+'<b>'+esc(g.lg===CUP?'Cup':(g.lg||LEAGUE))+'</b>'+(g.round?' · '+esc(g.round):'')+' · '+venue(g)+(g.place?' · '+esc(g.place):'')+'</div>'
-          +'<div class="vsrow" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+crest(g.h)+'<div class="rec"></div><div class="big">'+(played?score(g):(g.time||'TBC'))+'</div><div class="rec"></div>'+crest(g.a)+'</div>'
+        html:'<article class="card ev game"><div class="evt">'+(calAll?'<b>'+esc(t.label)+'</b> · ':'')+'<b>'+esc(g.lg===CUP?L('Cup'):(g.lg||LEAGUE))+'</b>'+(g.round?' · '+esc(L(g.round)):'')+' · '+venue(g)+(g.place?' · '+esc(g.place):'')+'</div>'
+          +'<div class="vsrow" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+crest(g.h)+'<div class="rec"></div><div class="big">'+(played?score(g):(g.time||L('TBC')))+'</div><div class="rec"></div>'+crest(g.a)+'</div>'
           +(g.addr?'<p class="addr">'+maplink(g.addr)+'</p>':'')+'</article>'});
     });
   }
@@ -958,20 +983,20 @@ function vSpiele(){
   var my=calMonth.split('-').map(Number), y=my[0], m=my[1]-1;
   var by={}; all.forEach(function(x){(by[x.date]=by[x.date]||[]).push(x)});
   var first=new Date(y,m,1), lead=(first.getDay()+6)%7, days=new Date(y,m+1,0).getDate();
-  var grid=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(function(w){return '<div class="mwd">'+w.slice(0,2)+'</div>'}).join('');
+  var grid=[1,2,3,4,5,6,0].map(function(i){return '<div class="mwd">'+WD[i].slice(0,2)+'</div>'}).join('');
   for(var i=0;i<lead;i++) grid+='<div></div>';
   for(var d=1;d<=days;d++){
     var ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'), gs=by[ds]||[];
     var pips=gs.slice(0,3).map(function(x){return '<i class="'+(x.played?'':'g')+'"></i>'}).join('');
-    grid+='<button type="button" class="mday'+(ds===dstr(today)?' td':'')+'" data-day="'+ds+'" aria-pressed="'+(ds===selDay)+'" aria-label="'+short(new Date(y,m,d))+(gs.length?', '+gs.length+(gs.length===1?' game':' games'):'')+'"><b>'+d+'</b><span class="pips">'+pips+'</span></button>';
+    grid+='<button type="button" class="mday'+(ds===dstr(today)?' td':'')+'" data-day="'+ds+'" aria-pressed="'+(ds===selDay)+'" aria-label="'+short(new Date(y,m,d))+(gs.length?', '+gs.length+' '+L(gs.length===1?'game':'games'):'')+'"><b>'+d+'</b><span class="pips">'+pips+'</span></button>';
   }
   var sd=pd(selDay), items=(by[selDay]||[]).slice().sort(function(a,b){return a.time<b.time?-1:a.time>b.time?1:0});
   var h=teamNote()
-    +'<div class="filt" role="group" aria-label="Team"><button type="button" data-calteam="sel" aria-pressed="'+!calAll+'">'+esc(TEAM.label)+'</button><button type="button" data-calteam="all" aria-pressed="'+calAll+'">All</button></div>'
-    +'<div class="calhead"><button type="button" class="mnav" data-month="-1" aria-label="Previous month">‹</button><b>'+MONTH[m]+' '+y+'</b><button type="button" class="mnav" data-month="1" aria-label="Next month">›</button></div>'
+    +'<div class="filt" role="group" aria-label="Team"><button type="button" data-calteam="sel" aria-pressed="'+!calAll+'">'+esc(TEAM.label)+'</button><button type="button" data-calteam="all" aria-pressed="'+calAll+'">'+L('All')+'</button></div>'
+    +'<div class="calhead"><button type="button" class="mnav" data-month="-1" aria-label="'+L('Previous month')+'">‹</button><b>'+MONTH[m]+' '+y+'</b><button type="button" class="mnav" data-month="1" aria-label="'+L('Next month')+'">›</button></div>'
     +'<div class="mcal">'+grid+'</div>'
-    +'<div class="dayline"><b>'+(selDay===dstr(today)?'Today':short(sd))+'</b><span>'+items.length+(items.length===1?' game':' games')+'</span></div>'
-    +(items.length?items.map(function(x){return x.html}).join(''):empty('No games','Nothing scheduled on this day.'));
+    +'<div class="dayline"><b>'+(selDay===dstr(today)?L('Today'):short(sd))+'</b><span>'+items.length+' '+L(items.length===1?'game':'games')+'</span></div>'
+    +(items.length?items.map(function(x){return x.html}).join(''):empty(L('No games'),L('Nothing scheduled on this day.')));
   h+=calSub();
   return h;
 }
@@ -1099,6 +1124,8 @@ document.addEventListener('click',function(e){
   if(mn){var mp=(calMonth||selDay||dstr(today)).slice(0,7).split('-').map(Number),dt=new Date(mp[0],mp[1]-1+(+mn.dataset.month),1);calMonth=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');render();return;}
   var ct=e.target.closest&&e.target.closest('[data-calteam]');
   if(ct){calAll=ct.dataset.calteam==='all';render();return;}
+  var lb=e.target.closest&&e.target.closest('[data-lang]');
+  if(lb){LANG=lb.dataset.lang;try{localStorage.setItem('ush-lang',LANG)}catch(er){}applyLang();useTeam(TEAM.key);render();return;}
   var dd=e.target.closest&&e.target.closest('[data-day]');
   if(dd){selDay=dd.dataset.day;render();}
 });
@@ -1113,6 +1140,7 @@ document.addEventListener('change',function(e){
 window.addEventListener('hashchange',function(){render();window.scrollTo(0,0)});
 
 /* ---------- Start ---------- */
+applyLang();
 var savedTeam=null; try{savedTeam=localStorage.getItem('ush-team')}catch(e){}
 useTeam(TEAMS[savedTeam]?savedTeam:'men');
 render();
