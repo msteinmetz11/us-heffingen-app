@@ -1151,6 +1151,8 @@ function sbLoad(){sb('coach_events?select=*&date=gte.'+dstr(today)+'&order=date'
 var coachCode='';
 var CEV=[], coachOpen=false, coachTeams=null, coachMsg='', cdb=null, cuser=null, cwrite=null;
 function clabel(k){return k==='club'?L('Club'):TEAMS[k]?TEAMS[k].label:k}
+function kindOpts(team){return team==='club'?'<option value="event">'+L('Event')+'</option>':'<option value="training">'+L('Training')+'</option><option value="game">'+L('Game')+'</option>'}
+document.addEventListener('change',function(e){if(e.target&&e.target.id==='cteam'){var k=document.getElementById('ckind');if(k)k.innerHTML=kindOpts(e.target.value)}});
 function ckind(k){return L(k==='training'?'Training':k==='game'?'Game':'Event')}
 function cbadge(){return '<span class="cb" title="'+L('Entered by the coach')+'" aria-label="'+L('Entered by the coach')+'">C</span>'}
 function chash(code){
@@ -1207,7 +1209,7 @@ function coachCard(){
   h+='<b>'+L('Coach')+' · '+coachTeams.map(function(k){return esc(clabel(k))}).join(', ')+'</b>';
   if(cwrite===false) h+='<div class="cerr">'+L('Your account may not write entries. Ask the club to give you Contributor access.')+'</div>';
   h+='<div class="cform"><div class="two"><select id="cteam" aria-label="Team">'+coachTeams.map(function(k){return '<option value="'+k+'"'+(k===t0?' selected':'')+'>'+esc(clabel(k))+'</option>'}).join('')+'</select>'
-    +'<select id="ckind" aria-label="'+L('Type')+'"><option value="training">'+L('Training')+'</option><option value="game">'+L('Game')+'</option><option value="event">'+L('Event')+'</option></select></div>'
+    +'<select id="ckind" aria-label="'+L('Type')+'">'+kindOpts(t0)+'</select></div>'
     +'<div class="two"><input id="cdate" type="date" value="'+dstr(today)+'" aria-label="'+L('Date')+'"><input id="ctime" type="time" aria-label="'+L('Time')+'"></div>'
     +'<input id="ctitle" type="text" maxlength="80" placeholder="'+L('Title')+'" aria-label="'+L('Title')+'">'
     +'<input id="cplace" type="text" maxlength="100" placeholder="'+L('Place')+'" aria-label="'+L('Place')+'">'
