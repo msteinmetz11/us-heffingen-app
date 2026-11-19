@@ -564,6 +564,8 @@ details.lineup[open] .lpch{transform:rotate(180deg)}
 #cpop input{width:100%;box-sizing:border-box;text-align:center;letter-spacing:.2em;font:700 20px var(--f-body);padding:12px;border:1.5px solid var(--accent);border-radius:12px;background:var(--surface);color:var(--ink)}
 #cpop .cerr{min-height:18px;margin-top:6px}
 #cpop .cpbtns{display:flex;gap:10px;margin-top:8px}#cpop .cpbtns .cbtn{flex:1;padding:13px;border-radius:12px;font-weight:700}
+html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:none}html.coach-one .hsel select{opacity:.75;background-image:none}
+#cteam:disabled{opacity:.7}
 </style>
 
 </head>
@@ -1563,7 +1565,7 @@ function coachCard(){
   var t0=coachTeams.indexOf(TEAM.key)>-1?TEAM.key:coachTeams[0];
   h+='<b>'+L('Coach')+' · '+coachTeams.map(function(k){return esc(clabel(k))}).join(', ')+'</b>';
   if(cwrite===false) h+='<div class="cerr">'+L('Your account may not write entries. Ask the club to give you Contributor access.')+'</div>';
-  h+='<div class="cform"><div class="two"><select id="cteam" aria-label="Team">'+coachTeams.map(function(k){return '<option value="'+k+'"'+(k===t0?' selected':'')+'>'+esc(clabel(k))+'</option>'}).join('')+'</select>'
+  h+='<div class="cform"><div class="two"><select id="cteam" aria-label="Team"'+(coachTeams.length===1?' disabled':'')+'>'+coachTeams.map(function(k){return '<option value="'+k+'"'+(k===t0?' selected':'')+'>'+esc(clabel(k))+'</option>'}).join('')+'</select>'
     +'<select id="ckind" aria-label="'+L('Type')+'">'+kindOpts(t0)+'</select></div>'
     +'<div class="two"><input id="cdate" type="date" value="'+dstr(today)+'" aria-label="'+L('Date')+'"><input id="ctime" type="time" aria-label="'+L('Time')+'"></div>'
     +'<label class="cl">'+L('Repeat weekly until (optional)')+'<input id="cuntil" type="date"></label>'
@@ -1685,8 +1687,13 @@ var VIEWS={coach:vCoach,home:vStart,club:vClub,games:vSpiele,standings:vTabelle,
 /* ---------- Rendern ---------- */
 function current(){var v=location.hash.slice(1);return TABS.indexOf(v)>-1&&tabOk(v)?v:'home'}
 var lastView=null;
+var coachPrev=null;
 function render(){
   var v=current();
+  var one=coachTeams&&coachTeams.length===1?coachTeams[0]:null;
+  if(v==='coach'&&one&&TEAM.key!==one){coachPrev=coachPrev||TEAM.key;useTeam(one)}
+  else if(v!=='coach'&&coachPrev){var pk=coachPrev;coachPrev=null;useTeam(pk)}
+  document.documentElement.classList.toggle('coach-one',v==='coach'&&!!one);
   TABS.forEach(function(t){document.getElementById('v-'+t).hidden=(t!==v)});
   document.querySelectorAll('.tabs a').forEach(function(a){
     a.hidden=!tabOk(a.dataset.tab);
