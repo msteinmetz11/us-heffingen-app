@@ -520,6 +520,10 @@ a.gr{display:block;color:inherit;text-decoration:none}
 .wstrip .wd{padding:2px 0 0;gap:1px}.wd b{width:32px;height:32px;font-size:17px}.wd small{font-size:10px}
 .calhead b{font-size:24px}
 .morebtn{padding:8px;margin-top:4px}
+.calsticky{position:sticky;top:var(--toph,64px);z-index:20;background:var(--bg);padding:2px 0;min-width:0;max-width:100%;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+.calsticky .wstrip{margin-bottom:0;min-width:0;width:100%}
+.calsticky .filt{margin-bottom:2px}
+html.tab-games .top{position:sticky;top:0;z-index:30;background:var(--bg);padding-top:calc(6px + env(safe-area-inset-top,0px));padding-bottom:8px}
 </style>
 
 </head>
@@ -1314,9 +1318,8 @@ function vSpiele(){
     var wds=dstr(wd), wg=by[wds]||[];
     strip+='<button type="button" class="wd'+(wds===dstr(today)?' td':'')+(wd.getDate()===1?' m1':'')+'" data-day="'+wds+'" aria-pressed="'+(wds===selDay)+'" aria-label="'+short(wd)+(wg.length?', '+wg.length+' '+L(wg.length===1?'entry':'entries'):'')+'"><small>'+WD[wd.getDay()].slice(0,2)+'</small><b>'+wd.getDate()+'</b><i class="'+(wg.length?'on':'')+'"></i></button>';
   }
-  var head='<div class="calhead wkhead"><b id="calmon">'+MONTH[sd.getMonth()]+' '+sd.getFullYear()+'</b></div><div class="wstrip" id="wstrip">'+strip+'</div>';
+  var head='<div class="calsticky">'+'<div class="filt" role="group" aria-label="Team"><button type="button" data-calteam="sel" aria-pressed="'+!calAll+'">'+esc(TEAM.label)+'</button><button type="button" data-calteam="all" aria-pressed="'+calAll+'">'+L('All')+'</button></div>'+'<div class="calhead wkhead"><b id="calmon">'+MONTH[sd.getMonth()]+' '+sd.getFullYear()+'</b></div><div class="wstrip" id="wstrip">'+strip+'</div></div>';
   var h=teamNote()
-    +'<div class="filt" role="group" aria-label="Team"><button type="button" data-calteam="sel" aria-pressed="'+!calAll+'">'+esc(TEAM.label)+'</button><button type="button" data-calteam="all" aria-pressed="'+calAll+'">'+L('All')+'</button></div>'
     +head
     +(items.length?'<div class="grl">'+items.map(function(x){return x.row||x.html}).join('')+'</div>':empty(L('No games'),L('Nothing scheduled on this day.')));
   h+=calSub();
@@ -1551,6 +1554,8 @@ function render(){
     if(a.dataset.tab===v) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
   });
   var el=document.getElementById('v-'+v);
+  document.documentElement.classList.toggle('tab-games',v==='games');
+  var tp=document.querySelector('.top'); if(tp) document.documentElement.style.setProperty('--toph',tp.offsetHeight+'px');
   el.innerHTML=VIEWS[v]();
   if(v!==lastView){ el.classList.remove('vin'); void el.offsetWidth; el.classList.add('vin'); lastView=v; }
   el.querySelectorAll('details[data-key]').forEach(function(d){d.open=openKeys.has(d.dataset.key)});
