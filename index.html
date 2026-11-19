@@ -474,6 +474,11 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
 .grc span{font-size:12px;color:var(--muted)}
 .grp{margin:6px 0 0;font-size:13px;color:var(--muted)}
 .gr.home .grc span{color:var(--accent);font-weight:600}
+.grt{text-transform:none;letter-spacing:.02em;font-size:14px}.grt b{font-weight:700;color:var(--ink)}
+.gside{display:grid;justify-items:center;gap:2px;width:66px;flex:none}
+.gside .side{width:auto}
+.gside .rc{font:600 12px var(--f-body);font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums}
+.grm{align-items:center}
 </style>
 
 </head>
@@ -898,6 +903,10 @@ var now=new Date();
 var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
 function daysTo(d){return Math.round((d-today)/864e5)}
 function when(n){return n<=0?'today':n===1?'tomorrow':'in '+n+' days'}
+function dateTop(d){var wd=WD[d.getDay()].replace(/\.$/,''),mo=MO[d.getMonth()].replace(/\.$/,'');
+  if(LANG==='de') return wd+'. '+d.getDate()+'. '+mo+'.';
+  if(LANG==='fr') return wd+'. '+d.getDate()+' '+mo+'.';
+  return wd+' '+d.getDate()+' '+mo}
 function short(d){return WD[d.getDay()]+' '+d.getDate()+' '+MO[d.getMonth()]}
 function ord(n){if(LANG==='de')return n+'.';if(LANG==='fr')return n===1?'1er':n+'e';var v=n%100,x=['th','st','nd','rd'];return n+(x[(v-20)%10]||x[v]||x[0])}
 function signed(n){return n>0?'+'+n:n<0?'−'+Math.abs(n):'0'}
@@ -1220,8 +1229,10 @@ function calGames(){
   function collect(k,t){
     GAMES.forEach(function(g){
       var d=pd(g.date), played=g.us!=null;
-      var rowh='<article class="gr'+(isHome(g)?' home':'')+'"><div class="grt">'+(calAll?'<b>'+esc(t.label)+'</b> · ':'')+esc(g.lg===CUP?L('Cup'):(g.lg||LEAGUE))+(g.round?' · '+esc(L(g.round)):'')+'</div>'
-        +'<div class="grm" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+crest(g.h)+'<div class="grc"><b>'+(played?score(g):(g.time||L('TBC')))+'</b><span>'+(played?L('Final')+' · ':'')+WD[d.getDay()]+' · '+venue(g)+'</span></div>'+crest(g.a)+'</div>'
+      var rm=recMap();
+      function gs(n){return '<div class="gside">'+crest(n)+'<em class="rc">'+(rm[n]||'&nbsp;')+'</em></div>'}
+      var rowh='<article class="gr'+(isHome(g)?' home':'')+'"><div class="grt"><b>'+dateTop(d)+'</b>'+(calAll?' · '+esc(t.label):'')+(g.lg===CUP?' · '+L('Cup'):'')+(g.round?' · '+esc(L(g.round)):'')+'</div>'
+        +'<div class="grm" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+gs(g.h)+'<div class="grc"><b>'+(played?score(g):(g.time||L('TBC')))+'</b><span>'+(played?L('Final'):venue(g))+'</span></div>'+gs(g.a)+'</div>'
         +(g.place?'<p class="grp">'+esc(g.place)+'</p>':'')+(g.addr&&!played?'<p class="grp">'+maplink(g.addr)+'</p>':'')+'</article>';
       out.push({k:k,t:t,g:g,date:g.date,time:g.time||'',played:played,row:rowh,
         html:'<article class="card ev game'+(isHome(g)?' home':'')+'"><div class="evt">'+(calAll?'<b>'+esc(t.label)+'</b> · ':'')+'<b>'+esc(g.lg===CUP?L('Cup'):(g.lg||LEAGUE))+'</b>'+(g.round?' · '+esc(L(g.round)):'')+' · '+venue(g)+(g.place?' · '+esc(g.place):'')+'</div>'
