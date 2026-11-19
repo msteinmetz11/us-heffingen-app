@@ -28,6 +28,12 @@ img{max-width:100%}
 .crow{display:flex;gap:10px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:8px 0}
 .crow:first-child{border-top:0}
 .cl{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+.mrow{gap:10px}
+.mv{display:flex;align-items:center;justify-content:center;gap:4px;flex:1;min-width:0}
+.mv .side{width:50px;gap:3px}.mv .crest{width:40px;height:40px}.mv .crest.ph{font-size:12px}.mv .side span{font:600 11px var(--f-body);letter-spacing:.04em;white-space:nowrap}
+.vsx{font:600 12px var(--f-body);color:var(--muted);padding-bottom:14px}
+.mr{text-align:right;flex:none;display:grid;gap:3px}.mr b{font:700 20px/1 var(--f-display);font-variant-numeric:tabular-nums}.mr span{font-size:12px;color:var(--muted);white-space:nowrap}
+.res .mrow .score,.res summary.mrow .score{font-size:22px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -883,10 +889,9 @@ function vNews(){var l=coachEvents('club',dstr(today));return '<h2 class="sec">'
 function teamNote(){return TEAM.note?'<p class="note">'+esc(TEAM.note)+'</p>':''}
 function resultCard(g){
   var d=pd(g.date), w=g.us>g.them, tot=function(i){return g.q.reduce(function(a,q){return a+q[i]},0)};
-  var head=dateBox(d)
-    +'<div style="min-width:0"><div style="font:600 19px/1.15 var(--f-display)">'+vsTitle(g)+'</div><div style="font-size:13px;color:var(--muted)">'+sub(g)+'</div></div>'
+  var head=dateBox(d)+mv(g)
     +'<div class="score">'+score(g)+'<span class="dot '+(w?'w':'l')+'">'+L(w?'W':'L')+'</span></div>';
-  var body='';
+  var body='<p class="cap">'+sub(g)+'</p>';
   if(g.q&&g.q.length){
     body+='<p class="cap">'+L('Score by quarter')+'</p><div class="scroll"><table><thead><tr><th>'+L('Team')+'</th><th>1</th><th>2</th><th>3</th><th>4</th><th>'+L('Total')+'</th></tr></thead><tbody>'
       +'<tr class="me"><td>Heffingen</td>'+g.q.map(function(q){return '<td>'+q[0]+'</td>'}).join('')+'<td>'+tot(0)+'</td></tr>'
@@ -903,7 +908,7 @@ function resultCard(g){
   } else if(!(g.q&&g.q.length)){
     body+='<p class="cap">'+L('No detailed statistics for this game yet.')+'</p>';
   }
-  return '<details class="card res" data-key="res-'+g.id+'"><summary>'+head+'</summary><div class="body">'+body+'</div></details>';
+  return '<details class="card res" data-key="res-'+g.id+'"><summary class="mrow">'+head+'</summary><div class="body">'+body+'</div></details>';
 }
 function vStart(){
   var up=upcoming(), ng=nextGame(), r=results(), h='';
@@ -925,7 +930,7 @@ function vStart(){
     h+='<h2 class="sec">'+L('Next')+'</h2><div class="card list">';
     more.forEach(function(g){
       var gd=pd(g.date);
-      h+='<a class="row" href="#games">'+dateBox(gd)+'<div><h3>'+vsTitle(g)+'</h3><p>'+WD[gd.getDay()]+' · '+(g.time||L('Time tbc'))+' · '+sub(g)+'</p></div></a>';
+      h+='<a class="row mrow" href="#games">'+dateBox(gd)+mv(g)+'<div class="mr"><b>'+(g.time||L('TBC'))+'</b><span>'+WD[gd.getDay()]+' · '+venue(g)+'</span></div></a>';
     });
     h+='</div>';
   }
@@ -963,6 +968,7 @@ function crest(name){
     :'<span class="crest ph" style="--c:hsl('+hue(name)+' 45% 55%)">'+esc(ab)+'</span>';
   return '<div class="side">'+img+'<span>'+esc(ab)+'</span></div>';
 }
+function mv(g){return '<div class="mv" role="img" aria-label="'+esc(g.h+' versus '+g.a)+'">'+crest(g.h)+'<span class="vsx">vs</span>'+crest(g.a)+'</div>'}
 function crestBig(name){
   var ab=abbr(name), src=logoOf(name);
   return src?'<img class="crest xl bg" src="'+esc(src)+'" alt=""'+rfb(name,'crest xl')+'>'
