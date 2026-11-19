@@ -490,6 +490,9 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
 .grl{border-top:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
 .grl .gr:first-child{border-top:0}
 .grl{margin:0 16px}
+.wstrip{display:flex;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;position:relative;margin:6px -4px 4px;-webkit-overflow-scrolling:touch}
+.wstrip::-webkit-scrollbar{display:none}
+.wstrip .wd{flex:0 0 calc(100% / 7);scroll-snap-align:center}
 </style>
 
 </head>
@@ -1270,14 +1273,16 @@ function vSpiele(){
     grid+='<button type="button" class="mday'+(ds===dstr(today)?' td':'')+'" data-day="'+ds+'" aria-pressed="'+(ds===selDay)+'" aria-label="'+short(new Date(y,m,d))+(gs.length?', '+gs.length+' '+L(gs.length===1?'entry':'entries'):'')+'"><b>'+d+'</b><span class="pips">'+pips+'</span></button>';
   }
   var sd=pd(selDay), items=(by[selDay]||[]).slice().sort(function(a,b){return a.time<b.time?-1:a.time>b.time?1:0});
-  var wk0=new Date(sd.getFullYear(),sd.getMonth(),sd.getDate()-((sd.getDay()+6)%7)), strip='';
-  for(var wi=0;wi<7;wi++){
-    var wd=new Date(wk0.getFullYear(),wk0.getMonth(),wk0.getDate()+wi), wds=dstr(wd), wg=by[wds]||[];
-    strip+='<button type="button" class="wd'+(wds===dstr(today)?' td':'')+'" data-day="'+wds+'" aria-pressed="'+(wds===selDay)+'" aria-label="'+short(wd)+(wg.length?', '+wg.length+' '+L(wg.length===1?'entry':'entries'):'')+'"><small>'+WD[wd.getDay()].slice(0,2)+'</small><b>'+wd.getDate()+'</b><i class="'+(wg.length?'on':'')+'"></i></button>';
+  var allD=all.map(function(x){return x.date}).sort(), lo=pd(allD[0]||dstr(today)), hi=pd(allD[allD.length-1]||dstr(today));
+  var t14=new Date(today.getFullYear(),today.getMonth(),today.getDate()-14), t45=new Date(today.getFullYear(),today.getMonth(),today.getDate()+45);
+  if(t14<lo) lo=t14; if(t45>hi) hi=t45;
+  lo=new Date(lo.getFullYear(),lo.getMonth(),lo.getDate()-((lo.getDay()+6)%7));
+  var strip='';
+  for(var wd=new Date(lo);wd<=hi;wd=new Date(wd.getFullYear(),wd.getMonth(),wd.getDate()+1)){
+    var wds=dstr(wd), wg=by[wds]||[];
+    strip+='<button type="button" class="wd'+(wds===dstr(today)?' td':'')+(wd.getDate()===1?' m1':'')+'" data-day="'+wds+'" aria-pressed="'+(wds===selDay)+'" aria-label="'+short(wd)+(wg.length?', '+wg.length+' '+L(wg.length===1?'entry':'entries'):'')+'"><small>'+WD[wd.getDay()].slice(0,2)+'</small><b>'+wd.getDate()+'</b><i class="'+(wg.length?'on':'')+'"></i></button>';
   }
-  var wmid=new Date(wk0.getFullYear(),wk0.getMonth(),wk0.getDate()+3);
-  var head=calWeek?'<div class="calhead wkhead"><button type="button" class="mnav" data-week="-1" aria-label="'+L('Previous week')+'">‹</button><b>'+MONTH[wmid.getMonth()]+' '+wmid.getFullYear()+'</b><button type="button" class="mnav" data-week="1" aria-label="'+L('Next week')+'">›</button></div><div class="wstrip">'+strip+'</div>'
-    :'<div class="calhead"><button type="button" class="mnav" data-month="-1" aria-label="'+L('Previous month')+'">‹</button><b>'+MONTH[m]+' '+y+'</b><button type="button" class="mnav" data-month="1" aria-label="'+L('Next month')+'">›</button></div><div class="mcal">'+grid+'</div>';
+  var head='<div class="calhead wkhead"><b id="calmon">'+MONTH[sd.getMonth()]+' '+sd.getFullYear()+'</b></div><div class="wstrip" id="wstrip">'+strip+'</div>';
   var h=teamNote()
     +'<div class="filt" role="group" aria-label="Team"><button type="button" data-calteam="sel" aria-pressed="'+!calAll+'">'+esc(TEAM.label)+'</button><button type="button" data-calteam="all" aria-pressed="'+calAll+'">'+L('All')+'</button></div>'
     +head
@@ -1519,6 +1524,7 @@ function render(){
   el.querySelectorAll('details[data-key]').forEach(function(d){d.open=openKeys.has(d.dataset.key)});
   var dsel=el.querySelector('.day[aria-pressed="true"]');
   if(dsel&&dsel.scrollIntoView) dsel.scrollIntoView({inline:'center',block:'nearest'});
+  var ws=el.querySelector('#wstrip'),wb=ws&&ws.querySelector('.wd[aria-pressed="true"]'); if(ws&&wb) ws.scrollLeft=wb.offsetLeft-(ws.clientWidth-wb.offsetWidth)/2;
   tickCountdown();
 }
 /* Zieh zum Aktualisieren */
@@ -1557,6 +1563,10 @@ document.addEventListener('click',function(e){
   var dd=e.target.closest&&e.target.closest('[data-day]');
   if(dd){selDay=dd.dataset.day;render();}
 });
+document.addEventListener('scroll',function(e){var ws=e.target;if(!ws||ws.id!=='wstrip')return;
+  var bs=ws.querySelectorAll('.wd'); if(!bs.length)return; var w=bs[0].offsetWidth, i=Math.max(0,Math.min(bs.length-1,Math.floor((ws.scrollLeft+ws.clientWidth/2)/w))), d=pd(bs[i].dataset.day), t=document.getElementById('calmon');
+  if(t) t.textContent=MONTH[d.getMonth()]+' '+d.getFullYear();
+},true);
 document.addEventListener('change',function(e){var t=e.target;if(t&&t.hasAttribute&&t.hasAttribute('data-setteam')){useTeam(t.value);render();return}if(t&&t.hasAttribute&&t.hasAttribute('data-clubteam')){clubTeam=t.value;render()}});
 document.addEventListener('toggle',function(e){
   var d=e.target;
