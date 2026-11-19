@@ -67,7 +67,9 @@ main{max-width:760px;margin:0 auto;padding:16px 12px 8px}
 .sp{padding:10px 0;border-bottom:1px solid var(--linie)}
 .sp:last-child{border-bottom:0}
 .sz{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
-.sz .h{text-align:right}
+.sz .h,.sz .a{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;line-height:1.25}
+.ml{width:26px;height:26px;border-radius:50%;object-fit:contain;flex:none;background:#fff}
+i.ml{display:inline-flex;align-items:center;justify-content:center;background:#efe9ea;font-style:normal;font-size:9px;font-weight:800;color:#6a5e60}
 .sz .wir{font-weight:800}
 .stand{min-width:76px;text-align:center;font-variant-numeric:tabular-nums;font-size:22px;font-weight:500;border-radius:9px;padding:3px 8px;color:#fff;background:#151012;letter-spacing:.03em}
 .stand.sieg{background:var(--akzent)}
@@ -116,8 +118,7 @@ td{padding:8px 4px;border-bottom:1px solid var(--linie);text-align:right;font-si
 td.pl{font-weight:800;width:28px}
 td.n{text-align:left;width:100%}
 td.n span{display:inline-flex;align-items:center;gap:8px}
-td.n img,td.n i{width:22px;height:22px;border-radius:50%;object-fit:contain;flex:none}
-td.n i{display:inline-flex;align-items:center;justify-content:center;background:#efe9ea;font-style:normal;font-size:9px;font-weight:800;color:#6a5e60}
+td.n .ml{width:24px;height:24px}
 td.pkt{font-weight:800}
 tr.wir td{background:var(--akzentHell);font-weight:800}
 tr:last-child td{border-bottom:0}
@@ -258,21 +259,28 @@ var D=null, TEAM={}, REITER=lese('reiter','woche'), offenAlle={};
 // ?r=<mannschaft> (aus einer Mitteilung) öffnet diesen Reiter
 (function(){var r=new URLSearchParams(location.search).get('r');if(r){REITER=r;merke('reiter',r);history.replaceState(null,'',location.pathname)}})();
 function laden(){
+  if(window.LOGO_SEED)LOGOS=window.LOGO_SEED;
+  else fetch('logos/index.json?'+Math.floor(Date.now()/36e5)).then(function(r){return r.ok?r.json():{}}).then(function(j){LOGOS=j||{};if(D)bauen()}).catch(function(){});
   return fetch('data/heffingen.json?'+Math.floor(Date.now()/6e4),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()})
     .catch(function(){return window.SEED||null})
     .then(function(d){if(!d)return;D=d;TEAM={};D.teams.forEach(function(x){TEAM[x.key]=x});if(REITER!=='woche'&&!TEAM[REITER])REITER='woche';bauen()});
 }
-function logoHtml(name,k){
-  if(istWir(name))return '<img class="logo" src="icon-192.png" alt="">';
-  var c=k&&k.logos&&k.logos[name];
-  if(c)return '<img class="logo" src="'+LOGO_FLBB+esc(c)+'.jpg" alt="" onerror="this.outerHTML=\'<div class=ini>'+esc(ini(name))+'</div>\'">';
-  return '<div class="ini">'+esc(ini(name))+'</div>';
+var LOGOS={};
+function grund(n){return String(n).replace(/ [B-F]$/,'')}
+// Logo einer Mannschaft: eigenes Vereinslogo, sonst logos/<datei> (logos/index.json), sonst FLBB, sonst Kürzel
+function logoSrc(name,k){
+  if(istWir(name))return 'icon-192.png';
+  var f=LOGOS[grund(name)];
+  if(f)return /^data:/.test(f)?f:'logos/'+f;
+  var c=k&&k.logos&&(k.logos[name]||k.logos[grund(name)]);
+  return c?LOGO_FLBB+c+'.jpg':null;
 }
-function miniLogo(name,k){
-  if(istWir(name))return '<img src="icon-192.png" alt="">';
-  var c=k&&k.logos&&k.logos[name];
-  return c?'<img src="'+LOGO_FLBB+esc(c)+'.jpg" alt="" onerror="this.outerHTML=\'<i>'+esc(ini(name))+'</i>\'">':'<i>'+esc(ini(name))+'</i>';
+function bild(name,k,cls,ersatz){
+  var src=logoSrc(name,k), e=ersatz.replace('%',esc(ini(name)));
+  return src?'<img class="'+cls+'" src="'+esc(src)+'" alt="" onerror="this.outerHTML=\''+e.replace(/"/g,'&quot;')+'\'">':e;
 }
+function logoHtml(name,k){return bild(name,k,'logo','<div class=ini>%</div>')}
+function miniLogo(name,k){return bild(name,k,'ml','<i class=ml>%</i>')}
 function karte(titel,neben,inhalt,voll){return '<section class="karte"><div class="kk'+(voll?' voll':'')+'"><h2>'+titel+'</h2>'+(neben?'<div class="neben">'+neben+'</div>':'')+'</div><div class="kb">'+inhalt+'</div></section>'}
 function wettText(s){return s.pokal?t('pokal')+(s.runde?' · '+s.runde:''):(s.wett||'')}
 function ortHtml(s){
@@ -288,8 +296,11 @@ function standHtml(s,eigen){
 }
 function zeile(s,eigen,unten){
   var w=function(n){return (eigen?n===eigen:istWir(n))?' wir':''};
-  return '<div class="sp"><div class="sz"><div class="h'+w(s.h)+'">'+esc(s.h)+'</div>'+standHtml(s,eigen)+'<div class="a'+w(s.a)+'">'+esc(s.a)+'</div></div>'+(unten?'<div class="sd">'+unten+'</div>':'')+'</div>';
+  var k=klasseVon(s);
+  return '<div class="sp"><div class="sz"><div class="h'+w(s.h)+'">'+miniLogo(s.h,k)+'<span>'+esc(s.h)+'</span></div>'+standHtml(s,eigen)+'<div class="a'+w(s.a)+'">'+miniLogo(s.a,k)+'<span>'+esc(s.a)+'</span></div></div>'+(unten?'<div class="sd">'+unten+'</div>':'')+'</div>';
 }
+// Klasse, in der ein Spiel steht (für FLBB-Logo-Codes)
+function klasseVon(s){if(!D)return null;for(var i=0;i<D.teams.length;i++){var k=D.teams[i].klasse;if(k&&k.logos&&(k.logos[s.h]||k.logos[s.a]))return k}return null}
 function laeuftJetzt(s){var b=luxMs(s.d),n=Date.now();return s.zeit&&!gespielt(s)&&n>=b&&n<b+3*3600e3}
 function spieltagHeute(team){
   var h=jetzt().slice(0,10);

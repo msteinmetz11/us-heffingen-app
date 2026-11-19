@@ -211,6 +211,39 @@ export async function mannschaftHolen(team, jetzt, cache, laden = holen) {
   return { key: team.key, reiter: team.reiter, ics: team.ics, n: eigen, live: team.live || null, spiele, klasse };
 }
 
+// ---------- Logos ----------
+// Liegen als Dateien in logos/ (Schlüssel = Vereinsname ohne „ B/C …“), Liste in logos/index.json.
+// Fehlt ein Verein, lädt der Abruf das Logo der FLBB (/layout/themes/flbb/images/Logos/<Code>.jpg) einmal herunter.
+export const grundName = n => String(n).replace(/ [B-F]$/, "");
+export const dateiName = n => n.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+async function logosErgaenzen(teams, cache) {
+  let idx = {};
+  try { idx = JSON.parse(await readFile("logos/index.json", "utf8")); } catch (e) {}
+  // Vereinscodes aus allen Wettbewerbsseiten (auch Pokal) der eigenen Spiele
+  const codes = new Map();
+  const ids = new Set(teams.flatMap(t => t.spiele.map(s => String(s.id).slice(0, 4))));
+  for (const id of ids) {
+    const k = "cal" + id;
+    if (!cache.seiten.has(k)) cache.seiten.set(k, holen(`${BASIS}/c/calendrier-resultat/${id}/x`).catch(() => ""));
+    for (const [n, l] of klubLinks(await cache.seiten.get(k))) if (!codes.has(grundName(n))) codes.set(grundName(n), l.code);
+  }
+  const namen = new Set(teams.flatMap(t => [...t.spiele.flatMap(s => [s.h, s.a]), ...(t.klasse?.tabelle || []).map(z => z.n)]).map(grundName));
+  let neu = 0;
+  for (const n of namen) {
+    if (!n || idx[n] || n === VEREIN.n || !codes.has(n)) continue;
+    try {
+      const r = await fetch(`${BASIS}/layout/themes/flbb/images/Logos/${codes.get(n)}.jpg`, { signal: AbortSignal.timeout(20e3) });
+      const b = Buffer.from(await r.arrayBuffer());
+      if (!r.ok || b.length < 300 || !/^image\//.test(r.headers.get("content-type") || "image/")) continue;
+      const f = dateiName(n) + ".jpg";
+      await mkdir("logos", { recursive: true });
+      await writeFile("logos/" + f, b);
+      idx[n] = f; neu++;
+    } catch (e) { console.log(`  Logo ${n}: ${e.message}`); }
+  }
+  if (neu) { await writeFile("logos/index.json", JSON.stringify(idx, null, 1)); console.log(`${neu} neue Logos`); }
+}
+
 async function main() {
   const jetzt = luxZeit(Date.now());
   let alt = null;
@@ -232,6 +265,7 @@ async function main() {
       teams.push(vorher || { key: t.key, reiter: t.reiter, ics: t.ics, n: VEREIN.n, live: t.live || null, spiele: [], klasse: null });
     }
   }
+  try { await logosErgaenzen(teams, cache); } catch (e) { console.log("Logos: " + e.message); }
   const daten = { stand: new Date().toISOString(), saison: saisonVon(jetzt), verein: VEREIN, teams };
   // Nur schreiben, wenn sich außer dem Zeitstempel etwas geändert hat (sonst ein Commit je Lauf).
   const ohneStand = d => JSON.stringify({ ...d, stand: null });

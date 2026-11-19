@@ -36,7 +36,7 @@ jobs:
         run: |
           git config user.name "heffingen-bot"
           git config user.email "heffingen-bot@users.noreply.github.com"
-          git add data
+          git add data logos
           if git diff --cached --quiet; then echo "nichts Neues"; exit 0; fi
           git commit -m "Daten $(date -u +%Y-%m-%dT%H:%MZ)"
           git pull --rebase
