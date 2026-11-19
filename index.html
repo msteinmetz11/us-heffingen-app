@@ -38,6 +38,43 @@ img{max-width:100%}
 .soc i{width:48px;height:48px;border-radius:50%;background:var(--accent);display:grid;place-items:center}
 .soc svg{width:24px;height:24px;stroke:var(--accent-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .socfoot{display:flex;justify-content:center;gap:22px;margin:28px 0 6px;opacity:.7}.socfoot a{color:var(--muted);display:grid;padding:6px}.socfoot svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* Teamfarben */
+html:not(.gta)[data-team="menb"]{--accent:#B45309;--hero-bg:#B45309;--hero-sub:rgba(255,255,255,.82)}
+html:not(.gta)[data-team="menc"]{--accent:#5F6B0A;--hero-bg:#5F6B0A;--hero-sub:rgba(255,255,255,.82)}
+html:not(.gta)[data-team="women"]{--accent:#A3166B;--hero-bg:#A3166B;--hero-sub:rgba(255,255,255,.82)}
+html:not(.gta)[data-team="u22m"]{--accent:#0B5CAD;--hero-bg:#0B5CAD;--hero-sub:rgba(255,255,255,.82)}
+html:not(.gta)[data-team="u19w"]{--accent:#6B2FA3;--hero-bg:#6B2FA3;--hero-sub:rgba(255,255,255,.82)}
+html:not(.gta)[data-team="u16m"]{--accent:#0F766E;--hero-bg:#0F766E;--hero-sub:rgba(255,255,255,.82)}
+html:not(.gta)[data-team="u16w"]{--accent:#BE123C;--hero-bg:#BE123C;--hero-sub:rgba(255,255,255,.82)}
+html:not(.gta)[data-team="u14m"]{--accent:#1E3A8A;--hero-bg:#1E3A8A;--hero-sub:rgba(255,255,255,.82)}
+html:not(.gta)[data-team="u14w"]{--accent:#15803D;--hero-bg:#15803D;--hero-sub:rgba(255,255,255,.82)}
+html:not(.gta)[data-team="u12m"]{--accent:#78350F;--hero-bg:#78350F;--hero-sub:rgba(255,255,255,.82)}
+html:not(.gta)[data-team="u12w"]{--accent:#475569;--hero-bg:#475569;--hero-sub:rgba(255,255,255,.82)}
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]):not(.gta)[data-team="menb"]{--accent:#F59E3B;--accent-ink:#2A1700}
+ :root:not([data-theme="light"]):not(.gta)[data-team="menc"]{--accent:#B5C443;--accent-ink:#1B2000}
+ :root:not([data-theme="light"]):not(.gta)[data-team="women"]{--accent:#F06BB8;--accent-ink:#2A0018}
+ :root:not([data-theme="light"]):not(.gta)[data-team="u22m"]{--accent:#6CB2F5;--accent-ink:#04182C}
+ :root:not([data-theme="light"]):not(.gta)[data-team="u19w"]{--accent:#BE97EA;--accent-ink:#1E0A33}
+ :root:not([data-theme="light"]):not(.gta)[data-team="u16m"]{--accent:#4FD1C5;--accent-ink:#03211E}
+ :root:not([data-theme="light"]):not(.gta)[data-team="u16w"]{--accent:#F9718F;--accent-ink:#33030F}
+ :root:not([data-theme="light"]):not(.gta)[data-team="u14m"]{--accent:#8FA8F0;--accent-ink:#0A1330}
+ :root:not([data-theme="light"]):not(.gta)[data-team="u14w"]{--accent:#5FD38A;--accent-ink:#04200F}
+ :root:not([data-theme="light"]):not(.gta)[data-team="u12m"]{--accent:#E0A06A;--accent-ink:#2A1405}
+ :root:not([data-theme="light"]):not(.gta)[data-team="u12w"]{--accent:#A9B8CC;--accent-ink:#0F1722}
+}
+/* Heimspiel */
+.row.home{box-shadow:inset 3px 0 0 var(--gold)}
+.card.res.home{border-left:3px solid var(--gold)}
+.card.ev.game.home{border-color:var(--gold);box-shadow:inset 3px 0 0 var(--gold)}
+/* Uebergaenge */
+@keyframes vin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.view.vin{animation:vin .28s ease-out}
+@keyframes dopen{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+details.res[open]>.body{animation:dopen .22s ease-out}
+@media (prefers-reduced-motion:reduce){.view.vin,details.res[open]>.body{animation:none}}
+html{overscroll-behavior-y:none}
+#ptr{position:fixed;left:50%;top:0;transform:translate(-50%,-48px);z-index:50;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:7px 14px;font:600 13px var(--f-body);box-shadow:0 2px 10px rgba(0,0,0,.18);pointer-events:none;opacity:0}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -734,6 +771,7 @@ function useTeam(k){
   var sm=document.querySelector('.brand small'); if(sm) sm.textContent=t.league+' · 2026/27';
   var sel=document.getElementById('teamsel');
   if(sel){ if(!sel.options.length) sel.innerHTML=TEAM_ORDER.map(function(x){return '<option value="'+x+'">'+esc(TEAMS[x].label)+'</option>'}).join(''); sel.value=t.key; }
+  document.documentElement.setAttribute('data-team',t.key);
   try{localStorage.setItem('ush-team',t.key)}catch(e){}
 }
 var POS={PG:'Point Guard',SG:'Shooting Guard',SF:'Small Forward',PF:'Power Forward',C:'Center'};
@@ -744,8 +782,8 @@ var LANG='en';
 try{LANG=localStorage.getItem('ush-lang')||''}catch(e){}
 if(['de','fr','en'].indexOf(LANG)<0){var nl=((navigator.language||'en')+'').slice(0,2).toLowerCase();LANG=(nl==='de'||nl==='fr')?nl:'en'}
 var I18N={
- de:{'Home':'Heim','Points by player':'Punkte pro Spieler','Follow us':'Folge uns','Repeat weekly until (optional)':'Wöchentlich wiederholen bis (optional)','Delete series':'Serie löschen','Share the app':'App teilen','Send the link to players and parents.':'Schick den Link an Spieler und Eltern.','Share':'Teilen','Link copied.':'Link kopiert.','Copy this link':'Diesen Link kopieren','US Heffingen – games, results and club events':'US Heffingen – Spiele, Resultate und Club-Events','Club events':'Club-Events','No club events yet':'Noch keine Club-Events','Events organised by the club will appear here.':'Events des Vereins erscheinen hier.','Club':'Club','From the coach':'Vom Coach','Coach area':'Coach-Bereich','Coach code':'Coach-Code','Enter the code you received from the club.':'Gib den Code ein, den du vom Verein erhalten hast.','Unlock':'Freischalten','Invalid code.':'Ungültiger Code.','Coach':'Coach','Training':'Training','Game':'Spiel','Event':'Event','Type':'Art','Date':'Datum','Time':'Uhrzeit','Title':'Titel','Place':'Ort','Note (optional)':'Notiz (optional)','Add entry':'Eintrag hinzufügen','Log out':'Abmelden','Delete':'Löschen','Saved.':'Gespeichert.','Please enter a date and a title.':'Bitte Datum und Titel eingeben.','Could not save. You may need Contributor access.':'Speichern fehlgeschlagen. Eventuell fehlt der Contributor-Zugang.','Could not delete.':'Löschen fehlgeschlagen.','Entered by the coach':'Vom Coach eingetragen','Coach entries need the shared app and a signed-in account. They are not available in this view.':'Coach-Einträge brauchen die geteilte App und ein angemeldetes Konto. In dieser Ansicht sind sie nicht verfügbar.','Your account may not write entries. Ask the club to give you Contributor access.':'Dein Konto darf evtl. keine Einträge schreiben. Bitte den Verein um Contributor-Zugang.','entries':'Einträge','entry':'Eintrag','Last games':'Letzte Spiele','Score by quarter':'Punkte pro Viertel','Total':'Gesamt','Final score':'Endstand','Margin':'Differenz','Points by player (* started)':'Punkte pro Spieler (* Starter)','Player':'Spieler','No detailed statistics for this game yet.':'Für dieses Spiel gibt es noch keine Detail-Statistik.','Away':'Auswärts','Watch live on YouTube':'Live auf YouTube ansehen','Game day':'Spieltag','Opponent preview':'Gegner-Vorschau','Standings':'Tabelle','Record':'Bilanz','Points / game':'Punkte / Spiel','Allowed / game':'Gegenpunkte / Spiel','Last 5':'Letzte 5','This season vs':'Diese Saison gegen','No meeting yet this season.':'Noch keine Begegnung in dieser Saison.','Cup':'Pokal','Subscribe':'Abonnieren','Download .ics':'.ics herunterladen','Calendar subscription':'Kalender-Abo','Add all games to your phone calendar. It updates automatically.':'Alle Spiele in deinen Handy-Kalender übernehmen. Wird automatisch aktualisiert.','Settings':'Einstellungen','Team':'Team','Choose the team shown when the app opens.':'Das Team, das beim Öffnen der App angezeigt wird.','About':'Info','Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.':'Spielplan und Ergebnisse von US Heffingen. Daten von luxembourg.basketball, täglich aktualisiert.','Language':'Sprache','Club news':'Club-News','Coming soon':'Demnächst','News from US Heffingen will appear here.':'Neuigkeiten von US Heffingen erscheinen hier.','Next game':'Nächstes Spiel','Time tbc':'Zeit offen','day':'Tag','days':'Tage','hour':'Stunde','hours':'Stunden','min':'Min','sec':'Sek','No more games':'Keine weiteren Spiele','There are no upcoming games in the schedule.':'Im Spielplan stehen keine kommenden Spiele.','Next':'Danach','Today':'Heute','game':'Spiel','games':'Spiele','All':'Alle','Previous month':'Vorheriger Monat','Next month':'Nächster Monat','No games':'Keine Spiele','Nothing scheduled on this day.':'An diesem Tag ist nichts geplant.','TBC':'offen','Calendar':'Kalender','News':'News','W':'S','L':'N','Round of 32':'Sechzehntelfinale','Round of 16':'Achtelfinale','1/16 finals':'Sechzehntelfinale','1/8 finals':'Achtelfinale','As of':'Stand','Data from':'Daten von','Men':'Herren','Women':'Damen'},
- fr:{'Home':'Domicile','Points by player':'Points par joueur','Follow us':'Suivez-nous','Repeat weekly until (optional)':'Répéter chaque semaine jusqu’au (facultatif)','Delete series':'Supprimer la série','Share the app':'Partager l’app','Send the link to players and parents.':'Envoie le lien aux joueurs et aux parents.','Share':'Partager','Link copied.':'Lien copié.','Copy this link':'Copier ce lien','US Heffingen – games, results and club events':'US Heffingen – matchs, résultats et événements du club','Club events':'Événements du club','No club events yet':'Pas encore d’événements du club','Events organised by the club will appear here.':'Les événements du club apparaîtront ici.','Club':'Club','From the coach':'Du coach','Coach area':'Espace coach','Coach code':'Code coach','Enter the code you received from the club.':'Saisis le code reçu du club.','Unlock':'Déverrouiller','Invalid code.':'Code invalide.','Coach':'Coach','Training':'Entraînement','Game':'Match','Event':'Événement','Type':'Type','Date':'Date','Time':'Heure','Title':'Titre','Place':'Lieu','Note (optional)':'Note (facultatif)','Add entry':'Ajouter','Log out':'Se déconnecter','Delete':'Supprimer','Saved.':'Enregistré.','Please enter a date and a title.':'Saisis une date et un titre.','Could not save. You may need Contributor access.':'Échec de l\'enregistrement. Un accès Contributor est peut-être nécessaire.','Could not delete.':'Suppression impossible.','Entered by the coach':'Saisi par le coach','Coach entries need the shared app and a signed-in account. They are not available in this view.':'Les entrées coach nécessitent l\'app partagée et un compte connecté. Indisponible dans cette vue.','Your account may not write entries. Ask the club to give you Contributor access.':'Ton compte ne peut peut-être pas écrire. Demande l\'accès Contributor au club.','entries':'entrées','entry':'entrée','Last games':'Derniers matchs','Score by quarter':'Points par quart-temps','Total':'Total','Final score':'Score final','Margin':'Écart','Points by player (* started)':'Points par joueur (* titulaire)','Player':'Joueur','No detailed statistics for this game yet.':'Pas encore de statistiques détaillées pour ce match.','Away':'Extérieur','Watch live on YouTube':'Regarder en direct sur YouTube','Game day':'Jour de match','Opponent preview':'Aperçu de l’adversaire','Standings':'Classement','Record':'Bilan','Points / game':'Points / match','Allowed / game':'Points encaissés / match','Last 5':'5 derniers','This season vs':'Cette saison contre','No meeting yet this season.':'Pas encore de rencontre cette saison.','Cup':'Coupe','Subscribe':'S’abonner','Download .ics':'Télécharger .ics','Calendar subscription':'Abonnement au calendrier','Add all games to your phone calendar. It updates automatically.':'Ajoutez tous les matchs à votre calendrier. Mise à jour automatique.','Settings':'Réglages','Team':'Équipe','Choose the team shown when the app opens.':'L’équipe affichée à l’ouverture de l’application.','About':'À propos','Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.':'Calendrier et résultats de l’US Heffingen. Données de luxembourg.basketball, mises à jour chaque jour.','Language':'Langue','Club news':'Actualités du club','Coming soon':'Bientôt disponible','News from US Heffingen will appear here.':'Les actualités de l’US Heffingen apparaîtront ici.','Next game':'Prochain match','Time tbc':'Heure à confirmer','day':'jour','days':'jours','hour':'heure','hours':'heures','min':'min','sec':'s','No more games':'Plus de matchs','There are no upcoming games in the schedule.':'Aucun match à venir au calendrier.','Next':'Ensuite','Today':'Aujourd’hui','game':'match','games':'matchs','All':'Tous','Previous month':'Mois précédent','Next month':'Mois suivant','No games':'Aucun match','Nothing scheduled on this day.':'Rien de prévu ce jour-là.','TBC':'à conf.','Calendar':'Calendrier','News':'Actualités','W':'V','L':'D','Round of 32':'16es de finale','Round of 16':'8es de finale','1/16 finals':'1/16 de finale','1/8 finals':'1/8 de finale','As of':'État au','Data from':'Données de','Men':'Hommes','Women':'Dames'}
+ de:{'Pull to refresh':'Zum Aktualisieren ziehen','Release to refresh':'Loslassen zum Aktualisieren','Refreshing…':'Aktualisiere…','Home':'Heim','Points by player':'Punkte pro Spieler','Follow us':'Folge uns','Repeat weekly until (optional)':'Wöchentlich wiederholen bis (optional)','Delete series':'Serie löschen','Share the app':'App teilen','Send the link to players and parents.':'Schick den Link an Spieler und Eltern.','Share':'Teilen','Link copied.':'Link kopiert.','Copy this link':'Diesen Link kopieren','US Heffingen – games, results and club events':'US Heffingen – Spiele, Resultate und Club-Events','Club events':'Club-Events','No club events yet':'Noch keine Club-Events','Events organised by the club will appear here.':'Events des Vereins erscheinen hier.','Club':'Club','From the coach':'Vom Coach','Coach area':'Coach-Bereich','Coach code':'Coach-Code','Enter the code you received from the club.':'Gib den Code ein, den du vom Verein erhalten hast.','Unlock':'Freischalten','Invalid code.':'Ungültiger Code.','Coach':'Coach','Training':'Training','Game':'Spiel','Event':'Event','Type':'Art','Date':'Datum','Time':'Uhrzeit','Title':'Titel','Place':'Ort','Note (optional)':'Notiz (optional)','Add entry':'Eintrag hinzufügen','Log out':'Abmelden','Delete':'Löschen','Saved.':'Gespeichert.','Please enter a date and a title.':'Bitte Datum und Titel eingeben.','Could not save. You may need Contributor access.':'Speichern fehlgeschlagen. Eventuell fehlt der Contributor-Zugang.','Could not delete.':'Löschen fehlgeschlagen.','Entered by the coach':'Vom Coach eingetragen','Coach entries need the shared app and a signed-in account. They are not available in this view.':'Coach-Einträge brauchen die geteilte App und ein angemeldetes Konto. In dieser Ansicht sind sie nicht verfügbar.','Your account may not write entries. Ask the club to give you Contributor access.':'Dein Konto darf evtl. keine Einträge schreiben. Bitte den Verein um Contributor-Zugang.','entries':'Einträge','entry':'Eintrag','Last games':'Letzte Spiele','Score by quarter':'Punkte pro Viertel','Total':'Gesamt','Final score':'Endstand','Margin':'Differenz','Points by player (* started)':'Punkte pro Spieler (* Starter)','Player':'Spieler','No detailed statistics for this game yet.':'Für dieses Spiel gibt es noch keine Detail-Statistik.','Away':'Auswärts','Watch live on YouTube':'Live auf YouTube ansehen','Game day':'Spieltag','Opponent preview':'Gegner-Vorschau','Standings':'Tabelle','Record':'Bilanz','Points / game':'Punkte / Spiel','Allowed / game':'Gegenpunkte / Spiel','Last 5':'Letzte 5','This season vs':'Diese Saison gegen','No meeting yet this season.':'Noch keine Begegnung in dieser Saison.','Cup':'Pokal','Subscribe':'Abonnieren','Download .ics':'.ics herunterladen','Calendar subscription':'Kalender-Abo','Add all games to your phone calendar. It updates automatically.':'Alle Spiele in deinen Handy-Kalender übernehmen. Wird automatisch aktualisiert.','Settings':'Einstellungen','Team':'Team','Choose the team shown when the app opens.':'Das Team, das beim Öffnen der App angezeigt wird.','About':'Info','Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.':'Spielplan und Ergebnisse von US Heffingen. Daten von luxembourg.basketball, täglich aktualisiert.','Language':'Sprache','Club news':'Club-News','Coming soon':'Demnächst','News from US Heffingen will appear here.':'Neuigkeiten von US Heffingen erscheinen hier.','Next game':'Nächstes Spiel','Time tbc':'Zeit offen','day':'Tag','days':'Tage','hour':'Stunde','hours':'Stunden','min':'Min','sec':'Sek','No more games':'Keine weiteren Spiele','There are no upcoming games in the schedule.':'Im Spielplan stehen keine kommenden Spiele.','Next':'Danach','Today':'Heute','game':'Spiel','games':'Spiele','All':'Alle','Previous month':'Vorheriger Monat','Next month':'Nächster Monat','No games':'Keine Spiele','Nothing scheduled on this day.':'An diesem Tag ist nichts geplant.','TBC':'offen','Calendar':'Kalender','News':'News','W':'S','L':'N','Round of 32':'Sechzehntelfinale','Round of 16':'Achtelfinale','1/16 finals':'Sechzehntelfinale','1/8 finals':'Achtelfinale','As of':'Stand','Data from':'Daten von','Men':'Herren','Women':'Damen'},
+ fr:{'Pull to refresh':'Tirer pour actualiser','Release to refresh':'Relâcher pour actualiser','Refreshing…':'Actualisation…','Home':'Domicile','Points by player':'Points par joueur','Follow us':'Suivez-nous','Repeat weekly until (optional)':'Répéter chaque semaine jusqu’au (facultatif)','Delete series':'Supprimer la série','Share the app':'Partager l’app','Send the link to players and parents.':'Envoie le lien aux joueurs et aux parents.','Share':'Partager','Link copied.':'Lien copié.','Copy this link':'Copier ce lien','US Heffingen – games, results and club events':'US Heffingen – matchs, résultats et événements du club','Club events':'Événements du club','No club events yet':'Pas encore d’événements du club','Events organised by the club will appear here.':'Les événements du club apparaîtront ici.','Club':'Club','From the coach':'Du coach','Coach area':'Espace coach','Coach code':'Code coach','Enter the code you received from the club.':'Saisis le code reçu du club.','Unlock':'Déverrouiller','Invalid code.':'Code invalide.','Coach':'Coach','Training':'Entraînement','Game':'Match','Event':'Événement','Type':'Type','Date':'Date','Time':'Heure','Title':'Titre','Place':'Lieu','Note (optional)':'Note (facultatif)','Add entry':'Ajouter','Log out':'Se déconnecter','Delete':'Supprimer','Saved.':'Enregistré.','Please enter a date and a title.':'Saisis une date et un titre.','Could not save. You may need Contributor access.':'Échec de l\'enregistrement. Un accès Contributor est peut-être nécessaire.','Could not delete.':'Suppression impossible.','Entered by the coach':'Saisi par le coach','Coach entries need the shared app and a signed-in account. They are not available in this view.':'Les entrées coach nécessitent l\'app partagée et un compte connecté. Indisponible dans cette vue.','Your account may not write entries. Ask the club to give you Contributor access.':'Ton compte ne peut peut-être pas écrire. Demande l\'accès Contributor au club.','entries':'entrées','entry':'entrée','Last games':'Derniers matchs','Score by quarter':'Points par quart-temps','Total':'Total','Final score':'Score final','Margin':'Écart','Points by player (* started)':'Points par joueur (* titulaire)','Player':'Joueur','No detailed statistics for this game yet.':'Pas encore de statistiques détaillées pour ce match.','Away':'Extérieur','Watch live on YouTube':'Regarder en direct sur YouTube','Game day':'Jour de match','Opponent preview':'Aperçu de l’adversaire','Standings':'Classement','Record':'Bilan','Points / game':'Points / match','Allowed / game':'Points encaissés / match','Last 5':'5 derniers','This season vs':'Cette saison contre','No meeting yet this season.':'Pas encore de rencontre cette saison.','Cup':'Coupe','Subscribe':'S’abonner','Download .ics':'Télécharger .ics','Calendar subscription':'Abonnement au calendrier','Add all games to your phone calendar. It updates automatically.':'Ajoutez tous les matchs à votre calendrier. Mise à jour automatique.','Settings':'Réglages','Team':'Équipe','Choose the team shown when the app opens.':'L’équipe affichée à l’ouverture de l’application.','About':'À propos','Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.':'Calendrier et résultats de l’US Heffingen. Données de luxembourg.basketball, mises à jour chaque jour.','Language':'Langue','Club news':'Actualités du club','Coming soon':'Bientôt disponible','News from US Heffingen will appear here.':'Les actualités de l’US Heffingen apparaîtront ici.','Next game':'Prochain match','Time tbc':'Heure à confirmer','day':'jour','days':'jours','hour':'heure','hours':'heures','min':'min','sec':'s','No more games':'Plus de matchs','There are no upcoming games in the schedule.':'Aucun match à venir au calendrier.','Next':'Ensuite','Today':'Aujourd’hui','game':'match','games':'matchs','All':'Tous','Previous month':'Mois précédent','Next month':'Mois suivant','No games':'Aucun match','Nothing scheduled on this day.':'Rien de prévu ce jour-là.','TBC':'à conf.','Calendar':'Calendrier','News':'Actualités','W':'V','L':'D','Round of 32':'16es de finale','Round of 16':'8es de finale','1/16 finals':'1/16 de finale','1/8 finals':'1/8 de finale','As of':'État au','Data from':'Données de','Men':'Hommes','Women':'Dames'}
 };
 function L(s){var d=I18N[LANG];return (d&&d[s])||s}
 var LANGDATA={
@@ -970,7 +1008,7 @@ function resultCard(g){
   } else if(!(g.q&&g.q.length)){
     body+='<p class="cap">'+L('No detailed statistics for this game yet.')+'</p>';
   }
-  return '<details class="card res" data-key="res-'+g.id+'"><summary class="mrow">'+head+'</summary><div class="body">'+body+'</div></details>';
+  return '<details class="card res'+(isHome(g)?' home':'')+'" data-key="res-'+g.id+'"><summary class="mrow">'+head+'</summary><div class="body">'+body+'</div></details>';
 }
 function vStart(){
   var up=upcoming(), ng=nextGame(), r=results(), h='';
@@ -992,7 +1030,7 @@ function vStart(){
     h+='<h2 class="sec">'+L('Next')+'</h2><div class="card list">';
     more.forEach(function(g){
       var gd=pd(g.date);
-      h+='<a class="row mrow" href="#games">'+dateBox(gd)+mv(g)+'<div class="mr"><b>'+(g.time||L('TBC'))+'</b><span>'+WD[gd.getDay()]+' · '+venue(g)+'</span></div></a>';
+      h+='<a class="row mrow'+(isHome(g)?' home':'')+'" href="#games">'+dateBox(gd)+mv(g)+'<div class="mr"><b>'+(g.time||L('TBC'))+'</b><span>'+WD[gd.getDay()]+' · '+venue(g)+'</span></div></a>';
     });
     h+='</div>';
   }
@@ -1046,7 +1084,7 @@ function dayEvents(ds,recs,nextId){
     var body, isNext=false;
     if(e.g){
       var g=e.g; isNext=g.id===nextId;
-      body='<article class="card ev game'+(isNext?' next':'')+'"><div class="evt"><b>'+esc(g.lg||LEAGUE)+'</b> · '+venue(g)+(g.place?' · '+esc(g.place):'')+'</div>'
+      body='<article class="card ev game'+(isNext?' next':'')+(isHome(g)?' home':'')+'"><div class="evt"><b>'+esc(g.lg||LEAGUE)+'</b> · '+venue(g)+(g.place?' · '+esc(g.place):'')+'</div>'
         +'<div class="vsrow" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+crest(g.h)+'<div class="rec">'+(recs[g.h]||'')+'</div><div class="big">'+(g.time||'TBC')+'</div><div class="rec">'+(recs[g.a]||'')+'</div>'+crest(g.a)+'</div>'
         +(g.addr?'<p class="addr">'+maplink(g.addr)+'</p>':'')+'</article>';
     } else {
@@ -1082,7 +1120,7 @@ function calGames(){
     GAMES.forEach(function(g){
       var d=pd(g.date), played=g.us!=null;
       out.push({k:k,t:t,g:g,date:g.date,time:g.time||'',played:played,
-        html:'<article class="card ev game"><div class="evt">'+(calAll?'<b>'+esc(t.label)+'</b> · ':'')+'<b>'+esc(g.lg===CUP?L('Cup'):(g.lg||LEAGUE))+'</b>'+(g.round?' · '+esc(L(g.round)):'')+' · '+venue(g)+(g.place?' · '+esc(g.place):'')+'</div>'
+        html:'<article class="card ev game'+(isHome(g)?' home':'')+'"><div class="evt">'+(calAll?'<b>'+esc(t.label)+'</b> · ':'')+'<b>'+esc(g.lg===CUP?L('Cup'):(g.lg||LEAGUE))+'</b>'+(g.round?' · '+esc(L(g.round)):'')+' · '+venue(g)+(g.place?' · '+esc(g.place):'')+'</div>'
           +'<div class="vsrow" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+crest(g.h)+'<div class="rec"></div><div class="big">'+(played?score(g):(g.time||L('TBC')))+'</div><div class="rec"></div>'+crest(g.a)+'</div>'
           +(g.addr?'<p class="addr">'+maplink(g.addr)+'</p>':'')+'</article>'});
     });
@@ -1335,6 +1373,7 @@ var VIEWS={home:vStart,club:vClub,games:vSpiele,standings:vTabelle,news:vNews,se
 
 /* ---------- Rendern ---------- */
 function current(){var v=location.hash.slice(1);return TABS.indexOf(v)>-1&&tabOk(v)?v:'home'}
+var lastView=null;
 function render(){
   var v=current();
   TABS.forEach(function(t){document.getElementById('v-'+t).hidden=(t!==v)});
@@ -1344,11 +1383,31 @@ function render(){
   });
   var el=document.getElementById('v-'+v);
   el.innerHTML=VIEWS[v]();
+  if(v!==lastView){ el.classList.remove('vin'); void el.offsetWidth; el.classList.add('vin'); lastView=v; }
   el.querySelectorAll('details[data-key]').forEach(function(d){d.open=openKeys.has(d.dataset.key)});
   var dsel=el.querySelector('.day[aria-pressed="true"]');
   if(dsel&&dsel.scrollIntoView) dsel.scrollIntoView({inline:'center',block:'nearest'});
   tickCountdown();
 }
+/* Zieh zum Aktualisieren */
+(function(){
+  var ind=document.createElement('div'); ind.id='ptr'; document.body.appendChild(ind);
+  var y0=null,dy=0,busy=false;
+  function busyField(){var a=document.activeElement;return a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)}
+  addEventListener('touchstart',function(e){ if(busy||busyField()||(window.scrollY||0)>0||e.touches.length!==1){y0=null;return} y0=e.touches[0].clientY; dy=0; },{passive:true});
+  addEventListener('touchmove',function(e){
+    if(y0==null) return; dy=e.touches[0].clientY-y0;
+    if(dy<=0){ind.style.opacity=0;return}
+    if((window.scrollY||0)>0){y0=null;ind.style.opacity=0;return}
+    var p=Math.min(dy*.5,90); ind.textContent=L(p>=60?'Release to refresh':'Pull to refresh');
+    ind.style.opacity=Math.min(1,p/40); ind.style.transform='translate(-50%,'+(p-30)+'px)';
+  },{passive:true});
+  addEventListener('touchend',function(){
+    if(y0==null) return; var go=dy*.5>=60; y0=null;
+    if(go){ busy=true; ind.textContent=L('Refreshing…'); ind.style.opacity=1; ind.style.transform='translate(-50%,30px)'; setTimeout(function(){location.reload()},250); }
+    else { ind.style.opacity=0; ind.style.transform='translate(-50%,-48px)'; }
+  },{passive:true});
+})();
 /* ---------- Events ---------- */
 document.addEventListener('click',function(e){
   var cb=e.target.closest&&e.target.closest('[data-club]');
