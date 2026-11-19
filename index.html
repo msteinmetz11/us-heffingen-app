@@ -377,19 +377,6 @@ html.gta.gta #hc{display:block}
 .stylebtn{background:linear-gradient(160deg,#FF3EA5 0%,#FF8A3D 60%,#FFD23F 100%);color:#fff;border:2px solid #14052B;border-radius:4px;font-style:italic;font-weight:800;letter-spacing:.08em;text-shadow:0 1px 0 #14052B,0 0 8px rgba(20,5,43,.6);transform:skewX(-8deg);box-shadow:0 0 0 1px #FF3EA5,0 0 14px rgba(255,62,165,.7)}
 html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:#00F0FF;border:2px solid #00F0FF;text-shadow:0 0 8px #00F0FF;box-shadow:0 0 0 1px #FF3EA5,0 0 14px rgba(0,240,255,.8),0 0 26px rgba(255,62,165,.55)}
 /* Kompakte Home */
-.hero{padding:14px 16px; gap:8px}
-.hero .when{font-size:25px; line-height:1; margin-top:4px!important; white-space:nowrap}
-.herologos{margin-top:6px; gap:18px}
-.crest.xl{width:58px; height:58px}.crest.xl.ph{font-size:18px}
-.hvs{font-size:18px}
-.count{display:flex; justify-content:center; gap:16px; margin-top:8px}
-.count > div{background:none; padding:0; display:flex; align-items:baseline; gap:5px}
-.count > div:nth-child(4){display:none}
-.count b{font-size:22px}
-.count span{margin:0; font-size:11px}
-.count.live{display:block}
-.hero .meta{margin-top:2px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap}
-.hero .meta .maplink{padding:2px; text-decoration:none}.hero .meta .maplink .pin{margin:0;width:18px;height:18px}
 .mrow .date{width:44px; margin-top:3px}
 .mrow .date::before,.mrow .date::after{top:-4px; width:4px; height:8px}
 .mrow .date::before{left:10px}.mrow .date::after{right:10px}
@@ -398,6 +385,11 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
 .row.mrow{padding:7px 0}
 .mv .crest{width:32px; height:32px}.mv .side{width:44px}
 .morebtn{display:block; width:100%; margin:6px 0 0; padding:10px; border:1.5px solid var(--line); border-radius:12px; background:transparent; color:var(--accent); font:600 14px var(--f-body); cursor:pointer}
+.scout{padding:12px 14px}
+.scout h2{margin-bottom:8px}
+.scout .sg{gap:4px 10px}
+.scout .v{font-size:17px}
+.scout .h2h{margin-top:8px;padding-top:8px}
 </style>
 
 </head>
@@ -1040,7 +1032,7 @@ function vStart(){
       +'<div class="when" style="margin-top:8px">'+short(d)+' · '+(ng.time||L('Time tbc'))+'</div>'
       +'<div class="herologos" role="img" aria-label="'+esc(ng.h+' versus '+ng.a)+'">'+crestBig(ng.h)+'<span class="hvs">vs</span>'+crestBig(ng.a)+'</div>'
       +'<div class="count" id="cd" data-ts="'+startOf(ng).getTime()+'" role="timer" aria-label="Time until tip-off"><div><b>0</b><span>'+L('days')+'</span></div><div><b>0</b><span>'+L('hours')+'</span></div><div><b>0</b><span>'+L('min')+'</span></div><div><b>0</b><span>'+L('sec')+'</span></div></div>'
-      +'<div class="meta">'+sub(ng)+(ng.addr?maplinkMini(ng.addr):'')+'</div></div>'
+      +'<div class="meta">'+sub(ng)+(ng.addr?'<br>'+maplink(ng.addr):'')+'</div></div>'
       +'</section>'+scout(ng);
   } else {
     h+=empty(L('No more games'),L('There are no upcoming games in the schedule.'));
