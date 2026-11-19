@@ -313,7 +313,7 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
     <section class="view" id="v-squad" hidden></section>
     <section class="view" id="v-training" hidden></section>
   </main>
-  <p class="asof">As of 17 Nov 2026 · Data from luxembourg.basketball</p>
+  <p class="asof">As of 19 Nov 2026 · Data from luxembourg.basketball</p>
 </div>
 <div class="tabs">
   <nav aria-label="Main menu">
@@ -507,7 +507,7 @@ TEAMS.women={key:'women',label:'Women A',club:'US Heffingen',league:'Nationale 2
   ],
   META:{'2026-11-15':{time:'15:30',place:'Larochette'}},CUPGAMES:[],FIXTURES:[
     {id:'sd1',date:'2026-11-21',time:'18:30',place:'Mersch',addr:'Hall Sportif, rue des Près, 7561 Mersch',h:"Black Star Mersch",a:"US Heffingen",lg:'Nationale 2'},
-    {id:'sd2',date:'2026-12-05',time:'18:00',place:'Heffingen',addr:HALL,h:"US Heffingen",a:"Etzella Ettelbruck",lg:'Nationale 2'},
+    {id:'sd2',date:'2026-12-03',time:'19:30',place:'Heffingen',addr:HALL,h:"US Heffingen",a:"Etzella Ettelbruck",lg:'Nationale 2'},
     {id:'sd3',date:'2026-12-12',time:'17:00',place:'Niederkorn',addr:'Centre Sportif Niederkorn, rue J.B. Scharlé, 4666 Niederkorn',h:"Kordall Steelers",a:"US Heffingen",lg:'Nationale 2'},
     {id:'sd4',date:'2027-01-30',h:"BBC East Side Pirates",a:"US Heffingen",lg:'Nationale 2'},
     {id:'sd5',date:'2027-02-20',place:'Heffingen',addr:HALL,h:"US Heffingen",a:"BC Mess",lg:'Nationale 2'},
@@ -839,7 +839,7 @@ function vTabelle(){
   st.forEach(function(x,i){
     h+='<tr'+(x.me?' class="me"':'')+'><td>'+(i+1)+'</td><td class="tm">'+esc(x.t)+'</td><td>'+x.sp+'</td><td>'+x.w+'</td><td>'+x.l+'</td><td>'+signed(x.d)+'</td><td>'+x.pts+'</td></tr>';
   });
-  return h+'</tbody></table></div></div><p class="note">'+(TEAM.table?'Official table from luxembourg.basketball (as of 17 Nov 2026).':'Calculated from the results on luxembourg.basketball (as of 17 Nov 2026): two points for a win, one for a loss, ties broken by the head-to-head games of the teams involved, then by point difference (same rules as the official table).')+'</p>';
+  return h+'</tbody></table></div></div><p class="note">'+(TEAM.table?'Official table from luxembourg.basketball (as of 19 Nov 2026).':'Calculated from the results on luxembourg.basketball (as of 19 Nov 2026): two points for a win, one for a loss, ties broken by the head-to-head games of the teams involved, then by point difference (same rules as the official table).')+'</p>';
 }
 
 function squadStats(){
@@ -861,7 +861,7 @@ function vKader(){
     var p=PLAYERS[x.id];
     h+='<tr><td>'+x.n+'</td><td class="tm">'+esc(pname(p))+(p.pos?'<br><span class="sub">'+POS[p.pos]+(p.h?' · '+esc(p.h)+' m':'')+'</span>':'')+'</td><td>'+x.gp+'</td><td>'+x.pts+'</td><td>'+x.ppg.toFixed(1)+'</td><td>'+x.three+'</td></tr>';
   });
-  return h+'</tbody></table></div></div><p class="note">From the match reports available so far ('+Object.keys(BOX).length+' league games) (as of 17 Nov 2026). The number is each player’s shirt number in his latest game. GP = games played, PPG = points per game, 3PM = three-pointers made.</p>';
+  return h+'</tbody></table></div></div><p class="note">From the match reports available so far ('+Object.keys(BOX).length+' league games) (as of 19 Nov 2026). The number is each player’s shirt number in his latest game. GP = games played, PPG = points per game, 3PM = three-pointers made.</p>';
 }
 
 function vTraining(){
