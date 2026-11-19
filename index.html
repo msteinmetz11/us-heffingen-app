@@ -876,7 +876,7 @@ function vSettings(){
     +'<div class="card info"><b>'+L('Team')+'</b><span>'+L('Choose the team shown when the app opens.')+'</span><div class="teampick" style="margin:8px 0 0"><div class="sel"><select data-setteam aria-label="'+L('Team')+'">'+TEAM_ORDER.map(function(k){return '<option value="'+k+'"'+(k===TEAM.key?' selected':'')+'>'+esc(TEAMS[k].label)+' · '+esc(TEAMS[k].league)+'</option>'}).join('')+'</select></div></div></div>'
     +'<div class="card info"><b>'+L('About')+'</b><span>'+L('Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.')+'</span><div style="margin-top:6px"><a class="maplink" href="http://www.usheffingen.com" target="_blank" rel="noopener">usheffingen.com</a></div></div>';
 }
-function vNews(){var l=coachEvents('club',dstr(today));return '<h2 class="sec">'+L('Club events')+(l.length?cbadge():'')+'</h2>'+(l.length?'<div class="card list">'+l.map(function(e){return coachRow(e,false)}).join('')+'</div>':'<div class="card empty"><b>'+L('No club events yet')+'</b><p>'+L('Events organised by the club will appear here.')+'</p></div>')}
+function vNews(){var l=coachEvents('club',dstr(today));return '<h2 class="sec">'+L('Club events')+'</h2>'+(l.length?'<div class="card list">'+l.map(function(e){return coachRow(e,false)}).join('')+'</div>':'<div class="card empty"><b>'+L('No club events yet')+'</b><p>'+L('Events organised by the club will appear here.')+'</p></div>')}
 function teamNote(){return TEAM.note?'<p class="note">'+esc(TEAM.note)+'</p>':''}
 function resultCard(g){
   var d=pd(g.date), w=g.us>g.them, tot=function(i){return g.q.reduce(function(a,q){return a+q[i]},0)};
@@ -1184,7 +1184,7 @@ function coachEvents(team,from){
 }
 function coachRow(e,del){
   var d=pd(e.date);
-  return '<div class="row">'+dateBox(d)+'<div style="min-width:0"><h3>'+esc(e.title)+cbadge()+'</h3><p>'+WD[d.getDay()]+' · '+(e.time?esc(e.time)+' · ':'')+'<span class="chip">'+ckind(e.kind)+'</span>'+(e.place?esc(e.place):'')+(e.note?'<br>'+esc(e.note):'')+'</p></div>'+(del?'<button type="button" class="cbtn alt" data-cdel="'+esc(e.id)+'" aria-label="'+L('Delete')+'">×</button>':'')+'</div>';
+  return '<div class="row">'+dateBox(d)+'<div style="min-width:0"><h3>'+esc(e.title)+(e.team==='club'?'':cbadge())+'</h3><p>'+WD[d.getDay()]+' · '+(e.time?esc(e.time)+' · ':'')+'<span class="chip">'+ckind(e.kind)+'</span>'+(e.place?esc(e.place):'')+(e.note?'<br>'+esc(e.note):'')+'</p></div>'+(del?'<button type="button" class="cbtn alt" data-cdel="'+esc(e.id)+'" aria-label="'+L('Delete')+'">×</button>':'')+'</div>';
 }
 function coachHome(){
   var l=coachEvents(TEAM.key,dstr(today)).slice(0,5); if(!l.length) return '';
@@ -1194,7 +1194,7 @@ function coachCal(){
   var out=[]; CEV.filter(function(e){return calAll||e.team===TEAM.key||e.team==='club'}).forEach(function(e){
     var t=e.team==='club'?{label:L('Club')}:TEAMS[e.team]; if(!t) return;
     out.push({k:e.team,t:t,g:null,date:e.date,time:e.time||'',played:false,coach:true,
-      html:'<article class="card ev"><div class="evt">'+(calAll||e.team==='club'?'<b>'+esc(t.label)+'</b> · ':'')+'<b>'+ckind(e.kind)+'</b>'+cbadge()+(e.time?' · '+esc(e.time):'')+(e.place?' · '+esc(e.place):'')+'</div><div style="font:600 19px/1.2 var(--f-display);margin-top:6px">'+esc(e.title)+'</div>'+(e.note?'<p class="addr">'+esc(e.note)+'</p>':'')+'</article>'});
+      html:'<article class="card ev"><div class="evt">'+(calAll||e.team==='club'?'<b>'+esc(t.label)+'</b> · ':'')+'<b>'+ckind(e.kind)+'</b>'+(e.team==='club'?'':cbadge())+(e.time?' · '+esc(e.time):'')+(e.place?' · '+esc(e.place):'')+'</div><div style="font:600 19px/1.2 var(--f-display);margin-top:6px">'+esc(e.title)+'</div>'+(e.note?'<p class="addr">'+esc(e.note)+'</p>':'')+'</article>'});
   });
   return out;
 }
