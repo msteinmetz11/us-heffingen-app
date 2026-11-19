@@ -1,0 +1,49 @@
+# Holt Spiele, Ergebnisse und Tabellen aller Mannschaften der US Heffingen von der FLBB
+# und legt sie als data/heffingen.json ab (gelesen von index.html), dazu data/mitteilungen.json.
+# Den dichten Takt am Wochenende gibt der Cloudflare-Worker (tools/cloudflare-worker.js) per workflow_dispatch;
+# der Zeitplan hier ist die Reserve (GitHub startet geplante Läufe oft verspätet).
+name: Daten
+
+on:
+  schedule:
+    # UTC. Luxemburg = UTC+1 (Sommer +2).
+    - cron: "7 6,11,22 * * *"          # täglich ~7, 12, 23 Uhr
+    - cron: "37 13-22 * * 5,6,0"       # Fr–So nachmittags/abends stündlich
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: daten
+  cancel-in-progress: false
+
+jobs:
+  abruf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test test/
+      - run: node tools/abruf.mjs
+      - name: Speichern
+        run: |
+          git config user.name "heffingen-bot"
+          git config user.email "heffingen-bot@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then echo "nichts Neues"; exit 0; fi
+          git commit -m "Daten $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase
+          git push
+      # GitHub schaltet Zeitpläne nach 60 Tagen ohne Commit ab — so bleiben sie an.
+      - name: Zeitplan wach halten
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/daten.yml/enable"
