@@ -4,6 +4,7 @@
 //  1. Takt: stößt den GitHub-Workflow „daten.yml“ an (GitHubs eigener Zeitplan startet oft zu spät oder gar nicht).
 //  2. Anonymer Zähler: die App meldet ?zaehle=1 beim Öffnen und ?angesehen=1 beim Umschalten. Gespeichert werden nur
 //     Zahlen je Tag (keine Kennung, keine IP). Ansehen: <worker>?zahlen
+//  4. Trainer-Bereich und Vereins-News (?coach=…): Termine (Freundschaftsspiele, Turniere, Trainingsabsagen) und News.
 //  3. Mitteilungen (Web-Push): Handys melden sich an (?push=anmelden), wählen Mannschaften und Arten (?push=wahl).
 //     Jede Minute liest der Worker data/mitteilungen.json (schreibt tools/abruf.mjs) und schickt Fälliges, 7–23 Uhr.
 //
@@ -11,6 +12,7 @@
 //   DB            D1-Datenbank (Bindings → D1). Ohne sie: kein Zähler, keine Mitteilungen.
 //   GITHUB_TOKEN  Secret: Fine-grained Token nur für dieses Repo, Recht „Actions: Read and write“. Ohne: kein Anstoß.
 //   MAX_ABOS      (optional) Höchstzahl angemeldeter Handys, sonst 300.
+//   ADMIN_CODE    Secret: Code für den Chef im Trainer-Bereich (mind. 8 Zeichen, frei wählbar). Ohne: kein Trainer-Bereich.
 // Trigger: Cron „* * * * *“ (jede Minute).
 
 const REPO = "msteinmetz11/us-heffingen-app";
@@ -18,7 +20,7 @@ const BRANCH = "claude/us-heffingen-app-github-ngwaiq";   // Standard-Branch des
 const WORKFLOW = "daten.yml";
 const APP = "https://msteinmetz11.github.io/us-heffingen-app/";
 const MITT_URL = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/data/mitteilungen.json`;
-const ARTEN = ["heute", "ergebnis", "uhrzeit", "neu"];
+const ARTEN = ["heute", "ergebnis", "uhrzeit", "neu", "trainer", "news"];
 const TEAM_OK = /^[a-z0-9-]{1,12}$/;
 const REITER_OK = /^[A-Za-zÀ-ÿ0-9 ]{1,20}$/;
 const CORS = { "access-control-allow-origin": "*", "access-control-allow-methods": "GET, POST", "access-control-allow-headers": "content-type" };
@@ -61,6 +63,11 @@ const TABELLEN = [
   "CREATE TABLE IF NOT EXISTS abos (endpoint TEXT PRIMARY KEY, abo TEXT NOT NULL, wahl TEXT, seit TEXT NOT NULL)",
   "CREATE TABLE IF NOT EXISTS gemeldet (id TEXT PRIMARY KEY, zeit INTEGER NOT NULL, titel TEXT, an INTEGER NOT NULL DEFAULT 0, fertig INTEGER NOT NULL DEFAULT 0)",
   "CREATE TABLE IF NOT EXISTS gesendet (id TEXT NOT NULL, endpoint TEXT NOT NULL, PRIMARY KEY (id, endpoint))",
+  "CREATE TABLE IF NOT EXISTS personen (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, rolle TEXT NOT NULL, teams TEXT NOT NULL DEFAULT '[]', code TEXT, code_bis INTEGER, eingeloest INTEGER, gesperrt INTEGER NOT NULL DEFAULT 0, seit INTEGER NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS geraete (schluessel TEXT PRIMARY KEY, person INTEGER NOT NULL, seit INTEGER NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS termine (id INTEGER PRIMARY KEY AUTOINCREMENT, team TEXT NOT NULL, art TEXT NOT NULL, datum TEXT NOT NULL, zeit TEXT, ende TEXT, gegner TEXT, ort TEXT, heim INTEGER NOT NULL DEFAULT 1, bem TEXT, abgesagt INTEGER NOT NULL DEFAULT 0, von INTEGER NOT NULL, geaendert INTEGER NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY AUTOINCREMENT, titel TEXT NOT NULL, text TEXT, link TEXT, team TEXT, datum INTEGER NOT NULL, von INTEGER NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS eigene_meldungen (id TEXT PRIMARY KEY, team TEXT NOT NULL, art TEXT NOT NULL, titel TEXT NOT NULL, text TEXT NOT NULL, ab INTEGER NOT NULL, bis INTEGER NOT NULL, quelle TEXT)",
   "CREATE TABLE IF NOT EXISTS push_schluessel (id INTEGER PRIMARY KEY, privat TEXT NOT NULL, oeffentlich TEXT NOT NULL)",
 ];
 let BEREIT = false;
@@ -201,13 +208,23 @@ async function pushAnfrage(req, db, was, env) {
 // Jede Minute: fällige Meldungen lesen und verschicken, höchstens PAKET Pushes je Minute
 // (Cloudflare erlaubt im Gratis-Tarif 50 Abrufe je Aufruf). Was nicht fertig wird, geht in der nächsten Minute weiter.
 export const PAKET = 40;
-export const passt = (wahl, e) => { try { return (JSON.parse(wahl || "{}").je?.[e.team] || []).includes(e.art); } catch (x) { return false; } };
+// Vereins-News (team „verein“) gehen an alle, die bei irgendeiner Mannschaft „News“ angehakt haben.
+export const passt = (wahl, e) => {
+  try {
+    const je = JSON.parse(wahl || "{}").je || {};
+    if (e.team === "verein") return Object.values(je).some(a => a.includes(e.art));
+    return (je[e.team] || []).includes(e.art);
+  } catch (x) { return false; }
+};
 async function mitteilungenSenden(db, now) {
   const { h } = lux(now);
   if (h < 7 || h >= 23) return;
-  const r = await fetch(MITT_URL + "?t=" + Math.floor(now / 6e4), { cf: { cacheTtl: 0 } });
-  if (!r.ok) return;
-  const faellig = ((await r.json()).ereignisse || []).filter(e => Date.parse(e.ab) <= now && Date.parse(e.bis) > now && ARTEN.includes(e.art));
+  let datei = [];
+  try { const r = await fetch(MITT_URL + "?t=" + Math.floor(now / 6e4), { cf: { cacheTtl: 0 } }); if (r.ok) datei = (await r.json()).ereignisse || []; } catch (e) {}
+  // dazu die Meldungen aus dem Trainer-Bereich (neue/geänderte Termine, News)
+  const eigene = (await db.prepare("SELECT * FROM eigene_meldungen WHERE ab <= ?1 AND bis > ?1").bind(now).all()).results
+    .map(m => ({ ...m, ab: new Date(m.ab).toISOString(), bis: new Date(m.bis).toISOString() }));
+  const faellig = [...datei, ...eigene].filter(e => Date.parse(e.ab) <= now && Date.parse(e.bis) > now && ARTEN.includes(e.art));
   if (!faellig.length) return;
   const fertig = new Set((await db.prepare("SELECT id FROM gemeldet WHERE fertig = 1 AND zeit > ?1").bind(now - 8 * 864e5).all()).results.map(x => x.id));
   const offen = faellig.filter(e => !fertig.has(e.id));
@@ -236,6 +253,161 @@ async function mitteilungenSenden(db, now) {
   if (lux(now).m === 0) await db.prepare("DELETE FROM gesendet WHERE id IN (SELECT id FROM gemeldet WHERE zeit < ?1)").bind(now - 8 * 864e5).run();
 }
 
+
+// ---------- 4. Trainer-Bereich und Vereins-News ----------
+// Rollen: „verwalter“ (alle Mannschaften, News für den ganzen Verein, legt Trainer an) und „trainer“ (nur seine Mannschaften).
+// Der Chef meldet sich mit dem Secret ADMIN_CODE an (beliebig oft, jedes Handy). Alle anderen bekommen vom Verwalter
+// einen Einmal-Code (14 Tage gültig); beim Einlösen bekommt das Handy einen eigenen geheimen Schlüssel.
+// Codes und Schlüssel liegen nur als SHA-256 in der Datenbank. Namen der Trainer werden nie öffentlich gezeigt.
+export const TERMIN_ARTEN = ["Freundschaftsspiel", "Turnier", "Training abgesagt", "Zusatztraining", "Sonstiges"];
+const sha = async t => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(t))))].map(b => b.toString(16).padStart(2, "0")).join("");
+const CODE_ZEICHEN = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+export const neuerCode = (n = 8) => [...crypto.getRandomValues(new Uint8Array(n))].map(b => CODE_ZEICHEN[b % CODE_ZEICHEN.length]).join("");
+export const codeNorm = c => String(c || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+const txt = (s, max) => String(s ?? "").replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
+const absatz = (s, max) => String(s ?? "").replace(/\r/g, "").replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, " ").trim().slice(0, max);
+const FEHL = new Map();
+const zuViele = (ip, now) => { const l = (FEHL.get(ip) || []).filter(t => now - t < 15 * 6e4); FEHL.set(ip, l); return l.length >= 8; };
+
+async function wer(db, k) {
+  if (typeof k !== "string" || k.length < 20) return null;
+  const p = await db.prepare("SELECT p.* FROM geraete g JOIN personen p ON p.id = g.person WHERE g.schluessel = ?1 AND p.gesperrt = 0").bind(await sha(k)).first();
+  return p ? { ...p, teams: JSON.parse(p.teams || "[]") } : null;
+}
+const darfTeam = (p, team) => p.rolle === "verwalter" || p.teams.includes(team);
+const oeffentlich = p => ({ name: p.name, rolle: p.rolle, teams: p.teams });
+
+export function terminPruefen(t, jetztTag) {
+  const f = {
+    team: txt(t?.team, 12), art: TERMIN_ARTEN.includes(t?.art) ? t.art : null, datum: txt(t?.datum, 10),
+    zeit: /^\d{2}:\d{2}$/.test(t?.zeit || "") ? t.zeit : null, ende: /^\d{2}:\d{2}$/.test(t?.ende || "") ? t.ende : null,
+    gegner: txt(t?.gegner, 60) || null, ort: txt(t?.ort, 80) || null, heim: t?.heim === false ? 0 : 1, bem: txt(t?.bem, 200) || null, abgesagt: t?.abgesagt ? 1 : 0,
+  };
+  if (!/^[a-z0-9-]{1,12}$/.test(f.team)) return [null, "Mannschaft fehlt"];
+  if (!f.art) return [null, "Art fehlt"];
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(f.datum) || isNaN(Date.parse(f.datum))) return [null, "Datum fehlt"];
+  if (f.datum < jetztTag) return [null, "Datum liegt in der Vergangenheit"];
+  return [f, null];
+}
+
+async function meldungMerken(db, m) {
+  // Pro Termin nur die letzte Änderung schicken (Vertipper → eine Mitteilung): ältere, noch nicht fällige löschen.
+  await db.prepare("DELETE FROM eigene_meldungen WHERE quelle = ?1 AND ab > ?2").bind(m.quelle, Date.now()).run();
+  await db.prepare("INSERT OR REPLACE INTO eigene_meldungen (id, team, art, titel, text, ab, bis, quelle) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)")
+    .bind(m.id, m.team, m.art, m.titel, m.text, m.ab, m.bis, m.quelle).run();
+}
+const TAGE = ["So.", "Mo.", "Di.", "Mi.", "Do.", "Fr.", "Sa."];
+const datumText = d => { const t = new Date(d + "T12:00:00Z"); return `${TAGE[t.getUTCDay()]} ${t.getUTCDate()}.${t.getUTCMonth() + 1}.`; };
+
+async function coachAnfrage(req, db, was, env, now) {
+  if (was === "liste") {
+    const seit = lux(now - 14 * 864e5).tag;
+    const termine = (await db.prepare("SELECT id, team, art, datum, zeit, ende, gegner, ort, heim, bem, abgesagt FROM termine WHERE datum >= ?1 ORDER BY datum, zeit").bind(seit).all()).results;
+    const news = (await db.prepare("SELECT id, titel, text, link, team, datum FROM news ORDER BY datum DESC LIMIT 30").all()).results;
+    return new Response(JSON.stringify({ termine, news }), { headers: { ...CORS, "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=30" } });
+  }
+  if (req.method !== "POST") return antwort('{"fehler":"post"}', 405);
+  let x; try { x = JSON.parse(await req.text()); } catch (e) { return antwort('{"fehler":"json"}', 400); }
+  const ip = req.headers.get("cf-connecting-ip") || "?";
+  if (was === "einloesen") {
+    if (zuViele(ip, now)) return antwort('{"fehler":"Zu viele Versuche, bitte in 15 Minuten noch einmal."}', 429);
+    const code = codeNorm(x.code);
+    let p = null;
+    if (env.ADMIN_CODE && code && code === codeNorm(env.ADMIN_CODE)) {
+      p = await db.prepare("SELECT * FROM personen WHERE name = 'Chef' AND rolle = 'verwalter'").first();
+      if (!p) { await db.prepare("INSERT INTO personen (name, rolle, teams, seit) VALUES ('Chef', 'verwalter', '[]', ?1)").bind(now).run(); p = await db.prepare("SELECT * FROM personen WHERE name = 'Chef' AND rolle = 'verwalter'").first(); }
+    } else if (code.length >= 6) {
+      p = await db.prepare("SELECT * FROM personen WHERE code = ?1 AND code_bis > ?2 AND gesperrt = 0").bind(await sha(code), now).first();
+      if (p) await db.prepare("UPDATE personen SET code = NULL, eingeloest = ?2 WHERE id = ?1").bind(p.id, now).run();
+    }
+    if (!p) { FEHL.get(ip)?.push(now) ?? FEHL.set(ip, [now]); return antwort('{"fehler":"Code stimmt nicht oder ist schon benutzt."}', 403); }
+    const k = neuerCode(32);
+    await db.prepare("INSERT INTO geraete (schluessel, person, seit) VALUES (?1, ?2, ?3)").bind(await sha(k), p.id, now).run();
+    return antwort(JSON.stringify({ k, ...oeffentlich({ ...p, teams: JSON.parse(p.teams || "[]") }) }));
+  }
+  const p = await wer(db, x.k);
+  if (!p) return antwort('{"fehler":"abgemeldet"}', 401);
+  if (was === "ich") {
+    const meine = (await db.prepare(`SELECT * FROM termine WHERE datum >= ?1 ${p.rolle === "verwalter" ? "" : "AND von = ?2"} ORDER BY datum, zeit`).bind(lux(now - 14 * 864e5).tag, ...(p.rolle === "verwalter" ? [] : [p.id])).all()).results;
+    const news = (await db.prepare(`SELECT id, titel, text, link, team, datum FROM news ${p.rolle === "verwalter" ? "" : "WHERE von = ?1"} ORDER BY datum DESC LIMIT 50`).bind(...(p.rolle === "verwalter" ? [] : [p.id])).all()).results;
+    return antwort(JSON.stringify({ ...oeffentlich(p), termine: meine, news }));
+  }
+  if (was === "abmelden") { await db.prepare("DELETE FROM geraete WHERE schluessel = ?1").bind(await sha(x.k)).run(); return antwort('{"ok":true}'); }
+  if (was === "termin") {
+    const [f, fehler] = terminPruefen(x.t, lux(now).tag);
+    if (!f) return antwort(JSON.stringify({ fehler }), 400);
+    if (!darfTeam(p, f.team)) return antwort('{"fehler":"Nicht deine Mannschaft"}', 403);
+    let id = +x.t.id || 0, neu = !id;
+    if (id) {
+      const alt = await db.prepare("SELECT * FROM termine WHERE id = ?1").bind(id).first();
+      if (!alt || (p.rolle !== "verwalter" && alt.von !== p.id)) return antwort('{"fehler":"Nicht dein Termin"}', 403);
+      await db.prepare("UPDATE termine SET team=?2, art=?3, datum=?4, zeit=?5, ende=?6, gegner=?7, ort=?8, heim=?9, bem=?10, abgesagt=?11, geaendert=?12 WHERE id = ?1")
+        .bind(id, f.team, f.art, f.datum, f.zeit, f.ende, f.gegner, f.ort, f.heim, f.bem, f.abgesagt, now).run();
+    } else {
+      const r = await db.prepare("INSERT INTO termine (team, art, datum, zeit, ende, gegner, ort, heim, bem, abgesagt, von, geaendert) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12)")
+        .bind(f.team, f.art, f.datum, f.zeit, f.ende, f.gegner, f.ort, f.heim, f.bem, f.abgesagt, p.id, now).run();
+      id = r.meta?.last_row_id;
+    }
+    const reiter = txt(x.reiter, 20) || f.team, wann = `${datumText(f.datum)}${f.zeit ? " " + f.zeit : ""}`;
+    const titel = f.abgesagt ? `❌ ${reiter}: abgesagt` : neu ? `📋 ${reiter}: ${f.art}` : `📋 ${reiter}: geändert`;
+    const text = `${f.abgesagt ? f.art + " · " : ""}${wann}${f.gegner ? " · " + f.gegner : ""}${f.ort ? " · 📍 " + f.ort : ""}`;
+    const bis = Date.parse(f.datum + "T23:59:00+01:00");
+    if (bis > now) await meldungMerken(db, { id: `tr-${id}-${now}`, quelle: `tr-${id}`, team: f.team, art: "trainer", titel, text, ab: now + 10 * 6e4, bis });
+    return antwort(JSON.stringify({ ok: true, id }));
+  }
+  if (was === "terminLoeschen") {
+    const alt = await db.prepare("SELECT * FROM termine WHERE id = ?1").bind(+x.id || 0).first();
+    if (!alt || (p.rolle !== "verwalter" && alt.von !== p.id)) return antwort('{"fehler":"Nicht dein Termin"}', 403);
+    await db.batch([db.prepare("DELETE FROM termine WHERE id = ?1").bind(alt.id), db.prepare("DELETE FROM eigene_meldungen WHERE quelle = ?1 AND ab > ?2").bind(`tr-${alt.id}`, now)]);
+    return antwort('{"ok":true}');
+  }
+  if (was === "news") {
+    const n = { titel: txt(x.n?.titel, 100), text: absatz(x.n?.text, 1500) || null, link: /^https:\/\/\S{3,300}$/.test(x.n?.link || "") ? x.n.link : null, team: x.n?.team ? txt(x.n.team, 12) : null };
+    if (!n.titel) return antwort('{"fehler":"Titel fehlt"}', 400);
+    if (n.team ? !darfTeam(p, n.team) : p.rolle !== "verwalter") return antwort('{"fehler":"Nur Verwalter dürfen News für den ganzen Verein schreiben"}', 403);
+    let id = +x.n.id || 0;
+    if (id) {
+      const alt = await db.prepare("SELECT * FROM news WHERE id = ?1").bind(id).first();
+      if (!alt || (p.rolle !== "verwalter" && alt.von !== p.id)) return antwort('{"fehler":"Nicht deine News"}', 403);
+      await db.prepare("UPDATE news SET titel=?2, text=?3, link=?4, team=?5 WHERE id = ?1").bind(id, n.titel, n.text, n.link, n.team).run();
+    } else {
+      id = (await db.prepare("INSERT INTO news (titel, text, link, team, datum, von) VALUES (?1,?2,?3,?4,?5,?6)").bind(n.titel, n.text, n.link, n.team, now, p.id).run()).meta?.last_row_id;
+      if (x.melden !== false) await meldungMerken(db, { id: `news-${id}`, quelle: `news-${id}`, team: n.team || "verein", art: "news", titel: "📰 " + n.titel, text: txt(n.text, 140) || "Neu in der App", ab: now + 5 * 6e4, bis: now + 24 * 3600e3 });
+    }
+    return antwort(JSON.stringify({ ok: true, id }));
+  }
+  if (was === "newsLoeschen") {
+    const alt = await db.prepare("SELECT * FROM news WHERE id = ?1").bind(+x.id || 0).first();
+    if (!alt || (p.rolle !== "verwalter" && alt.von !== p.id)) return antwort('{"fehler":"Nicht deine News"}', 403);
+    await db.batch([db.prepare("DELETE FROM news WHERE id = ?1").bind(alt.id), db.prepare("DELETE FROM eigene_meldungen WHERE quelle = ?1 AND ab > ?2").bind(`news-${alt.id}`, now)]);
+    return antwort('{"ok":true}');
+  }
+  // ab hier nur Verwalter: Personen verwalten
+  if (p.rolle !== "verwalter") return antwort('{"fehler":"Nur für Verwalter"}', 403);
+  if (was === "personen") {
+    const l = (await db.prepare("SELECT id, name, rolle, teams, eingeloest, gesperrt, code_bis, (SELECT COUNT(*) FROM geraete g WHERE g.person = personen.id) AS geraete FROM personen ORDER BY gesperrt, name").all()).results;
+    return antwort(JSON.stringify({ personen: l.map(x => ({ ...x, teams: JSON.parse(x.teams || "[]") })) }));
+  }
+  if (was === "person") {
+    const name = txt(x.p?.name, 40), rolle = x.p?.rolle === "verwalter" ? "verwalter" : "trainer";
+    const teams = (Array.isArray(x.p?.teams) ? x.p.teams : []).filter(t => /^[a-z0-9-]{1,12}$/.test(t)).slice(0, 20);
+    if (!name) return antwort('{"fehler":"Name fehlt"}', 400);
+    const code = neuerCode(8);
+    let id = +x.p.id || 0;
+    if (id) await db.prepare("UPDATE personen SET name=?2, rolle=?3, teams=?4" + (x.neuerCode ? ", code=?5, code_bis=?6" : "") + " WHERE id = ?1")
+      .bind(id, name, rolle, JSON.stringify(teams), ...(x.neuerCode ? [await sha(code), now + 14 * 864e5] : [])).run();
+    else id = (await db.prepare("INSERT INTO personen (name, rolle, teams, code, code_bis, seit) VALUES (?1,?2,?3,?4,?5,?6)").bind(name, rolle, JSON.stringify(teams), await sha(code), now + 14 * 864e5, now).run()).meta?.last_row_id;
+    return antwort(JSON.stringify({ ok: true, id, code: !+x.p.id || x.neuerCode ? code : null }));
+  }
+  if (was === "sperren") {
+    const id = +x.id || 0;
+    if (id === p.id) return antwort('{"fehler":"Dich selbst kannst du nicht sperren"}', 400);
+    await db.batch([db.prepare("UPDATE personen SET gesperrt = ?2, code = NULL WHERE id = ?1").bind(id, x.wieder ? 0 : 1), db.prepare("DELETE FROM geraete WHERE person = ?1").bind(id)]);
+    return antwort('{"ok":true}');
+  }
+  return antwort('{"fehler":"coach"}', 400);
+}
+
 export default {
   async fetch(req, env) {
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
@@ -246,6 +418,7 @@ export default {
     if (q.has("angesehen")) { await ansehen(db, q, now); return new Response(null, { status: 204, headers: CORS }); }
     if (q.has("zahlen")) return zahlenSeite(db, now);
     if (q.has("push")) return pushAnfrage(req, db, q.get("push"), env);
+    if (q.has("coach")) return coachAnfrage(req, db, q.get("coach"), env, now);
     return antwort('{"app":"US Heffingen"}');
   },
   async scheduled(ev, env, ctx) {

@@ -96,3 +96,26 @@ test("Mitteilungen", () => {
   // erster Lauf überhaupt: nur Spieltag
   assert.deepEqual(ereignisse(null, neu, null, now).ereignisse.map(e => e.art), ["heute"]);
 });
+
+import { spielPfade, berichtLesen, spielerZeile } from "../tools/berichte.mjs";
+test("Spielbericht lesen", () => {
+  const box = (team, rows) => `<h3>${team}</h3><table><tr><th></th><th>Joueur</th><th>Points</th><th colspan=3>Tirs réussis</th><th>Fautes</th><th>C</th></tr><tr><th></th><th></th><th>Tot.</th><th>1P</th><th>2P</th><th>3P</th><th></th><th></th></tr>${rows.map(r => "<tr>" + r.map(c => `<td>${c}</td>`).join("") + "</tr>").join("")}</table>
+  <table><tr><th>Joueur</th><th>Points/M</th><th>Rebonds</th><th>3P</th></tr><tr><td>4</td><td>X Y</td><td>3</td><td>2</td></tr></table>`;
+  const html = `<a href="https://fibalivestats.dcd.shared.geniussports.com/u/LUX/2897769/">Live</a>
+   <table><tr><td>40</td><td>Quart 1</td><td>8</td></tr><tr><td>20</td><td>Quart 2</td><td>10</td></tr><tr><td>10</td><td>Quart 3</td><td>20</td></tr><tr><td>17</td><td>Quart 4</td><td>20</td></tr></table>
+   ${box("US Heffingen", [["4 *", "OLY Charel", 30, 0, 9, 4, "2 (P2+P)"], ["5", "WILLIAMS Najee", 57, 3, 18, 6, "1 (P)"]])}
+   ${box("CFBB U18", [["4 *", "KEMEVUAKO Pedrito", 8, 0, 4, 0, "2 (P2+P)"], ["5 *", "REUTER Jules", 50, 3, 13, 7, "1 (P)"]])}`;
+  const b = berichtLesen(html, { hs: 87, as: 58 });
+  assert.equal(b.fiba, "2897769");
+  assert.deepEqual(b.q, [[40, 8], [20, 10], [10, 20], [17, 20]]);
+  assert.equal(b.h.length, 2);
+  assert.deepEqual(b.h[0], { nr: 4, n: "OLY Charel", s: 1, pts: 30, p1: 0, p2: 9, p3: 4, f: 2 });
+  assert.equal(b.a[1].n, "REUTER Jules");
+  // vertauschte Reihenfolge wird gedreht
+  const b2 = berichtLesen(html, { hs: 58, as: 87 });
+  assert.equal(b2.h[0].n, "KEMEVUAKO Pedrito");
+  assert.deepEqual(b2.q[0], [8, 40]);
+  assert.deepEqual(spielerZeile(["12", "*", "JACOBY Frank", "8", "4", "2", "0", "3"]).s, 1);
+  assert.equal(spielPfade('<a href="https://www.luxembourg.basketball/match/1201093/2026-09-23/us-heffingen/cfbb-u18/m-nationale-2tour-qualificatif">').get(1201093), "/match/1201093/2026-09-23/us-heffingen/cfbb-u18/m-nationale-2tour-qualificatif");
+  assert.equal(berichtLesen("<p>Les informations concernant ce match ne sont pas disponibles !</p>", { hs: 1, as: 2 }), null);
+});

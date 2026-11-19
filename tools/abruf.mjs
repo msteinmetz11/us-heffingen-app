@@ -13,6 +13,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { TEAMS, VEREIN } from "./teams.mjs";
 import { ereignisse } from "./mitteilungen.mjs";
 import { luxZeit } from "./zeit.mjs";
+import { spielPfade, berichtLesen } from "./berichte.mjs";
 
 export const BASIS = "https://www.luxembourg.basketball";
 export const icsUrl = code => `${BASIS}/layout/themes/flbb/calendar/${code}.ics`;
@@ -244,6 +245,32 @@ async function logosErgaenzen(teams, cache) {
   if (neu) { await writeFile("logos/index.json", JSON.stringify(idx, null, 1)); console.log(`${neu} neue Logos`); }
 }
 
+// ---------- Spielberichte (tools/berichte.mjs) ----------
+// Holt für jedes gespielte eigene Spiel einmal die Spielseite. Hat sie (noch) keinen Bericht, wird es bei den
+// nächsten Läufen noch ein paarmal versucht. Höchstens 80 Seiten je Lauf (der erste Lauf holt die Saison nach).
+async function berichteErgaenzen(teams, cache) {
+  let alt = {};
+  try { alt = JSON.parse(await readFile("data/berichte.json", "utf8")); } catch (e) {}
+  const vorher = JSON.stringify(alt);
+  const pfade = new Map();
+  for (const [k, v] of cache.seiten) if (k.startsWith("cal")) for (const [id, p] of spielPfade(await v)) pfade.set(id, p);
+  let n = 0;
+  for (const t of teams) for (const s of t.spiele) {
+    if (s.hs == null) continue;
+    const b = alt[s.id];
+    if (b && !b.leer) continue;
+    if (b?.leer && (b.versuche || 0) >= 6) continue;
+    const pfad = pfade.get(s.id);
+    if (!pfad || n >= 80) continue;
+    n++;
+    try {
+      const r = berichtLesen(await holen(BASIS + pfad, 2), s);
+      alt[s.id] = r && !r.leer ? r : { ...(r || {}), leer: true, versuche: (b?.versuche || 0) + 1 };
+    } catch (e) { console.log(`  Bericht ${s.id}: ${e.message}`); }
+  }
+  if (JSON.stringify(alt) !== vorher) { await writeFile("data/berichte.json", JSON.stringify(alt)); console.log(`Spielberichte: ${n} Seiten geholt`); }
+}
+
 async function main() {
   const jetzt = luxZeit(Date.now());
   let alt = null;
@@ -266,6 +293,7 @@ async function main() {
     }
   }
   try { await logosErgaenzen(teams, cache); } catch (e) { console.log("Logos: " + e.message); }
+  try { await berichteErgaenzen(teams, cache); } catch (e) { console.log("Spielberichte: " + e.message); }
   const daten = { stand: new Date().toISOString(), saison: saisonVon(jetzt), verein: VEREIN, teams };
   // Nur schreiben, wenn sich außer dem Zeitstempel etwas geändert hat (sonst ein Commit je Lauf).
   const ohneStand = d => JSON.stringify({ ...d, stand: null });
