@@ -201,6 +201,9 @@ tbody tr:last-child td{border-bottom:0}
   padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .tabs nav{display:grid; grid-template-columns:repeat(5,1fr); gap:4px; max-width:640px; margin:0 auto}
 .tabs a svg{display:block}
+.formrow .fm{display:flex;gap:4px;flex:none;flex-wrap:nowrap}
+.formrow .fm .dot{width:22px;height:22px;font-size:11px}
+.formrow>span{min-width:0}
 .vs{display:flex;align-items:center;gap:8px;min-width:0}
 .vsl{display:flex;flex:none}
 .vsl .mini+.mini{margin-left:-6px}
@@ -634,7 +637,7 @@ function applyTeam(t){
   GAMES=buildGames();
 }
 function useTeam(k){
-  var t=TEAMS[k]||TEAMS.men; applyTeam(t); selDay=null; openKeys.clear();
+  var t=TEAMS[k]||TEAMS.men; applyTeam(t); selDay=null; showAllRes=false; openKeys.clear();
   var sm=document.querySelector('.brand small'); if(sm) sm.textContent=t.league+' · 2026/27';
   var sel=document.getElementById('teamsel');
   if(sel){ if(!sel.options.length) sel.innerHTML=TEAM_ORDER.map(function(x){return '<option value="'+x+'">'+esc(TEAMS[x].label)+'</option>'}).join(''); sel.value=t.key; }
@@ -818,6 +821,23 @@ function teamSelect(){
 var ICS_BASE='www.luxembourg.basketball/layout/themes/flbb/calendar/';
 function calLink(t){return t.ics?'<a class="maplink" href="webcal://'+ICS_BASE+t.ics+'.ics" style="margin-right:14px">Subscribe</a><a class="maplink" href="https://'+ICS_BASE+t.ics+'.ics" target="_blank" rel="noopener">Download .ics</a>':''}
 function calSub(){return TEAM.ics?'<h2 class="sec">Calendar subscription</h2><div class="card info"><b>'+esc(TEAM.label)+' · '+esc(TEAM.league)+'</b><span>Add all games to your phone calendar. It updates automatically.</span><div style="margin-top:6px">'+calLink(TEAM)+'</div></div>':''}
+function recap(){
+  var rs=results(), st=teamStats(CLUB), w,l,ppg,opg,d,rank=null;
+  if(st.n){w=st.w;l=st.l;ppg=st.ppg;opg=st.opg;d=st.d;rank=st.rank}
+  else if(rs.length){
+    var pf=0,pa=0; w=0; l=0;
+    rs.forEach(function(g){pf+=g.us;pa+=g.them;if(g.us>g.them)w++;else l++});
+    ppg=pf/rs.length; opg=pa/rs.length; d=pf-pa;
+  } else return '<div class="card empty"><b>No games played yet</b><p>The recap appears after the first result.</p></div>';
+  var form=rs.slice(0,5).reverse().map(function(g){return g.us>g.them?'W':'L'});
+  var last=rs[0];
+  return '<div class="card"><div class="stats"><div class="stat"><b>'+w+'–'+l+'</b><span>Record</span></div>'
+    +'<div class="stat"><b>'+(rank?ord(rank):(w+l))+'</b><span>'+(rank?'Standings':'Games')+'</span></div>'
+    +'<div class="stat"><b>'+signed(Math.round(d))+'</b><span>Diff</span></div></div>'
+    +'<div class="formrow"><span>'+Math.round(ppg)+' pts · '+Math.round(opg)+' allowed per game</span>'+formDots(form,false)+'</div>'
+    +(last?'<div class="formrow"><span>Last · '+short(pd(last.date))+'</span><span><b style="color:var(--ink)">'+title(last)+' '+score(last)+'</b></span></div>':'')
+    +'</div>';
+}
 function teamNote(){return TEAM.note?'<p class="note">'+esc(TEAM.note)+'</p>':''}
 function vStart(){
   var up=upcoming(), ng=nextGame(), r=results(), h='';
@@ -833,20 +853,18 @@ function vStart(){
     h+=empty('No more games','There are no upcoming games in the schedule.');
   }
   h+=teamNote();
-  var more=ng?up.filter(function(g){return g!==ng&&startOf(g)>startOf(ng)}).slice(0,4):[];
+  h+='<h2 class="sec">Season recap</h2>'+recap();
+  var more=ng?up.filter(function(g){return g!==ng&&startOf(g)>startOf(ng)}).slice(0,3):[];
   if(more.length){
-    h+='<h2 class="sec">After that</h2><div class="card list">';
+    h+='<h2 class="sec">Next</h2><div class="card list">';
     more.forEach(function(g){
       var gd=pd(g.date);
       h+='<a class="row" href="#games">'+dateBox(gd)+'<div><h3>'+vsTitle(g)+'</h3><p>'+WD[gd.getDay()]+' · '+(g.time||'Time tbc')+' · '+sub(g)+'</p></div></a>';
     });
     h+='</div>';
   }
-  if(r.length){
-    var last=r[0];
-    h+='<a href="#games" style="text-decoration:none;color:inherit"><div class="card info"><span>Last game · '+short(pd(last.date))+'</span>'
-      +'<b>'+title(last)+'</b><span>'+score(last)+(last.us>last.them?' · Win':' · Loss')+'</span></div></a>';
-  }
+  h+='<h2 class="sec">Club news</h2><div class="card empty"><b>Coming soon</b><p>News from US Heffingen will appear here.</p></div>';
+  h+='<h2 class="sec">US Heffingen</h2><div class="card info"><b>Basketball Club Union Sportive Heffingen</b><span>Founded 1959</span><div style="margin-top:6px">'+maplink(HALL)+'</div><div style="margin-top:4px"><a class="maplink" href="http://www.usheffingen.com" target="_blank" rel="noopener">usheffingen.com</a></div></div>';
   h+=calSub();
   return h;
 }
@@ -923,6 +941,8 @@ function vSpiele(){
   var h=teamNote()+calendar();
   h+='<h2 class="sec">Results</h2>';
   if(!r.length) h+=empty('No results yet','Results will appear here once they are entered.');
+  var rAll=r.length;
+  if(!showAllRes) r=r.slice(0,5);
   r.forEach(function(g){
     var d=pd(g.date), w=g.us>g.them;
     var head=dateBox(d)
@@ -946,6 +966,7 @@ function vSpiele(){
       h+='<div class="card res"><div class="sum">'+head+'</div></div>';
     }
   });
+  if(rAll>5) h+='<div class="filt"><button type="button" data-allres="1" aria-pressed="false">'+(showAllRes?'Show less':'Show all '+rAll)+'</button></div>';
   return h;
 }
 
@@ -998,7 +1019,7 @@ function vTraining(){
 
 
 /* ---------- Club: alle Teams auf einen Blick ---------- */
-var clubHome=false;
+var clubHome=false, clubTeam='all', showAllRes=false;
 function clubData(){
   var cur=TEAM, ahead=[], past=[], now=new Date(), lim=new Date(today.getFullYear(),today.getMonth(),today.getDate()+14), back=new Date(today.getFullYear(),today.getMonth(),today.getDate()-10);
   TEAM_ORDER.forEach(function(k){
@@ -1020,8 +1041,10 @@ function clubData(){
 function vClub(){
   var c=clubData();
   var list=clubHome?c.ahead.filter(function(x){return x.home}):c.ahead;
-  var h='<div class="filt" role="group" aria-label="Filter"><button type="button" data-club="all" aria-pressed="'+!clubHome+'">All games</button><button type="button" data-club="home" aria-pressed="'+clubHome+'">Home games only</button></div>';
-  h+='<h2 class="sec">Next 14 days · all teams</h2>';
+  if(clubTeam!=='all'){list=list.filter(function(x){return x.k===clubTeam});c.past=c.past.filter(function(x){return x.k===clubTeam})}
+  var h='<div class="filt" role="group" aria-label="Filter"><button type="button" data-club="all" aria-pressed="'+!clubHome+'">All</button><button type="button" data-club="home" aria-pressed="'+clubHome+'">Home</button></div>'
+    +'<div class="teampick"><div class="sel"><select data-clubteam aria-label="Filter by team"><option value="all">All teams</option>'+TEAM_ORDER.map(function(k){return '<option value="'+k+'"'+(k===clubTeam?' selected':'')+'>'+esc(TEAMS[k].label)+'</option>'}).join('')+'</select></div></div>';
+  h+='<h2 class="sec">Next 14 days</h2>';
   if(!list.length) h+=empty(clubHome?'No home games':'No games','Nothing in the next 14 days.');
   else {
     h+='<div class="card list">';
@@ -1031,7 +1054,7 @@ function vClub(){
     });
     h+='</div>';
   }
-  h+='<h2 class="sec">Results · last 10 days</h2>';
+  h+='<h2 class="sec">Last 10 days</h2>';
   if(!c.past.length) h+=empty('No recent results','Nothing played in the last 10 days.');
   else {
     h+='<div class="card list">';
@@ -1065,9 +1088,11 @@ function render(){
 document.addEventListener('click',function(e){
   var cb=e.target.closest&&e.target.closest('[data-club]');
   if(cb){clubHome=cb.dataset.club==='home';render();return;}
+  if(e.target.closest&&e.target.closest('[data-allres]')){showAllRes=!showAllRes;render();return;}
   var dd=e.target.closest&&e.target.closest('[data-day]');
   if(dd){selDay=dd.dataset.day;render();}
 });
+document.addEventListener('change',function(e){var t=e.target;if(t&&t.hasAttribute&&t.hasAttribute('data-clubteam')){clubTeam=t.value;render()}});
 document.addEventListener('toggle',function(e){
   var d=e.target;
   if(d&&d.dataset&&d.dataset.key){ if(d.open) openKeys.add(d.dataset.key); else openKeys.delete(d.dataset.key); }
