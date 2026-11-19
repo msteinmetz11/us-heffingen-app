@@ -858,7 +858,6 @@ function vStart(){
     });
     h+='</div>';
   }
-  h+=calSub();
   return h;
 }
 
@@ -966,6 +965,7 @@ function vSpiele(){
     +'<div class="mcal">'+grid+'</div>'
     +'<div class="dayline"><b>'+(selDay===dstr(today)?'Today':short(sd))+'</b><span>'+items.length+(items.length===1?' game':' games')+'</span></div>'
     +(items.length?items.map(function(x){return x.html}).join(''):empty('No games','Nothing scheduled on this day.'));
+  h+=calSub();
   return h;
 }
 
