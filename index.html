@@ -123,9 +123,11 @@ h2.sec{font:600 13px var(--f-body); letter-spacing:.08em; text-transform:upperca
 /* games */
 .game{display:grid; gap:14px}
 .ghead{display:flex; gap:14px; align-items:center; min-width:0}
-.date{flex:none; width:54px; text-align:center; border-radius:10px; background:var(--soft); padding:7px 0}
-.date b{display:block; font:700 27px/1 var(--f-display); font-variant-numeric:tabular-nums}
-.date span{display:block; margin-top:2px; font:600 11px var(--f-body); text-transform:uppercase; letter-spacing:.06em; color:var(--muted)}
+.date{flex:none; width:58px; position:relative; margin-top:4px; text-align:center; border-radius:10px; background:var(--surface); border:1.5px solid var(--line)}
+.date::before,.date::after{content:""; position:absolute; top:-5px; width:5px; height:11px; border-radius:3px; background:var(--ink)}
+.date::before{left:14px}.date::after{right:14px}
+.date span{display:block; background:var(--accent); color:var(--accent-ink); border-radius:8px 8px 0 0; padding:7px 0 4px; font:700 11px/1 var(--f-body); text-transform:uppercase; letter-spacing:.08em}
+.date b{display:block; padding:5px 0 7px; font:700 27px/1 var(--f-display); font-variant-numeric:tabular-nums; color:var(--ink)}
 .ghead h3{margin:0; font:600 21px/1.15 var(--f-display); letter-spacing:.01em}
 .ghead p{margin:3px 0 0; color:var(--muted); font-size:13px}
 .ghead > div{min-width:0}
@@ -774,7 +776,7 @@ var openKeys=new Set();
 var selDay=null;
 
 /* ---------- Bausteine ---------- */
-function dateBox(d){return '<div class="date"><b>'+d.getDate()+'</b><span>'+MO[d.getMonth()]+'</span></div>'}
+function dateBox(d){return '<div class="date"><span>'+MO[d.getMonth()]+'</span><b>'+d.getDate()+'</b></div>'}
 function empty(head,text){return '<div class="card empty"><b>'+head+'</b><p>'+text+'</p></div>'}
 
 /* ---------- Ansichten ---------- */
