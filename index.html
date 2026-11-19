@@ -335,6 +335,7 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
     <section class="view" id="v-games" hidden></section>
     <section class="view" id="v-standings" hidden></section>
     <section class="view" id="v-news" hidden></section>
+    <section class="view" id="v-settings" hidden></section>
     <section class="view" id="v-squad" hidden></section>
     <section class="view" id="v-training" hidden></section>
   </main>
@@ -345,6 +346,7 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
     <a href="#home" data-tab="home" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></a>
     <a href="#games" data-tab="games" aria-label="Calendar" title="Calendar"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"/></svg></a>
     <a href="#news" data-tab="news" aria-label="News" title="News"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h13v14a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v10a2 2 0 0 1-2 2"/><path d="M8 9h5M8 13h5M8 17h5"/></svg></a>
+    <a href="#settings" data-tab="settings" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></a>
   </nav>
 </div>
 
@@ -660,7 +662,7 @@ var POS={PG:'Point Guard',SG:'Shooting Guard',SF:'Small Forward',PF:'Power Forwa
 /* ---------- Hilfsfunktionen ---------- */
 var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-var TABS=['home','games','news'];
+var TABS=['home','games','news','settings'];
 function tabOk(t){return t==='squad'?Object.keys(PLAYERS||{}).length>0:t==='training'?TRAINING_WEEK.length>0:true}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function pd(s){var p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2])}
@@ -833,6 +835,11 @@ function teamSelect(){
 var ICS_BASE='www.luxembourg.basketball/layout/themes/flbb/calendar/';
 function calLink(t){return t.ics?'<a class="maplink" href="webcal://'+ICS_BASE+t.ics+'.ics" style="margin-right:14px">Subscribe</a><a class="maplink" href="https://'+ICS_BASE+t.ics+'.ics" target="_blank" rel="noopener">Download .ics</a>':''}
 function calSub(){return TEAM.ics?'<h2 class="sec">Calendar subscription</h2><div class="card info"><b>'+esc(TEAM.label)+' · '+esc(TEAM.league)+'</b><span>Add all games to your phone calendar. It updates automatically.</span><div style="margin-top:6px">'+calLink(TEAM)+'</div></div>':''}
+function vSettings(){
+  return '<h2 class="sec">Settings</h2>'
+    +'<div class="card info"><b>Team</b><span>Choose the team shown when the app opens.</span><div class="teampick" style="margin:8px 0 0"><div class="sel"><select data-setteam aria-label="Team">'+TEAM_ORDER.map(function(k){return '<option value="'+k+'"'+(k===TEAM.key?' selected':'')+'>'+esc(TEAMS[k].label)+' · '+esc(TEAMS[k].league)+'</option>'}).join('')+'</select></div></div></div>'
+    +'<div class="card info"><b>About</b><span>Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.</span><div style="margin-top:6px"><a class="maplink" href="http://www.usheffingen.com" target="_blank" rel="noopener">usheffingen.com</a></div></div>';
+}
 function vNews(){return '<h2 class="sec">Club news</h2><div class="card empty"><b>Coming soon</b><p>News from US Heffingen will appear here.</p></div>'}
 function teamNote(){return TEAM.note?'<p class="note">'+esc(TEAM.note)+'</p>':''}
 function vStart(){
@@ -1065,7 +1072,7 @@ function vClub(){
   return h;
 }
 
-var VIEWS={home:vStart,club:vClub,games:vSpiele,standings:vTabelle,news:vNews,squad:vKader,training:vTraining};
+var VIEWS={home:vStart,club:vClub,games:vSpiele,standings:vTabelle,news:vNews,settings:vSettings,squad:vKader,training:vTraining};
 
 /* ---------- Rendern ---------- */
 function current(){var v=location.hash.slice(1);return TABS.indexOf(v)>-1&&tabOk(v)?v:'home'}
@@ -1095,7 +1102,7 @@ document.addEventListener('click',function(e){
   var dd=e.target.closest&&e.target.closest('[data-day]');
   if(dd){selDay=dd.dataset.day;render();}
 });
-document.addEventListener('change',function(e){var t=e.target;if(t&&t.hasAttribute&&t.hasAttribute('data-clubteam')){clubTeam=t.value;render()}});
+document.addEventListener('change',function(e){var t=e.target;if(t&&t.hasAttribute&&t.hasAttribute('data-setteam')){useTeam(t.value);render();return}if(t&&t.hasAttribute&&t.hasAttribute('data-clubteam')){clubTeam=t.value;render()}});
 document.addEventListener('toggle',function(e){
   var d=e.target;
   if(d&&d.dataset&&d.dataset.key){ if(d.open) openKeys.add(d.dataset.key); else openKeys.delete(d.dataset.key); }
