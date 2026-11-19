@@ -444,6 +444,14 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
 .sbm .side{align-items:center;justify-items:center}
 .sbm{align-items:center}
 .sbm b,.sbm i{align-self:center;height:auto}
+/* Last games als Liste wie Next */
+.card.list>details.res{border-top:1px solid var(--line)}
+.card.list>details.res:first-child{border-top:0}
+.card.list .res summary.sb{padding:10px 0 12px}
+.card.list .res .body{padding:0 0 12px}
+.card.res.home,.res.home{border-color:var(--line);box-shadow:none}
+.card.list>details.res.home{border-color:var(--line)}
+.sbt em{font-style:normal;color:var(--accent);font-weight:700}
 </style>
 
 </head>
@@ -1058,7 +1066,7 @@ function resultCard(g){
   var d=pd(g.date), w=g.us>g.them, tot=function(i){return g.q.reduce(function(a,q){return a+q[i]},0)};
   var hs=isHome(g)?g.us:g.them, as=isHome(g)?g.them:g.us;
   function side(n){return crest(n)}
-  var head='<div class="sbt"><span>'+WD[d.getDay()]+' '+d.getDate()+' '+MO[d.getMonth()]+(g.lg===CUP?' · '+L('Cup'):'')+'</span></div>'
+  var head='<div class="sbt"><span>'+WD[d.getDay()]+' '+d.getDate()+' '+MO[d.getMonth()]+(g.lg===CUP?' · '+L('Cup'):'')+(isHome(g)?' · <em>'+L('Home')+'</em>':'')+'</span></div>'
     +'<div class="sbm" role="img" aria-label="'+esc(g.h+' '+hs+' : '+as+' '+g.a)+'">'+side(g.h)+'<b class="'+(hs>as?'win':'')+'">'+hs+'</b><i>'+L('Final')+'</i><b class="'+(as>hs?'win':'')+'">'+as+'</b>'+side(g.a)+'</div>';
   var body='<p class="cap">'+sub(g)+'</p>';
   if(g.q&&g.q.length){
@@ -1078,7 +1086,7 @@ function resultCard(g){
   } else if(!(g.q&&g.q.length)){
     body+='<p class="cap">'+L('No detailed statistics for this game yet.')+'</p>';
   }
-  return '<details class="card res'+(isHome(g)?' home':'')+'" data-key="res-'+g.id+'"><summary class="sb">'+head+'</summary><div class="body">'+body+'</div></details>';
+  return '<details class="res'+(isHome(g)?' home':'')+'" data-key="res-'+g.id+'"><summary class="sb">'+head+'</summary><div class="body">'+body+'</div></details>';
 }
 function vStart(){
   var up=upcoming(), ng=nextGame(), r=results(), h='';
@@ -1105,7 +1113,7 @@ function vStart(){
     h+='</div>';
   }
   if(r.length){
-    h+='<h2 class="sec">'+L('Last games')+'</h2>'+r.slice(0,showAllRes?5:2).map(resultCard).join('');
+    h+='<h2 class="sec">'+L('Last games')+'</h2><div class="card list">'+r.slice(0,showAllRes?5:2).map(resultCard).join('')+'</div>';
     if(r.length>2) h+='<button class="morebtn" data-allres>'+L(showAllRes?'Show less':'Show more')+'</button>';
   }
   return h;
