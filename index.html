@@ -916,6 +916,7 @@ function vStart(){
     h+=empty(L('No more games'),L('There are no upcoming games in the schedule.'));
   }
   h+=teamNote();
+  h+=coachHome();
   var more=ng?up.filter(function(g){return g!==ng&&startOf(g)>startOf(ng)}).slice(0,3):[];
   if(more.length){
     h+='<h2 class="sec">'+L('Next')+'</h2><div class="card list">';
@@ -925,7 +926,6 @@ function vStart(){
     });
     h+='</div>';
   }
-  h+=coachHome();
   if(r.length){
     h+='<h2 class="sec">'+L('Last games')+'</h2>'+r.slice(0,5).map(resultCard).join('');
   }
