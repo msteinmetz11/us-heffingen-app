@@ -692,7 +692,7 @@ function opp(g){return isHome(g)?g.a:g.h}
 function title(g){return esc(g.h)+' – '+esc(g.a)}
 function miniLogo(name){
   var src=logoOf(name);
-  return src?'<img class="mini bg" src="'+esc(src)+'" alt="" title="'+esc(name)+'">'
+  return src?'<img class="mini bg" src="'+esc(src)+'" alt="" title="'+esc(name)+'"'+rfb(name,'mini')+'>'
     :'<span class="mini ph" title="'+esc(name)+'" style="--c:hsl('+hue(name)+' 45% 55%)">'+esc(abbr(name).slice(0,3))+'</span>';
 }
 function vsTitle(g){return '<span class="vs"><span class="vsl">'+miniLogo(g.h)+miniLogo(g.a)+'</span><span class="vst">'+title(g)+'</span></span>'}
@@ -903,7 +903,12 @@ function abbr(n){
   var b=baseName(n), suf=b!==n?' '+n.slice(-1):'';
   return (ABBR[b]||b.replace(/[^A-Za-z]/g,'').slice(0,3).toUpperCase())+suf;
 }
-function logoOwn(n){return LOGOS[n]||LOGOS[baseName(n)]}
+var RLOGO_BASE='https://www.luxembourg.basketball/layout/themes/flbb/images/Logos/';
+var REMOTE={'Vibball Luxembourg':'VBE','Zesummen Aktiv':'ZAK','Les Sangliers Wooltz':'SAN','Rebound Préizerdaul':'PRE'};
+function remoteLogo(n){var c=REMOTE[n]||REMOTE[baseName(n)];return c?RLOGO_BASE+c+'.jpg':''}
+function rfb(n,cls){return remoteLogo(n)&&!LOGOS[n]&&!LOGOS[baseName(n)]?' data-ab="'+esc(abbr(n).slice(0,3))+'" data-c="hsl('+hue(n)+' 45% 55%)" data-cls="'+cls+'" onerror="window.__lf(this)"':''}
+window.__lf=function(i){var s=document.createElement('span');s.className=i.dataset.cls+' ph';s.style.setProperty('--c',i.dataset.c);s.textContent=i.dataset.ab;i.replaceWith(s)};
+function logoOwn(n){return LOGOS[n]||LOGOS[baseName(n)]||remoteLogo(n)}
 function hue(name){var x=0;for(var i=0;i<name.length;i++)x=(x*31+name.charCodeAt(i))%360;return x}
 function logoOf(name){
   if(logoOwn(name)) return logoOwn(name);
@@ -912,13 +917,13 @@ function logoOf(name){
 }
 function crest(name){
   var ab=abbr(name), src=logoOf(name);
-  var img=src?'<img class="crest'+(logoOwn(name)?' bg':'')+'" src="'+esc(src)+'" alt="">'
+  var img=src?'<img class="crest'+(logoOwn(name)?' bg':'')+'" src="'+esc(src)+'" alt=""'+rfb(name,'crest')+'>'
     :'<span class="crest ph" style="--c:hsl('+hue(name)+' 45% 55%)">'+esc(ab)+'</span>';
   return '<div class="side">'+img+'<span>'+esc(ab)+'</span></div>';
 }
 function crestBig(name){
   var ab=abbr(name), src=logoOf(name);
-  return src?'<img class="crest xl bg" src="'+esc(src)+'" alt="">'
+  return src?'<img class="crest xl bg" src="'+esc(src)+'" alt=""'+rfb(name,'crest xl')+'>'
     :'<span class="crest xl ph" style="--c:hsl('+hue(name)+' 45% 55%)">'+esc(ab)+'</span>';
 }
 function recMap(){var m={};standings().forEach(function(x){m[x.t]=x.w+'–'+x.l});return m}
