@@ -1270,8 +1270,6 @@ function vSpiele(){
   var h=teamNote()
     +'<div class="filt" role="group" aria-label="Team"><button type="button" data-calteam="sel" aria-pressed="'+!calAll+'">'+esc(TEAM.label)+'</button><button type="button" data-calteam="all" aria-pressed="'+calAll+'">'+L('All')+'</button></div>'
     +head
-    +'<button type="button" class="viewtog" data-calview>'+L(calWeek?'Show month':'Show week')+'</button>'
-    +'<div class="dayline"><b>'+(selDay===dstr(today)?L('Today'):short(sd))+'</b><span>'+items.length+' '+L(items.length===1?'entry':'entries')+'</span></div>'
     +(items.length?'<div class="card list grl">'+items.map(function(x){return x.row||x.html}).join('')+'</div>':empty(L('No games'),L('Nothing scheduled on this day.')));
   h+=calSub();
   return h;
