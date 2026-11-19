@@ -498,6 +498,10 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
 .gr .grc{flex:1}
 .gr .grc b{font-size:38px;color:var(--ink);font-weight:700}
 .gr.home .grc span{color:var(--accent);font-weight:600}
+a.gr{display:block;color:inherit;text-decoration:none}
+.card.list>a.gr{padding:14px 0}
+.card.list>a.gr:first-child{padding-top:6px;border-top:0}
+.card.list>a.gr:last-child{padding-bottom:6px}
 </style>
 
 </head>
@@ -1158,7 +1162,10 @@ function vStart(){
     h+='<h2 class="sec">'+L('Next')+'</h2><div class="card list">';
     more.forEach(function(g){
       var gd=pd(g.date);
-      h+='<a class="row mrow'+(isHome(g)?' home':'')+'" href="#games">'+dateBox(gd)+mv(g)+'<div class="mr"><b>'+(g.time||L('TBC'))+'</b><span>'+WD[gd.getDay()]+' · '+venue(g)+'</span></div></a>';
+      var rm=recMap();
+      function gs(n){return '<div class="gside">'+crest(n)+'<em class="rc">'+(rm[n]||'&nbsp;')+'</em></div>'}
+      h+='<a class="gr'+(isHome(g)?' home':'')+'" href="#games"><div class="sbt"><span>'+dateTop(gd)+(g.lg===CUP?' · '+L('Cup'):'')+(g.round?' · '+esc(L(g.round)):'')+'</span></div>'
+        +'<div class="sbm" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+gs(g.h)+'<div class="grc"><b>'+(g.time||L('TBC'))+'</b><span>'+venue(g)+'</span></div>'+gs(g.a)+'</div></a>';
     });
     h+='</div>';
   }
