@@ -823,23 +823,6 @@ function teamSelect(){
 var ICS_BASE='www.luxembourg.basketball/layout/themes/flbb/calendar/';
 function calLink(t){return t.ics?'<a class="maplink" href="webcal://'+ICS_BASE+t.ics+'.ics" style="margin-right:14px">Subscribe</a><a class="maplink" href="https://'+ICS_BASE+t.ics+'.ics" target="_blank" rel="noopener">Download .ics</a>':''}
 function calSub(){return TEAM.ics?'<h2 class="sec">Calendar subscription</h2><div class="card info"><b>'+esc(TEAM.label)+' · '+esc(TEAM.league)+'</b><span>Add all games to your phone calendar. It updates automatically.</span><div style="margin-top:6px">'+calLink(TEAM)+'</div></div>':''}
-function recap(){
-  var rs=results(), st=teamStats(CLUB), w,l,ppg,opg,d,rank=null;
-  if(st.n){w=st.w;l=st.l;ppg=st.ppg;opg=st.opg;d=st.d;rank=st.rank}
-  else if(rs.length){
-    var pf=0,pa=0; w=0; l=0;
-    rs.forEach(function(g){pf+=g.us;pa+=g.them;if(g.us>g.them)w++;else l++});
-    ppg=pf/rs.length; opg=pa/rs.length; d=pf-pa;
-  } else return '<div class="card empty"><b>No games played yet</b><p>The recap appears after the first result.</p></div>';
-  var form=rs.slice(0,5).reverse().map(function(g){return g.us>g.them?'W':'L'});
-  var last=rs[0];
-  return '<div class="card"><div class="stats"><div class="stat"><b>'+w+'–'+l+'</b><span>Record</span></div>'
-    +'<div class="stat"><b>'+(rank?ord(rank):(w+l))+'</b><span>'+(rank?'Standings':'Games')+'</span></div>'
-    +'<div class="stat"><b>'+signed(Math.round(d))+'</b><span>Diff</span></div></div>'
-    +'<div class="formrow"><span>'+Math.round(ppg)+' pts · '+Math.round(opg)+' allowed per game</span>'+formDots(form,false)+'</div>'
-    +(last?'<div class="formrow"><span>Last · '+short(pd(last.date))+'</span><span><b style="color:var(--ink)">'+title(last)+' '+score(last)+'</b></span></div>':'')
-    +'</div>';
-}
 function vNews(){return '<h2 class="sec">Club news</h2><div class="card empty"><b>Coming soon</b><p>News from US Heffingen will appear here.</p></div>'}
 function teamNote(){return TEAM.note?'<p class="note">'+esc(TEAM.note)+'</p>':''}
 function vStart(){
@@ -856,7 +839,6 @@ function vStart(){
     h+=empty('No more games','There are no upcoming games in the schedule.');
   }
   h+=teamNote();
-  h+='<h2 class="sec">Season recap</h2>'+recap();
   var more=ng?up.filter(function(g){return g!==ng&&startOf(g)>startOf(ng)}).slice(0,3):[];
   if(more.length){
     h+='<h2 class="sec">Next</h2><div class="card list">';
