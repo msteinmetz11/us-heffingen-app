@@ -555,6 +555,12 @@ details.scout .sl{font:600 15px var(--f-body);margin-top:4px}
 details.scout .chev{color:var(--accent);font-size:22px;line-height:1;transition:transform .2s}
 details.scout[open] .chev{transform:rotate(180deg)}
 details.scout .sg{margin-top:10px}
+.herob .count{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px}
+.herob .count>div{padding:5px 2px 4px}
+.herob .count b{font-size:22px}
+.herob .count span{margin-top:2px;font-size:9px}
+.hbm span{display:inline-flex;align-items:center;gap:6px}
+.hbm .maplink{padding:0;text-decoration:none;color:var(--hero-ink)}.hbm .maplink .pin{margin:0;width:16px;height:16px}
 </style>
 
 </head>
@@ -1203,9 +1209,9 @@ function vStart(){
   if(ng){
     var d=pd(ng.date);
     h+='<section class="hero herob" aria-label="'+L('Next game')+'"><div class="eyebrow">'+L('Next game')+' · '+dateTop(d)+'</div>'
-      +'<div class="hb" role="group" aria-label="'+esc(ng.h+' versus '+ng.a)+'">'+crest(ng.h)+'<div class="hbm"><b>'+(ng.time||L('TBC'))+'</b><span>'+venue(ng)+'</span></div>'+crest(ng.a)+'</div>'
-      +'<div class="count tx" id="cd" data-ts="'+startOf(ng).getTime()+'" role="timer" aria-label="Time until tip-off"></div>'
-      +'<div class="meta">'+(ng.lg===CUP?'<span class="chip">'+L('Cup')+'</span>':'')+(ng.round?esc(L(ng.round))+(ng.place?' · ':''):'')+(ng.place?esc(ng.place):'')+(ng.addr?maplinkMini(ng.addr):'')+'</div>'
+      +'<div class="hb" role="group" aria-label="'+esc(ng.h+' versus '+ng.a)+'">'+crest(ng.h)+'<div class="hbm"><b>'+(ng.time||L('TBC'))+'</b><span>'+venue(ng)+(ng.addr?' '+maplinkMini(ng.addr):'')+'</span></div>'+crest(ng.a)+'</div>'
+      +'<div class="count" id="cd" data-ts="'+startOf(ng).getTime()+'" role="timer" aria-label="Time until tip-off"><div><b>0</b><span>'+L('days')+'</span></div><div><b>0</b><span>'+L('hours')+'</span></div><div><b>0</b><span>'+L('min')+'</span></div><div><b>0</b><span>'+L('sec')+'</span></div></div>'
+      +((ng.lg===CUP||ng.round)?'<div class="meta">'+(ng.lg===CUP?'<span class="chip">'+L('Cup')+'</span>':'')+(ng.round?esc(L(ng.round)):'')+'</div>':'')
       +'</section>'+scout(ng);
   } else {
     h+=empty(L('No more games'),L('There are no upcoming games in the schedule.'));
