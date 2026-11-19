@@ -524,6 +524,10 @@ a.gr{display:block;color:inherit;text-decoration:none}
 .calsticky .wstrip{margin-bottom:0;min-width:0;width:100%}
 .calsticky .filt{margin-bottom:2px}
 html.tab-games .top{position:sticky;top:0;z-index:30;background:var(--bg);padding-top:calc(6px + env(safe-area-inset-top,0px));padding-bottom:8px}
+.grl{border-top:0!important}
+.calsticky{margin-bottom:0}
+.grl .gr:first-child{padding-top:18px}
+.gr .sbt{margin-bottom:6px}
 </style>
 
 </head>
@@ -1601,7 +1605,9 @@ document.addEventListener('click',function(e){
   if(dd){selDay=dd.dataset.day;render();}
 });
 document.addEventListener('scroll',function(e){var ws=e.target;if(!ws||ws.id!=='wstrip')return;
-  var bs=ws.querySelectorAll('.wd'); if(!bs.length)return; var w=bs[0].offsetWidth, i=Math.max(0,Math.min(bs.length-1,Math.floor((ws.scrollLeft+ws.clientWidth/2)/w))), d=pd(bs[i].dataset.day), t=document.getElementById('calmon');
+  var bs=ws.querySelectorAll('.wd'); if(!bs.length)return; var wr=ws.getBoundingClientRect(), cx=wr.left+wr.width/2, bi=bs[0];
+  for(var q=0;q<bs.length;q++){var r=bs[q].getBoundingClientRect(); if(r.left<=cx&&r.right>cx){bi=bs[q];break}}
+  var d=pd(bi.dataset.day), t=document.getElementById('calmon');
   if(t) t.textContent=MONTH[d.getMonth()]+' '+d.getFullYear();
 },true);
 document.addEventListener('change',function(e){var t=e.target;if(t&&t.hasAttribute&&t.hasAttribute('data-setteam')){useTeam(t.value);render();return}if(t&&t.hasAttribute&&t.hasAttribute('data-clubteam')){clubTeam=t.value;render()}});
