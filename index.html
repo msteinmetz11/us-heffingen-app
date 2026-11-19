@@ -479,6 +479,8 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
 .gside .side{width:auto}
 .gside .rc{font:600 12px var(--f-body);font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums}
 .grm{align-items:center}
+.grl{padding:0}
+.grl .gr{padding:14px 0}
 </style>
 
 </head>
@@ -1233,7 +1235,7 @@ function calGames(){
       function gs(n){return '<div class="gside">'+crest(n)+'<em class="rc">'+(rm[n]||'&nbsp;')+'</em></div>'}
       var rowh='<article class="gr'+(isHome(g)?' home':'')+'"><div class="grt"><b>'+dateTop(d)+'</b>'+(calAll?' · '+esc(t.label):'')+(g.lg===CUP?' · '+L('Cup'):'')+(g.round?' · '+esc(L(g.round)):'')+'</div>'
         +'<div class="grm" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+gs(g.h)+'<div class="grc"><b>'+(played?score(g):(g.time||L('TBC')))+'</b><span>'+(played?L('Final'):venue(g))+'</span></div>'+gs(g.a)+'</div>'
-        +(g.place?'<p class="grp">'+esc(g.place)+'</p>':'')+(g.addr&&!played?'<p class="grp">'+maplink(g.addr)+'</p>':'')+'</article>';
+        +'</article>';
       out.push({k:k,t:t,g:g,date:g.date,time:g.time||'',played:played,row:rowh,
         html:'<article class="card ev game'+(isHome(g)?' home':'')+'"><div class="evt">'+(calAll?'<b>'+esc(t.label)+'</b> · ':'')+'<b>'+esc(g.lg===CUP?L('Cup'):(g.lg||LEAGUE))+'</b>'+(g.round?' · '+esc(L(g.round)):'')+' · '+venue(g)+(g.place?' · '+esc(g.place):'')+'</div>'
           +'<div class="vsrow" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+crest(g.h)+'<div class="rec"></div><div class="big">'+(played?score(g):(g.time||L('TBC')))+'</div><div class="rec"></div>'+crest(g.a)+'</div>'
@@ -1270,7 +1272,7 @@ function vSpiele(){
   var h=teamNote()
     +'<div class="filt" role="group" aria-label="Team"><button type="button" data-calteam="sel" aria-pressed="'+!calAll+'">'+esc(TEAM.label)+'</button><button type="button" data-calteam="all" aria-pressed="'+calAll+'">'+L('All')+'</button></div>'
     +head
-    +(items.length?'<div class="card list grl">'+items.map(function(x){return x.row||x.html}).join('')+'</div>':empty(L('No games'),L('Nothing scheduled on this day.')));
+    +(items.length?'<div class="grl">'+items.map(function(x){return x.row||x.html}).join('')+'</div>':empty(L('No games'),L('Nothing scheduled on this day.')));
   h+=calSub();
   return h;
 }
