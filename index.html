@@ -818,7 +818,6 @@ function teamSelect(){
 var ICS_BASE='www.luxembourg.basketball/layout/themes/flbb/calendar/';
 function calLink(t){return t.ics?'<a class="maplink" href="webcal://'+ICS_BASE+t.ics+'.ics" style="margin-right:14px">Subscribe</a><a class="maplink" href="https://'+ICS_BASE+t.ics+'.ics" target="_blank" rel="noopener">Download .ics</a>':''}
 function calSub(){return TEAM.ics?'<h2 class="sec">Calendar subscription</h2><div class="card info"><b>'+esc(TEAM.label)+' · '+esc(TEAM.league)+'</b><span>Add all games to your phone calendar. It updates automatically.</span><div style="margin-top:6px">'+calLink(TEAM)+'</div></div>':''}
-function calSubAll(){return '<h2 class="sec">Calendar subscriptions</h2><div class="card list">'+TEAM_ORDER.map(function(k){var t=TEAMS[k];return '<div class="row" style="justify-content:space-between;flex-wrap:wrap"><div style="min-width:0"><h3 style="margin:0">'+esc(t.label)+'</h3><p style="margin:2px 0 0">'+esc(t.league)+'</p></div><div>'+calLink(t)+'</div></div>'}).join('')+'</div>'}
 function teamNote(){return TEAM.note?'<p class="note">'+esc(TEAM.note)+'</p>':''}
 function vStart(){
   var up=upcoming(), ng=nextGame(), r=results(), h='';
@@ -848,6 +847,7 @@ function vStart(){
     h+='<a href="#games" style="text-decoration:none;color:inherit"><div class="card info"><span>Last game · '+short(pd(last.date))+'</span>'
       +'<b>'+title(last)+'</b><span>'+score(last)+(last.us>last.them?' · Win':' · Loss')+'</span></div></a>';
   }
+  h+=calSub();
   return h;
 }
 
@@ -946,7 +946,6 @@ function vSpiele(){
       h+='<div class="card res"><div class="sum">'+head+'</div></div>';
     }
   });
-  h+=calSub();
   return h;
 }
 
@@ -1041,7 +1040,6 @@ function vClub(){
     });
     h+='</div>';
   }
-  h+=calSubAll();
   return h;
 }
 
