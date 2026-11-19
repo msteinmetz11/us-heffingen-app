@@ -20,6 +20,7 @@ drop policy if exists "alle lesen" on public.coach_events;
 create policy "alle lesen" on public.coach_events for select to anon using (true);
 revoke all on public.coach_codes from anon, authenticated;
 revoke insert, update, delete on public.coach_events from anon, authenticated;
+grant select on public.coach_events to anon;
 
 insert into public.coach_codes (team, hash) values
   ('men','abdbc18fb3631c5ee2aaafd6036ecb1a8d83201fefe2e1302e65276be206f76a'),
