@@ -442,6 +442,8 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
 .sbm{justify-content:center;align-items:flex-start}
 .sbm b,.sbm i{align-self:flex-start;height:44px;display:flex;align-items:center;justify-content:center}
 .sbm .side{align-items:center;justify-items:center}
+.sbm{align-items:center}
+.sbm b,.sbm i{align-self:center;height:auto}
 </style>
 
 </head>
@@ -1056,7 +1058,7 @@ function resultCard(g){
   var d=pd(g.date), w=g.us>g.them, tot=function(i){return g.q.reduce(function(a,q){return a+q[i]},0)};
   var hs=isHome(g)?g.us:g.them, as=isHome(g)?g.them:g.us;
   function side(n){return crest(n)}
-  var head='<div class="sbt"><span>'+WD[d.getDay()]+' '+d.getDate()+' '+MO[d.getMonth()]+(g.lg===CUP?' · '+L('Cup'):'')+'</span><span class="dot '+(w?'w':'l')+'">'+L(w?'W':'L')+'</span></div>'
+  var head='<div class="sbt"><span>'+WD[d.getDay()]+' '+d.getDate()+' '+MO[d.getMonth()]+(g.lg===CUP?' · '+L('Cup'):'')+'</span></div>'
     +'<div class="sbm" role="img" aria-label="'+esc(g.h+' '+hs+' : '+as+' '+g.a)+'">'+side(g.h)+'<b class="'+(hs>as?'win':'')+'">'+hs+'</b><i>'+L('Final')+'</i><b class="'+(as>hs?'win':'')+'">'+as+'</b>'+side(g.a)+'</div>';
   var body='<p class="cap">'+sub(g)+'</p>';
   if(g.q&&g.q.length){
