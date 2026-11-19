@@ -320,6 +320,7 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
     <section class="view" id="v-club" hidden></section>
     <section class="view" id="v-games" hidden></section>
     <section class="view" id="v-standings" hidden></section>
+    <section class="view" id="v-news" hidden></section>
     <section class="view" id="v-squad" hidden></section>
     <section class="view" id="v-training" hidden></section>
   </main>
@@ -331,6 +332,7 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
     <a href="#club" data-tab="club" aria-label="Club" title="Club"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M17 14c2.6 0 4.5 2 4.5 5"/></svg></a>
     <a href="#games" data-tab="games" aria-label="Games" title="Games"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18"/><path d="M5.6 5.6c2.6 2.6 2.6 10.2 0 12.8M18.4 5.6c-2.6 2.6-2.6 10.2 0 12.8"/></svg></a>
     <a href="#standings" data-tab="standings" aria-label="Standings" title="Standings"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H4v1a4 4 0 0 0 4 4M16 6h4v1a4 4 0 0 1-4 4"/><path d="M12 13v4M8 20h8M10 17h4"/></svg></a>
+    <a href="#news" data-tab="news" aria-label="News" title="News"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h13v14a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v10a2 2 0 0 1-2 2"/><path d="M8 9h5M8 13h5M8 17h5"/></svg></a>
     <a href="#squad" data-tab="squad" aria-label="Squad" title="Squad"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7.5" r="3.5"/><path d="M5 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/></svg></a>
     <a href="#training" data-tab="training" aria-label="Training" title="Training"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 8v5l3 2M9 2h6"/></svg></a>
   </nav>
@@ -648,7 +650,7 @@ var POS={PG:'Point Guard',SG:'Shooting Guard',SF:'Small Forward',PF:'Power Forwa
 /* ---------- Hilfsfunktionen ---------- */
 var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-var TABS=['home','club','games','standings','squad','training'];
+var TABS=['home','club','games','standings','news','squad','training'];
 function tabOk(t){return t==='squad'?Object.keys(PLAYERS||{}).length>0:t==='training'?TRAINING_WEEK.length>0:true}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function pd(s){var p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2])}
@@ -838,6 +840,7 @@ function recap(){
     +(last?'<div class="formrow"><span>Last · '+short(pd(last.date))+'</span><span><b style="color:var(--ink)">'+title(last)+' '+score(last)+'</b></span></div>':'')
     +'</div>';
 }
+function vNews(){return '<h2 class="sec">Club news</h2><div class="card empty"><b>Coming soon</b><p>News from US Heffingen will appear here.</p></div>'}
 function teamNote(){return TEAM.note?'<p class="note">'+esc(TEAM.note)+'</p>':''}
 function vStart(){
   var up=upcoming(), ng=nextGame(), r=results(), h='';
@@ -863,8 +866,6 @@ function vStart(){
     });
     h+='</div>';
   }
-  h+='<h2 class="sec">Club news</h2><div class="card empty"><b>Coming soon</b><p>News from US Heffingen will appear here.</p></div>';
-  h+='<h2 class="sec">US Heffingen</h2><div class="card info"><b>Basketball Club Union Sportive Heffingen</b><span>Founded 1959</span><div style="margin-top:6px">'+maplink(HALL)+'</div><div style="margin-top:4px"><a class="maplink" href="http://www.usheffingen.com" target="_blank" rel="noopener">usheffingen.com</a></div></div>';
   h+=calSub();
   return h;
 }
@@ -1066,7 +1067,7 @@ function vClub(){
   return h;
 }
 
-var VIEWS={home:vStart,club:vClub,games:vSpiele,standings:vTabelle,squad:vKader,training:vTraining};
+var VIEWS={home:vStart,club:vClub,games:vSpiele,standings:vTabelle,news:vNews,squad:vKader,training:vTraining};
 
 /* ---------- Rendern ---------- */
 function current(){var v=location.hash.slice(1);return TABS.indexOf(v)>-1&&tabOk(v)?v:'home'}
