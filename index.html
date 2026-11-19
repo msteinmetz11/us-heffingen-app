@@ -418,7 +418,7 @@ var BOX={
 
 /* ---------- Teams des Clubs: jedes Team hat eigene Daten; useTeam() schaltet die globalen Variablen um ---------- */
 var TEAMS={};
-var TEAM_ORDER=['men','menb','menc','women'];
+var TEAM_ORDER=['men','menb','menc','women','u22m','u19w','u16m','u16w','u14m','u14w','u12m','u12w'];
 TEAMS.men={key:'men',label:'Men A',club:'US Heffingen',league:'Nationale 2',heading:'Nationale 2 Men',sub:'Men A · Nationale 2 · 2026/27',live:true,
   T:T,PLAYED:PLAYED,META:META,CUPGAMES:CUPGAMES,FIXTURES:FIXTURES,TRAINING_WEEK:TRAINING_WEEK,PLAYERS:PLAYERS,BOX:BOX};
 TEAMS.menb={key:'menb',label:'Men B',club:'US Heffingen B',league:'Division 1',heading:'Division 1 Men',sub:'Men B · Division 1 · 2026/27',live:false,
@@ -519,6 +519,106 @@ TEAMS.women={key:'women',label:'Women A',club:'US Heffingen',league:'Nationale 2
     {id:'sd11',date:'2027-04-10',h:"Etzella Ettelbruck",a:"US Heffingen",lg:'Nationale 2'},
     {id:'sd12',date:'2027-04-17',place:'Heffingen',addr:HALL,h:"US Heffingen",a:"Kordall Steelers",lg:'Nationale 2'}
   ],TRAINING_WEEK:[],PLAYERS:{},BOX:{}};
+TEAMS.u22m={key:'u22m',label:'Men U22',club:'US Heffingen',league:'U22 N2',heading:'U22 Men N2',sub:'Men U22 · U22 N2 · 2026/27',live:false,
+  T:{},PLAYED:[],META:{},CUPGAMES:[
+    {id:'u221',date:'2026-10-11',time:'18:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Nitia Bettembourg',us:91,them:30,lg:'U22 N2'},
+    {id:'u222',date:'2026-10-18',time:'18:45',place:'Mamer',addr:'Centre Sportif \'Nic. Frantz\', 1, rue de Bertrange, 8216 Mamer',h:'Mambra Mamer',a:'US Heffingen',us:57,them:66,lg:'U22 N2'},
+    {id:'u223',date:'2026-10-26',time:'20:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Vibball Luxembourg',us:68,them:58,lg:'U22 N2'},
+    {id:'u224',date:'2026-11-08',time:'18:00',place:'Reuler',addr:'Hall Sportif, 9768 Reuler',h:'North Fox',a:'US Heffingen',us:84,them:60,lg:'U22 N2'}
+  ],FIXTURES:[
+    {id:'u225',date:'2026-11-30',time:'19:00',place:'Luxembourg',addr:'hall sportif ISL 1, 36, blv Pierre Dupond, 1430 Luxembourg',h:'Vibball Luxembourg',a:'US Heffingen',lg:'U22 N2'},
+    {id:'u226',date:'2026-12-07',time:'20:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'BC Mess',lg:'U22 N2'},
+    {id:'u227',date:'2026-12-20',time:'14:00',place:'Bettembourg',addr:'centre sportif hall, 30, rue J. H. Polk, 3275 Bettembourg',h:'Nitia Bettembourg',a:'US Heffingen',lg:'U22 N2'},
+    {id:'u228',date:'2027-01-11',time:'20:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Mambra Mamer',lg:'U22 N2'},
+    {id:'u229',date:'2027-02-08',time:'20:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'North Fox',lg:'U22 N2'}
+  ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
+  table:[]};
+TEAMS.u16m={key:'u16m',label:'Men U16',club:'US Heffingen',league:'U16 Division 5',heading:'U16 Division 5 Men',sub:'Men U16 · Division 5 · 2026/27',live:false,
+  T:{},PLAYED:[],META:{},CUPGAMES:[
+    {id:'u161',date:'2026-10-03',time:'14:45',place:'Contern',addr:'Centre Scolaire et Sportif, 40, rue de Syren, 5316 Contern',h:'AB Contern B',a:'US Heffingen',us:65,them:64,lg:'U16 Division 5'},
+    {id:'u162',date:'2026-10-07',time:'19:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'T71 Dudelange',us:22,them:101,lg:CUP,round:'1/16 finals'},
+    {id:'u163',date:'2026-10-11',time:'17:15',place:'Dudelange',addr:'c.s. Hartmann - salle Grimler, rue Nic Biever, 3425 Dudelange',h:'T71 Dudelange C',a:'US Heffingen',us:61,them:73,lg:'U16 Division 5'},
+    {id:'u164',date:'2026-10-17',time:'15:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Mambra Mamer B',us:58,them:61,lg:'U16 Division 5'},
+    {id:'u165',date:'2026-10-25',time:'14:00',place:'Luxembourg-Limpertsberg',addr:'Tramsschapp Luxembourg, 47a, rue Ermesinde, 1469 Luxembourg-Limpertsberg',h:'Racing Luxembourg B',a:'US Heffingen',us:49,them:71,lg:'U16 Division 5'}
+  ],FIXTURES:[
+    {id:'u166',date:'2026-11-21',time:'16:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Mambra Mamer B',lg:'U16 Division 5'},
+    {id:'u167',date:'2026-11-28',time:'15:00',place:'Bascharage',addr:'Hall op Acker, 83a, avenue de Luxembourg, 4950 Bascharage',h:'Bascharage Hedgehogs',a:'US Heffingen',lg:'U16 Division 5'},
+    {id:'u168',date:'2026-12-06',time:'15:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Racing Luxembourg B',lg:'U16 Division 5'},
+    {id:'u169',date:'2026-12-12',time:'15:15',place:'Niederkorn',addr:'Centre Sportif Niederkorn, rue J.B. Scharlé, 4666 Niederkorn',h:'Kordall Steelers',a:'US Heffingen',lg:'U16 Division 5'}
+  ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
+  table:[]};
+TEAMS.u14m={key:'u14m',label:'Men U14',club:'US Heffingen',league:'U14 Division 4',heading:'U14 Division 4 Men',sub:'Men U14 · Division 4 · 2026/27',live:false,
+  T:{},PLAYED:[],META:{},CUPGAMES:[
+    {id:'u141',date:'2026-09-26',time:'15:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'BBC East Side Pirates B',us:49,them:41,lg:'U14 Division 4'},
+    {id:'u142',date:'2026-10-03',time:'15:30',place:'Soleuvre',addr:'KUSS Scheierhaff, rue Jean Anen, 4413 Soleuvre',h:'AS Soleuvre B',a:'US Heffingen',us:40,them:64,lg:'U14 Division 4'},
+    {id:'u143',date:'2026-10-10',time:'14:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Arantia Larochette',us:37,them:120,lg:'U14 Division 4'},
+    {id:'u144',date:'2026-10-17',time:'14:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Basket Esch B',us:61,them:60,lg:'U14 Division 4'},
+    {id:'u145',date:'2026-10-24',time:'15:15',place:'Niederkorn',addr:'Centre Sportif Niederkorn, rue J.B. Scharlé, 4666 Niederkorn',h:'Kordall Steelers',a:'US Heffingen',us:25,them:115,lg:'U14 Division 4'}
+  ],FIXTURES:[
+    {id:'u146',date:'2026-11-21',time:'15:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'T71 Dudelange B',lg:'U14 Division 4'},
+    {id:'u147',date:'2026-11-25',time:'19:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'AS Soleuvre',lg:CUP,round:'1/8 finals'},
+    {id:'u148',date:'2026-11-28',time:'13:30',place:'Bascharage',addr:'Hall op Acker, 83a, avenue de Luxembourg, 4950 Bascharage',h:'Bascharage Hedgehogs',a:'US Heffingen',lg:'U14 Division 4'},
+    {id:'u149',date:'2026-12-05',time:'15:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'AS Soleuvre B',lg:'U14 Division 4'},
+    {id:'u1410',date:'2026-12-12',time:'16:45',place:'Bertrange',addr:'centre sportif \'Atert\', rue Atert, 8005 Bertrange',h:'Sparta Bertrange C',a:'US Heffingen',lg:'U14 Division 4'}
+  ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
+  table:[]};
+TEAMS.u19w={key:'u19w',label:'Women U19',club:'US Heffingen',league:'U19 Division 4',heading:'U19 Division 4 Women',sub:'Women U19 · Division 4 · 2026/27',live:false,
+  T:{},PLAYED:[],META:{},CUPGAMES:[
+    {id:'u191',date:'2026-09-26',time:'15:00',place:'Beggen',addr:'Ecole primaire, 26 rue de Rochefort, 2431 Beggen',h:'Zesummen Aktiv',a:'US Heffingen',us:72,them:23,lg:'U19 Division 4'},
+    {id:'u192',date:'2026-10-11',time:'15:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Les Sangliers Wooltz B',us:41,them:65,lg:'U19 Division 4'},
+    {id:'u193',date:'2026-10-17',time:'18:30',place:'Oberanven',addr:'Sportzenter Jos Mouton, am Sand, 6999 Oberanven',h:'Gréngewald Hueschtert B',a:'US Heffingen',us:35,them:93,lg:'U19 Division 4'},
+    {id:'u194',date:'2026-11-14',time:'15:00',place:'Beggen',addr:'Ecole primaire, 26 rue de Rochefort, 2431 Beggen',h:'Zesummen Aktiv',a:'US Heffingen',us:55,them:12,lg:'U19 Division 4'}
+  ],FIXTURES:[
+    {id:'u195',date:'2026-11-29',time:'15:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Les Sangliers Wooltz B',lg:'U19 Division 4'},
+    {id:'u196',date:'2026-11-30',time:'19:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Nitia Bettembourg',lg:CUP,round:'1/8 finals'},
+    {id:'u197',date:'2026-12-13',time:'15:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Rebound Préizerdaul',lg:'U19 Division 4'}
+  ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
+  table:[]};
+TEAMS.u16w={key:'u16w',label:'Women U16',club:'US Heffingen',league:'U16 Division 2',heading:'U16 Division 2 Women',sub:'Women U16 · Division 2 · 2026/27',live:false,
+  T:{},PLAYED:[],META:{},CUPGAMES:[
+    {id:'w161',date:'2026-09-27',time:'14:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Nitia Bettembourg',us:74,them:39,lg:'U16 Division 2'},
+    {id:'w162',date:'2026-10-03',time:'15:00',place:'Ettelbruck',addr:'Centre sportif du Deich, 9012 Ettelbruck',h:'Etzella Ettelbruck',a:'US Heffingen',us:52,them:64,lg:'U16 Division 2'},
+    {id:'w163',date:'2026-10-11',time:'17:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Basket Esch',us:47,them:57,lg:'U16 Division 2'},
+    {id:'w164',date:'2026-10-17',time:'11:00',place:'Echternach',addr:'Hall Sportif, rue de la Chapelle, 6419 Echternach',h:'BBC East Side Pirates',a:'US Heffingen',us:49,them:74,lg:'U16 Division 2'},
+    {id:'w165',date:'2026-11-14',time:'14:30',place:'Bertrange',addr:'salle Niki Bettendorf, 2, beim Schlass, 8058 Bertrange',h:'Sparta Bertrange',a:'US Heffingen',us:34,them:59,lg:'U16 Division 2'}
+  ],FIXTURES:[
+    {id:'w166',date:'2026-11-21',time:'18:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'T71 Dudelange B',lg:'U16 Division 2'},
+    {id:'w167',date:'2026-11-26',time:'17:00',place:'Wasserbillig',addr:'Centre Sportif, route de Luxembourg, 6633 Wasserbillig',h:'BBC East Side Pirates',a:'US Heffingen',lg:CUP,round:'1/8 finals'},
+    {id:'w168',date:'2026-11-28',time:'17:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'BBC East Side Pirates',lg:'U16 Division 2'},
+    {id:'w169',date:'2026-12-05',time:'15:45',place:'Walferdange',addr:'c.s.\'Prince Henri\' nouv. salle, Walferdange',h:'Résidence Walferdange',a:'US Heffingen',lg:'U16 Division 2'},
+    {id:'w1610',date:'2026-12-13',time:'17:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Telstar Hesperange',lg:'U16 Division 2'}
+  ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
+  table:[]};
+TEAMS.u14w={key:'u14w',label:'Women U14',club:'US Heffingen',league:'U14 Division 1',heading:'U14 Division 1 Women',sub:'Women U14 · Division 1 · 2026/27',live:false,
+  T:{},PLAYED:[],META:{},CUPGAMES:[
+    {id:'w141',date:'2026-09-26',time:'14:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Arantia Larochette',us:51,them:75,lg:'U14 Division 1'},
+    {id:'w142',date:'2026-10-03',time:'13:30',place:'Ettelbruck',addr:'Centre sportif du Deich, 9012 Ettelbruck',h:'Etzella Ettelbruck',a:'US Heffingen',us:40,them:96,lg:'U14 Division 1'},
+    {id:'w143',date:'2026-10-10',time:'15:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Basket Esch',us:73,them:25,lg:'U14 Division 1'},
+    {id:'w144',date:'2026-10-18',time:'15:45',place:'Stadtbredimus',addr:'Hall d. Sports Jeannot Bonifas, 57, Dicksstrooss, 5451 Stadtbredimus',h:'Musel Pikes',a:'US Heffingen',us:51,them:98,lg:'U14 Division 1'},
+    {id:'w145',date:'2026-10-25',time:'14:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'T71 Dudelange',us:47,them:33,lg:'U14 Division 1'},
+    {id:'w146',date:'2026-11-15',time:'14:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Arantia Larochette',us:50,them:83,lg:'U14 Division 1'}
+  ],FIXTURES:[
+    {id:'w147',date:'2026-11-22',time:'14:00',place:'Wasserbillig',addr:'Centre Sportif, route de Luxembourg, 6633 Wasserbillig',h:'BBC East Side Pirates',a:'US Heffingen',lg:'U14 Division 1'},
+    {id:'w148',date:'2026-11-25',time:'19:00',place:'Dudelange',addr:'c.s. Hartmann - salle Grimler, rue Nic Biever, 3425 Dudelange',h:'T71 Dudelange',a:'US Heffingen',lg:CUP,round:'1/8 finals'},
+    {id:'w149',date:'2026-11-29',time:'17:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Gréngewald Hueschtert',lg:'U14 Division 1'},
+    {id:'w1410',date:'2026-12-05',time:'13:00',place:'Ettelbruck',addr:'Centre sportif du Deich, 9012 Ettelbruck',h:'Etzella Ettelbruck',a:'US Heffingen',lg:'U14 Division 1'},
+    {id:'w1411',date:'2026-12-12',time:'15:30',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Musel Pikes',lg:'U14 Division 1'}
+  ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
+  table:[]};
+TEAMS.u12m={key:'u12m',label:'Men U12',club:'US Heffingen',league:'U12',heading:'U12 Men',sub:'Men U12 · 2026/27',live:false,
+  T:{},PLAYED:[],META:{},CUPGAMES:[
+    
+  ],FIXTURES:[
+    
+  ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
+  table:[]};
+TEAMS.u12w={key:'u12w',label:'Women U12',club:'US Heffingen',league:'U12',heading:'U12 Women',sub:'Women U12 · 2026/27',live:false,
+  T:{},PLAYED:[],META:{},CUPGAMES:[
+    
+  ],FIXTURES:[
+    
+  ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
+  table:[]};
 var TEAM=TEAMS.men;
 function applyTeam(t){
   TEAM=t;
