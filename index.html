@@ -201,6 +201,19 @@ tbody tr:last-child td{border-bottom:0}
   padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .tabs nav{display:grid; grid-template-columns:repeat(5,1fr); gap:4px; max-width:640px; margin:0 auto}
 .tabs a svg{display:block}
+.calhead{align-items:center}
+.mnav{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 24px/1 var(--f-body);cursor:pointer}
+.mcal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.mwd{text-align:center;font:600 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:4px 0}
+.mday{position:relative;aspect-ratio:1/1.05;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;display:grid;align-content:center;justify-items:center;gap:3px;padding:0;cursor:pointer;font-family:var(--f-body)}
+.mday b{font:700 18px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.mday.td{border-color:var(--accent)}
+.mday .pips{display:flex;gap:3px;height:6px}
+.mday .pips i{width:6px;height:6px;border-radius:50%;background:var(--muted)}
+.mday .pips i.g{background:var(--accent)}
+.mday[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#2A1700}
+.mday[aria-pressed="true"] .pips i{background:#3D2500}
+
 .formrow .fm{display:flex;gap:4px;flex:none;flex-wrap:nowrap}
 .formrow .fm .dot{width:22px;height:22px;font-size:11px}
 .formrow>span{min-width:0}
@@ -330,7 +343,7 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
   <nav aria-label="Main menu">
     <a href="#home" data-tab="home" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></a>
     <a href="#club" data-tab="club" aria-label="Club" title="Club"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M17 14c2.6 0 4.5 2 4.5 5"/></svg></a>
-    <a href="#games" data-tab="games" aria-label="Games" title="Games"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18"/><path d="M5.6 5.6c2.6 2.6 2.6 10.2 0 12.8M18.4 5.6c-2.6 2.6-2.6 10.2 0 12.8"/></svg></a>
+    <a href="#games" data-tab="games" aria-label="Calendar" title="Calendar"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"/></svg></a>
     <a href="#standings" data-tab="standings" aria-label="Standings" title="Standings"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H4v1a4 4 0 0 0 4 4M16 6h4v1a4 4 0 0 1-4 4"/><path d="M12 13v4M8 20h8M10 17h4"/></svg></a>
     <a href="#news" data-tab="news" aria-label="News" title="News"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h13v14a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v10a2 2 0 0 1-2 2"/><path d="M8 9h5M8 13h5M8 17h5"/></svg></a>
     <a href="#squad" data-tab="squad" aria-label="Squad" title="Squad"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7.5" r="3.5"/><path d="M5 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/></svg></a>
@@ -639,7 +652,7 @@ function applyTeam(t){
   GAMES=buildGames();
 }
 function useTeam(k){
-  var t=TEAMS[k]||TEAMS.men; applyTeam(t); selDay=null; showAllRes=false; openKeys.clear();
+  var t=TEAMS[k]||TEAMS.men; applyTeam(t); selDay=null; calMonth=null; showAllRes=false; openKeys.clear();
   var sm=document.querySelector('.brand small'); if(sm) sm.textContent=t.league+' · 2026/27';
   var sel=document.getElementById('teamsel');
   if(sel){ if(!sel.options.length) sel.innerHTML=TEAM_ORDER.map(function(x){return '<option value="'+x+'">'+esc(TEAMS[x].label)+'</option>'}).join(''); sel.value=t.key; }
@@ -919,37 +932,43 @@ function calendar(){
     +'<div class="dayline"><b>'+(selDay===dstr(today)?'Today':short(sd))+'</b><span>'+n+(n===1?' event':' events')+'</span></div>'
     +(n?items:empty('Nothing planned','No game or training on this day.'));
 }
+var calMonth=null, calAll=false;
+function calGames(){
+  var out=[];
+  function collect(k,t){
+    GAMES.forEach(function(g){
+      var d=pd(g.date), played=g.us!=null;
+      out.push({k:k,t:t,g:g,date:g.date,time:g.time||'',played:played,
+        html:'<article class="card ev game"><div class="evt">'+(calAll?'<b>'+esc(t.label)+'</b> · ':'')+'<b>'+esc(g.lg===CUP?'Cup':(g.lg||LEAGUE))+'</b>'+(g.round?' · '+esc(g.round):'')+' · '+venue(g)+(g.place?' · '+esc(g.place):'')+'</div>'
+          +'<div class="vsrow" role="group" aria-label="'+esc(g.h+' versus '+g.a)+'">'+crest(g.h)+'<div class="rec"></div><div class="big">'+(played?score(g):(g.time||'TBC'))+'</div><div class="rec"></div>'+crest(g.a)+'</div>'
+          +(g.addr?'<p class="addr">'+maplink(g.addr)+'</p>':'')+'</article>'});
+    });
+  }
+  if(calAll){var cur=TEAM; TEAM_ORDER.forEach(function(k){var t=TEAMS[k]; applyTeam(t); collect(k,t)}); applyTeam(cur)}
+  else collect(TEAM.key,TEAM);
+  return out;
+}
 function vSpiele(){
-  var r=results();
-  var h=teamNote()+calendar();
-  h+='<h2 class="sec">Results</h2>';
-  if(!r.length) h+=empty('No results yet','Results will appear here once they are entered.');
-  var rAll=r.length;
-  if(!showAllRes) r=r.slice(0,5);
-  r.forEach(function(g){
-    var d=pd(g.date), w=g.us>g.them;
-    var head=dateBox(d)
-      +'<div style="min-width:0"><div style="font:600 19px/1.15 var(--f-display)">'+vsTitle(g)+'</div><div style="font-size:13px;color:var(--muted)">'+sub(g)+'</div></div>'
-      +'<div class="score">'+score(g)+'<span class="dot '+(w?'w':'l')+'" title="'+(w?'Win':'Loss')+'">'+(w?'W':'L')+'</span></div>';
-    if(g.q&&g.q.length){
-      var su=0,st=0;
-      g.q.forEach(function(q){su+=q[0];st+=q[1]});
-      var bx='';
-      if(g.box){
-        bx='<p class="cap" style="margin-top:14px">Points by player (* started)</p><div class="scroll"><table><thead><tr><th>#</th><th class="tm">Player</th><th>PTS</th><th>3P</th></tr></thead><tbody>'
-          +g.box.slice().sort(function(a,b){return b[2]-a[2]||a[1]-b[1]}).map(function(r){return '<tr><td>'+r[1]+(r[6]?'*':'')+'</td><td class="tm">'+esc(pname(PLAYERS[r[0]]))+'</td><td>'+r[2]+'</td><td>'+r[5]+'</td></tr>'}).join('')
-          +'</tbody></table></div>';
-      }
-      h+='<details class="card res" data-key="res-'+g.id+'"><summary>'+head+'</summary>'
-        +'<div class="body"><p class="cap">Score by quarter</p><div class="scroll"><table><thead><tr><th>Team</th><th>1</th><th>2</th><th>3</th><th>4</th><th>Total</th></tr></thead><tbody>'
-        +'<tr class="me"><td>Heffingen</td>'+g.q.map(function(q){return '<td>'+q[0]+'</td>'}).join('')+'<td>'+su+'</td></tr>'
-        +'<tr><td>'+esc(opp(g))+'</td>'+g.q.map(function(q){return '<td>'+q[1]+'</td>'}).join('')+'<td>'+st+'</td></tr>'
-        +'</tbody></table></div>'+bx+'</div></details>';
-    } else {
-      h+='<div class="card res"><div class="sum">'+head+'</div></div>';
-    }
-  });
-  if(rAll>5) h+='<div class="filt"><button type="button" data-allres="1" aria-pressed="false">'+(showAllRes?'Show less':'Show all '+rAll)+'</button></div>';
+  var all=calGames(), up=all.filter(function(x){return !x.played&&pd(x.date)>=today}).sort(function(a,b){return a.date+a.time<b.date+b.time?-1:1});
+  if(!selDay) selDay=up.length?up[0].date:dstr(today);
+  if(!calMonth) calMonth=selDay.slice(0,7);
+  var my=calMonth.split('-').map(Number), y=my[0], m=my[1]-1;
+  var by={}; all.forEach(function(x){(by[x.date]=by[x.date]||[]).push(x)});
+  var first=new Date(y,m,1), lead=(first.getDay()+6)%7, days=new Date(y,m+1,0).getDate();
+  var grid=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(function(w){return '<div class="mwd">'+w.slice(0,2)+'</div>'}).join('');
+  for(var i=0;i<lead;i++) grid+='<div></div>';
+  for(var d=1;d<=days;d++){
+    var ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'), gs=by[ds]||[];
+    var pips=gs.slice(0,3).map(function(x){return '<i class="'+(x.played?'':'g')+'"></i>'}).join('');
+    grid+='<button type="button" class="mday'+(ds===dstr(today)?' td':'')+'" data-day="'+ds+'" aria-pressed="'+(ds===selDay)+'" aria-label="'+short(new Date(y,m,d))+(gs.length?', '+gs.length+(gs.length===1?' game':' games'):'')+'"><b>'+d+'</b><span class="pips">'+pips+'</span></button>';
+  }
+  var sd=pd(selDay), items=(by[selDay]||[]).slice().sort(function(a,b){return a.time<b.time?-1:a.time>b.time?1:0});
+  var h=teamNote()
+    +'<div class="filt" role="group" aria-label="Team"><button type="button" data-calteam="sel" aria-pressed="'+!calAll+'">'+esc(TEAM.label)+'</button><button type="button" data-calteam="all" aria-pressed="'+calAll+'">All</button></div>'
+    +'<div class="calhead"><button type="button" class="mnav" data-month="-1" aria-label="Previous month">‹</button><b>'+MONTH[m]+' '+y+'</b><button type="button" class="mnav" data-month="1" aria-label="Next month">›</button></div>'
+    +'<div class="mcal">'+grid+'</div>'
+    +'<div class="dayline"><b>'+(selDay===dstr(today)?'Today':short(sd))+'</b><span>'+items.length+(items.length===1?' game':' games')+'</span></div>'
+    +(items.length?items.map(function(x){return x.html}).join(''):empty('No games','Nothing scheduled on this day.'));
   return h;
 }
 
@@ -1072,6 +1091,10 @@ document.addEventListener('click',function(e){
   var cb=e.target.closest&&e.target.closest('[data-club]');
   if(cb){clubHome=cb.dataset.club==='home';render();return;}
   if(e.target.closest&&e.target.closest('[data-allres]')){showAllRes=!showAllRes;render();return;}
+  var mn=e.target.closest&&e.target.closest('[data-month]');
+  if(mn){var mp=(calMonth||selDay||dstr(today)).slice(0,7).split('-').map(Number),dt=new Date(mp[0],mp[1]-1+(+mn.dataset.month),1);calMonth=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');render();return;}
+  var ct=e.target.closest&&e.target.closest('[data-calteam]');
+  if(ct){calAll=ct.dataset.calteam==='all';render();return;}
   var dd=e.target.closest&&e.target.closest('[data-day]');
   if(dd){selDay=dd.dataset.day;render();}
 });
