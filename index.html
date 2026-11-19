@@ -16,6 +16,17 @@
 body{margin:0;font-size:14px;font-family:system-ui,sans-serif}
 img{max-width:100%}
 [hidden]{display:none!important}
+
+.cb{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font:700 11px/1 var(--f-body);margin-left:6px;vertical-align:2px}
+.mday .pips i.c,.day .pips i.c{background:var(--gold);box-shadow:0 0 0 1px var(--accent)}
+.cform{display:grid;gap:8px;margin-top:10px}
+.cform input,.cform select,.cform textarea{font:16px var(--f-body);padding:9px 10px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);width:100%;box-sizing:border-box}
+.cform .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cbtn{font:600 15px var(--f-body);padding:10px 14px;border-radius:9px;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.cbtn.alt{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.cerr{color:var(--accent);font-size:13px;min-height:1em}
+.crow{display:flex;gap:10px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:8px 0}
+.crow:first-child{border-top:0}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -665,8 +676,8 @@ var LANG='en';
 try{LANG=localStorage.getItem('ush-lang')||''}catch(e){}
 if(['de','fr','en'].indexOf(LANG)<0){var nl=((navigator.language||'en')+'').slice(0,2).toLowerCase();LANG=(nl==='de'||nl==='fr')?nl:'en'}
 var I18N={
- de:{'Home':'Heim','Last games':'Letzte Spiele','Score by quarter':'Punkte pro Viertel','Total':'Gesamt','Final score':'Endstand','Margin':'Differenz','Points by player (* started)':'Punkte pro Spieler (* Starter)','Player':'Spieler','No detailed statistics for this game yet.':'Für dieses Spiel gibt es noch keine Detail-Statistik.','Away':'Auswärts','Watch live on YouTube':'Live auf YouTube ansehen','Game day':'Spieltag','Opponent preview':'Gegner-Vorschau','Standings':'Tabelle','Record':'Bilanz','Points / game':'Punkte / Spiel','Allowed / game':'Gegenpunkte / Spiel','Last 5':'Letzte 5','This season vs':'Diese Saison gegen','No meeting yet this season.':'Noch keine Begegnung in dieser Saison.','Cup':'Pokal','Subscribe':'Abonnieren','Download .ics':'.ics herunterladen','Calendar subscription':'Kalender-Abo','Add all games to your phone calendar. It updates automatically.':'Alle Spiele in deinen Handy-Kalender übernehmen. Wird automatisch aktualisiert.','Settings':'Einstellungen','Team':'Team','Choose the team shown when the app opens.':'Das Team, das beim Öffnen der App angezeigt wird.','About':'Info','Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.':'Spielplan und Ergebnisse von US Heffingen. Daten von luxembourg.basketball, täglich aktualisiert.','Language':'Sprache','Club news':'Club-News','Coming soon':'Demnächst','News from US Heffingen will appear here.':'Neuigkeiten von US Heffingen erscheinen hier.','Next game':'Nächstes Spiel','Time tbc':'Zeit offen','day':'Tag','days':'Tage','hour':'Stunde','hours':'Stunden','min':'Min','sec':'Sek','No more games':'Keine weiteren Spiele','There are no upcoming games in the schedule.':'Im Spielplan stehen keine kommenden Spiele.','Next':'Danach','Today':'Heute','game':'Spiel','games':'Spiele','All':'Alle','Previous month':'Vorheriger Monat','Next month':'Nächster Monat','No games':'Keine Spiele','Nothing scheduled on this day.':'An diesem Tag ist nichts geplant.','TBC':'offen','Calendar':'Kalender','News':'News','W':'S','L':'N','Round of 32':'Sechzehntelfinale','Round of 16':'Achtelfinale','1/16 finals':'Sechzehntelfinale','1/8 finals':'Achtelfinale','As of':'Stand','Data from':'Daten von','Men':'Herren','Women':'Damen'},
- fr:{'Home':'Domicile','Last games':'Derniers matchs','Score by quarter':'Points par quart-temps','Total':'Total','Final score':'Score final','Margin':'Écart','Points by player (* started)':'Points par joueur (* titulaire)','Player':'Joueur','No detailed statistics for this game yet.':'Pas encore de statistiques détaillées pour ce match.','Away':'Extérieur','Watch live on YouTube':'Regarder en direct sur YouTube','Game day':'Jour de match','Opponent preview':'Aperçu de l’adversaire','Standings':'Classement','Record':'Bilan','Points / game':'Points / match','Allowed / game':'Points encaissés / match','Last 5':'5 derniers','This season vs':'Cette saison contre','No meeting yet this season.':'Pas encore de rencontre cette saison.','Cup':'Coupe','Subscribe':'S’abonner','Download .ics':'Télécharger .ics','Calendar subscription':'Abonnement au calendrier','Add all games to your phone calendar. It updates automatically.':'Ajoutez tous les matchs à votre calendrier. Mise à jour automatique.','Settings':'Réglages','Team':'Équipe','Choose the team shown when the app opens.':'L’équipe affichée à l’ouverture de l’application.','About':'À propos','Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.':'Calendrier et résultats de l’US Heffingen. Données de luxembourg.basketball, mises à jour chaque jour.','Language':'Langue','Club news':'Actualités du club','Coming soon':'Bientôt disponible','News from US Heffingen will appear here.':'Les actualités de l’US Heffingen apparaîtront ici.','Next game':'Prochain match','Time tbc':'Heure à confirmer','day':'jour','days':'jours','hour':'heure','hours':'heures','min':'min','sec':'s','No more games':'Plus de matchs','There are no upcoming games in the schedule.':'Aucun match à venir au calendrier.','Next':'Ensuite','Today':'Aujourd’hui','game':'match','games':'matchs','All':'Tous','Previous month':'Mois précédent','Next month':'Mois suivant','No games':'Aucun match','Nothing scheduled on this day.':'Rien de prévu ce jour-là.','TBC':'à conf.','Calendar':'Calendrier','News':'Actualités','W':'V','L':'D','Round of 32':'16es de finale','Round of 16':'8es de finale','1/16 finals':'1/16 de finale','1/8 finals':'1/8 de finale','As of':'État au','Data from':'Données de','Men':'Hommes','Women':'Dames'}
+ de:{'Home':'Heim','From the coach':'Vom Coach','Coach area':'Coach-Bereich','Coach code':'Coach-Code','Enter the code you received from the club.':'Gib den Code ein, den du vom Verein erhalten hast.','Unlock':'Freischalten','Invalid code.':'Ungültiger Code.','Coach':'Coach','Training':'Training','Game':'Spiel','Event':'Event','Type':'Art','Date':'Datum','Time':'Uhrzeit','Title':'Titel','Place':'Ort','Note (optional)':'Notiz (optional)','Add entry':'Eintrag hinzufügen','Log out':'Abmelden','Delete':'Löschen','Saved.':'Gespeichert.','Please enter a date and a title.':'Bitte Datum und Titel eingeben.','Could not save. You may need Contributor access.':'Speichern fehlgeschlagen. Eventuell fehlt der Contributor-Zugang.','Could not delete.':'Löschen fehlgeschlagen.','Entered by the coach':'Vom Coach eingetragen','Coach entries need the shared app and a signed-in account. They are not available in this view.':'Coach-Einträge brauchen die geteilte App und ein angemeldetes Konto. In dieser Ansicht sind sie nicht verfügbar.','Your account may not write entries. Ask the club to give you Contributor access.':'Dein Konto darf evtl. keine Einträge schreiben. Bitte den Verein um Contributor-Zugang.','entries':'Einträge','entry':'Eintrag','Last games':'Letzte Spiele','Score by quarter':'Punkte pro Viertel','Total':'Gesamt','Final score':'Endstand','Margin':'Differenz','Points by player (* started)':'Punkte pro Spieler (* Starter)','Player':'Spieler','No detailed statistics for this game yet.':'Für dieses Spiel gibt es noch keine Detail-Statistik.','Away':'Auswärts','Watch live on YouTube':'Live auf YouTube ansehen','Game day':'Spieltag','Opponent preview':'Gegner-Vorschau','Standings':'Tabelle','Record':'Bilanz','Points / game':'Punkte / Spiel','Allowed / game':'Gegenpunkte / Spiel','Last 5':'Letzte 5','This season vs':'Diese Saison gegen','No meeting yet this season.':'Noch keine Begegnung in dieser Saison.','Cup':'Pokal','Subscribe':'Abonnieren','Download .ics':'.ics herunterladen','Calendar subscription':'Kalender-Abo','Add all games to your phone calendar. It updates automatically.':'Alle Spiele in deinen Handy-Kalender übernehmen. Wird automatisch aktualisiert.','Settings':'Einstellungen','Team':'Team','Choose the team shown when the app opens.':'Das Team, das beim Öffnen der App angezeigt wird.','About':'Info','Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.':'Spielplan und Ergebnisse von US Heffingen. Daten von luxembourg.basketball, täglich aktualisiert.','Language':'Sprache','Club news':'Club-News','Coming soon':'Demnächst','News from US Heffingen will appear here.':'Neuigkeiten von US Heffingen erscheinen hier.','Next game':'Nächstes Spiel','Time tbc':'Zeit offen','day':'Tag','days':'Tage','hour':'Stunde','hours':'Stunden','min':'Min','sec':'Sek','No more games':'Keine weiteren Spiele','There are no upcoming games in the schedule.':'Im Spielplan stehen keine kommenden Spiele.','Next':'Danach','Today':'Heute','game':'Spiel','games':'Spiele','All':'Alle','Previous month':'Vorheriger Monat','Next month':'Nächster Monat','No games':'Keine Spiele','Nothing scheduled on this day.':'An diesem Tag ist nichts geplant.','TBC':'offen','Calendar':'Kalender','News':'News','W':'S','L':'N','Round of 32':'Sechzehntelfinale','Round of 16':'Achtelfinale','1/16 finals':'Sechzehntelfinale','1/8 finals':'Achtelfinale','As of':'Stand','Data from':'Daten von','Men':'Herren','Women':'Damen'},
+ fr:{'Home':'Domicile','From the coach':'Du coach','Coach area':'Espace coach','Coach code':'Code coach','Enter the code you received from the club.':'Saisis le code reçu du club.','Unlock':'Déverrouiller','Invalid code.':'Code invalide.','Coach':'Coach','Training':'Entraînement','Game':'Match','Event':'Événement','Type':'Type','Date':'Date','Time':'Heure','Title':'Titre','Place':'Lieu','Note (optional)':'Note (facultatif)','Add entry':'Ajouter','Log out':'Se déconnecter','Delete':'Supprimer','Saved.':'Enregistré.','Please enter a date and a title.':'Saisis une date et un titre.','Could not save. You may need Contributor access.':'Échec de l\'enregistrement. Un accès Contributor est peut-être nécessaire.','Could not delete.':'Suppression impossible.','Entered by the coach':'Saisi par le coach','Coach entries need the shared app and a signed-in account. They are not available in this view.':'Les entrées coach nécessitent l\'app partagée et un compte connecté. Indisponible dans cette vue.','Your account may not write entries. Ask the club to give you Contributor access.':'Ton compte ne peut peut-être pas écrire. Demande l\'accès Contributor au club.','entries':'entrées','entry':'entrée','Last games':'Derniers matchs','Score by quarter':'Points par quart-temps','Total':'Total','Final score':'Score final','Margin':'Écart','Points by player (* started)':'Points par joueur (* titulaire)','Player':'Joueur','No detailed statistics for this game yet.':'Pas encore de statistiques détaillées pour ce match.','Away':'Extérieur','Watch live on YouTube':'Regarder en direct sur YouTube','Game day':'Jour de match','Opponent preview':'Aperçu de l’adversaire','Standings':'Classement','Record':'Bilan','Points / game':'Points / match','Allowed / game':'Points encaissés / match','Last 5':'5 derniers','This season vs':'Cette saison contre','No meeting yet this season.':'Pas encore de rencontre cette saison.','Cup':'Coupe','Subscribe':'S’abonner','Download .ics':'Télécharger .ics','Calendar subscription':'Abonnement au calendrier','Add all games to your phone calendar. It updates automatically.':'Ajoutez tous les matchs à votre calendrier. Mise à jour automatique.','Settings':'Réglages','Team':'Équipe','Choose the team shown when the app opens.':'L’équipe affichée à l’ouverture de l’application.','About':'À propos','Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.':'Calendrier et résultats de l’US Heffingen. Données de luxembourg.basketball, mises à jour chaque jour.','Language':'Langue','Club news':'Actualités du club','Coming soon':'Bientôt disponible','News from US Heffingen will appear here.':'Les actualités de l’US Heffingen apparaîtront ici.','Next game':'Prochain match','Time tbc':'Heure à confirmer','day':'jour','days':'jours','hour':'heure','hours':'heures','min':'min','sec':'s','No more games':'Plus de matchs','There are no upcoming games in the schedule.':'Aucun match à venir au calendrier.','Next':'Ensuite','Today':'Aujourd’hui','game':'match','games':'matchs','All':'Tous','Previous month':'Mois précédent','Next month':'Mois suivant','No games':'Aucun match','Nothing scheduled on this day.':'Rien de prévu ce jour-là.','TBC':'à conf.','Calendar':'Calendrier','News':'Actualités','W':'V','L':'D','Round of 32':'16es de finale','Round of 16':'8es de finale','1/16 finals':'1/16 de finale','1/8 finals':'1/8 de finale','As of':'État au','Data from':'Données de','Men':'Hommes','Women':'Dames'}
 };
 function L(s){var d=I18N[LANG];return (d&&d[s])||s}
 var LANGDATA={
@@ -860,7 +871,7 @@ function applyLang(){
 function calLink(t){return t.ics?'<a class="maplink" href="webcal://'+ICS_BASE+t.ics+'.ics" style="margin-right:14px">'+L('Subscribe')+'</a><a class="maplink" href="https://'+ICS_BASE+t.ics+'.ics" target="_blank" rel="noopener">'+L('Download .ics')+'</a>':''}
 function calSub(){return TEAM.ics?'<h2 class="sec">'+L('Calendar subscription')+'</h2><div class="card info"><b>'+esc(TEAM.label)+' · '+esc(TEAM.league)+'</b><span>'+L('Add all games to your phone calendar. It updates automatically.')+'</span><div style="margin-top:6px">'+calLink(TEAM)+'</div></div>':''}
 function vSettings(){
-  return '<h2 class="sec">'+L('Settings')+'</h2>'
+  return '<h2 class="sec">'+L('Settings')+'</h2>'+coachCard()
     +'<div class="card info"><b>'+L('Language')+'</b><div class="filt" role="group" aria-label="'+L('Language')+'" style="margin-top:8px">'+[['de','Deutsch'],['fr','Français'],['en','English']].map(function(x){return '<button type="button" data-lang="'+x[0]+'" aria-pressed="'+(LANG===x[0])+'">'+x[1]+'</button>'}).join('')+'</div></div>'
     +'<div class="card info"><b>'+L('Team')+'</b><span>'+L('Choose the team shown when the app opens.')+'</span><div class="teampick" style="margin:8px 0 0"><div class="sel"><select data-setteam aria-label="'+L('Team')+'">'+TEAM_ORDER.map(function(k){return '<option value="'+k+'"'+(k===TEAM.key?' selected':'')+'>'+esc(TEAMS[k].label)+' · '+esc(TEAMS[k].league)+'</option>'}).join('')+'</select></div></div></div>'
     +'<div class="card info"><b>'+L('About')+'</b><span>'+L('Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.')+'</span><div style="margin-top:6px"><a class="maplink" href="http://www.usheffingen.com" target="_blank" rel="noopener">usheffingen.com</a></div></div>';
@@ -914,6 +925,7 @@ function vStart(){
     });
     h+='</div>';
   }
+  h+=coachHome();
   if(r.length){
     h+='<h2 class="sec">'+L('Last games')+'</h2>'+r.slice(0,5).map(resultCard).join('');
   }
@@ -1006,7 +1018,7 @@ function calGames(){
   }
   if(calAll){var cur=TEAM; TEAM_ORDER.forEach(function(k){var t=TEAMS[k]; applyTeam(t); collect(k,t)}); applyTeam(cur)}
   else collect(TEAM.key,TEAM);
-  return out;
+  return out.concat(coachCal());
 }
 function vSpiele(){
   var all=calGames(), up=all.filter(function(x){return !x.played&&pd(x.date)>=today}).sort(function(a,b){return a.date+a.time<b.date+b.time?-1:1});
@@ -1019,15 +1031,15 @@ function vSpiele(){
   for(var i=0;i<lead;i++) grid+='<div></div>';
   for(var d=1;d<=days;d++){
     var ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'), gs=by[ds]||[];
-    var pips=gs.slice(0,3).map(function(x){return '<i class="'+(x.played?'':'g')+'"></i>'}).join('');
-    grid+='<button type="button" class="mday'+(ds===dstr(today)?' td':'')+'" data-day="'+ds+'" aria-pressed="'+(ds===selDay)+'" aria-label="'+short(new Date(y,m,d))+(gs.length?', '+gs.length+' '+L(gs.length===1?'game':'games'):'')+'"><b>'+d+'</b><span class="pips">'+pips+'</span></button>';
+    var pips=gs.slice(0,3).map(function(x){return '<i class="'+(x.coach?'c':x.played?'':'g')+'"></i>'}).join('');
+    grid+='<button type="button" class="mday'+(ds===dstr(today)?' td':'')+'" data-day="'+ds+'" aria-pressed="'+(ds===selDay)+'" aria-label="'+short(new Date(y,m,d))+(gs.length?', '+gs.length+' '+L(gs.length===1?'entry':'entries'):'')+'"><b>'+d+'</b><span class="pips">'+pips+'</span></button>';
   }
   var sd=pd(selDay), items=(by[selDay]||[]).slice().sort(function(a,b){return a.time<b.time?-1:a.time>b.time?1:0});
   var h=teamNote()
     +'<div class="filt" role="group" aria-label="Team"><button type="button" data-calteam="sel" aria-pressed="'+!calAll+'">'+esc(TEAM.label)+'</button><button type="button" data-calteam="all" aria-pressed="'+calAll+'">'+L('All')+'</button></div>'
     +'<div class="calhead"><button type="button" class="mnav" data-month="-1" aria-label="'+L('Previous month')+'">‹</button><b>'+MONTH[m]+' '+y+'</b><button type="button" class="mnav" data-month="1" aria-label="'+L('Next month')+'">›</button></div>'
     +'<div class="mcal">'+grid+'</div>'
-    +'<div class="dayline"><b>'+(selDay===dstr(today)?L('Today'):short(sd))+'</b><span>'+items.length+' '+L(items.length===1?'game':'games')+'</span></div>'
+    +'<div class="dayline"><b>'+(selDay===dstr(today)?L('Today'):short(sd))+'</b><span>'+items.length+' '+L(items.length===1?'entry':'entries')+'</span></div>'
     +(items.length?items.map(function(x){return x.html}).join(''):empty(L('No games'),L('Nothing scheduled on this day.')));
   h+=calSub();
   return h;
@@ -1129,6 +1141,89 @@ function vClub(){
   return h;
 }
 
+
+/* ---------- Coach ---------- */
+var COACH_H={"men": "abdbc18fb3631c5ee2aaafd6036ecb1a8d83201fefe2e1302e65276be206f76a", "menb": "a3c2d1808cde387d6e365ec57208cab0dc80de70159203705e68cc2e50e5d863", "menc": "10000e5d6b774491d63286e5674f2348d64148ea68d18cee2a50172cf57a2cb3", "women": "173ee18d1866158eeca7f5502c0c69fab30c0324e9476735acc9b7c453980531", "u22m": "af7d002c7e5b0d9a790b55f64ee53086f14b144526cdf9bd0ce7ff0a0051b5bb", "u19w": "521712af46e42e7b8a78de1bf605165bfa345d749ed0467e724df457b5798e1b", "u16m": "30bb93b0b191651b0177053a5a30163ac4472d964123cbd6c74d399c4211095f", "u16w": "54b170857c03f2a52af83c73ef65a692bd5508b6c659a2d472987e3a8eaca67f", "u14m": "53a1179e8a24fdb02b66faeef2fe3e2a78bc1f8c0453d8c7c3691d1c4cfbf92d", "u14w": "24236ae466c7c7cc8ab2e4d5220e9eacbf215f8c8adf1b39bf7412958aece030", "u12m": "6013254209ac544482990cd00355fa51868ac312ed724d0dbdefa5f4040a39a0", "u12w": "77f4ed1e90b0829091fca8eb373f32a317bf7090d59b74521ce5d2c7f65ec434", "*": "ea66d847bef2bb8c7bf2e4fb84b9fd29511c129fc84ab940a6fc253655a2ab96"}, COACH_SALT='ush-coach-v1:';
+var CEV=[], coachOpen=false, coachTeams=null, coachMsg='', cdb=null, cuser=null, cwrite=null;
+function ckind(k){return L(k==='training'?'Training':k==='game'?'Game':'Event')}
+function cbadge(){return '<span class="cb" title="'+L('Entered by the coach')+'" aria-label="'+L('Entered by the coach')+'">C</span>'}
+function chash(code){
+  var c=String(code).toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(!c||!window.crypto||!crypto.subtle) return Promise.resolve(null);
+  return crypto.subtle.digest('SHA-256',new TextEncoder().encode(COACH_SALT+c)).then(function(b){
+    var h=Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2)}).join('');
+    var t=Object.keys(COACH_H).filter(function(k){return COACH_H[k]===h});
+    return t.length?(t[0]==='*'?TEAM_ORDER.slice():t):null;
+  });
+}
+function coachRestore(){var c=null;try{c=localStorage.getItem('ush-coach')}catch(e){} if(c) chash(c).then(function(t){if(t){coachTeams=t;render()}})}
+function coachInit(){
+  if(!window.claude||!claude.use) return;
+  claude.use('db').then(function(db){
+    if(!db) return; cdb=db;
+    var guard=setTimeout(function(){},10000);
+    db.collection('coach_events').onSnapshot(function(s){
+      clearTimeout(guard); var a=[]; s.forEach(function(d){var v=d.data(); if(v&&v.date&&v.team){v.id=d.id;a.push(v)}}); CEV=a;
+      var ae=document.activeElement; if(ae&&ae.closest&&ae.closest('.cform')) return; render();
+    },function(){});
+    return claude.use('user').then(function(u){cuser=u;cwrite=u&&u.can?u.can('data.write'):null;render()});
+  }).catch(function(){});
+}
+function coachEvents(team,from){
+  return CEV.filter(function(e){return (!team||e.team===team)&&(!from||e.date>=from)}).sort(function(a,b){return (a.date+(a.time||''))<(b.date+(b.time||''))?-1:1});
+}
+function coachRow(e,del){
+  var d=pd(e.date);
+  return '<div class="row">'+dateBox(d)+'<div style="min-width:0"><h3>'+esc(e.title)+cbadge()+'</h3><p>'+WD[d.getDay()]+' · '+(e.time?esc(e.time)+' · ':'')+'<span class="chip">'+ckind(e.kind)+'</span>'+(e.place?esc(e.place):'')+(e.note?'<br>'+esc(e.note):'')+'</p></div>'+(del?'<button type="button" class="cbtn alt" data-cdel="'+esc(e.id)+'" aria-label="'+L('Delete')+'">×</button>':'')+'</div>';
+}
+function coachHome(){
+  var l=coachEvents(TEAM.key,dstr(today)).slice(0,5); if(!l.length) return '';
+  return '<h2 class="sec">'+L('From the coach')+cbadge()+'</h2><div class="card list">'+l.map(function(e){return coachRow(e,false)}).join('')+'</div>';
+}
+function coachCal(){
+  var out=[]; coachEvents(calAll?null:TEAM.key).forEach(function(e){
+    var t=TEAMS[e.team]; if(!t) return;
+    out.push({k:e.team,t:t,g:null,date:e.date,time:e.time||'',played:false,coach:true,
+      html:'<article class="card ev"><div class="evt">'+(calAll?'<b>'+esc(t.label)+'</b> · ':'')+'<b>'+ckind(e.kind)+'</b>'+cbadge()+(e.time?' · '+esc(e.time):'')+(e.place?' · '+esc(e.place):'')+'</div><div style="font:600 19px/1.2 var(--f-display);margin-top:6px">'+esc(e.title)+'</div>'+(e.note?'<p class="addr">'+esc(e.note)+'</p>':'')+'</article>'});
+  });
+  return out;
+}
+function coachCard(){
+  if(!coachOpen&&!coachTeams) return '';
+  var h='<h2 class="sec">'+L('Coach area')+cbadge()+'</h2><div class="card info">';
+  if(!cdb) return h+'<span>'+L('Coach entries need the shared app and a signed-in account. They are not available in this view.')+'</span></div>';
+  if(!coachTeams){
+    return h+'<b>'+L('Coach code')+'</b><span>'+L('Enter the code you received from the club.')+'</span><div class="cform"><input id="ccode" type="text" autocomplete="off" autocapitalize="characters" placeholder="XXXX-XXXX" aria-label="'+L('Coach code')+'"><div class="cerr" role="alert">'+esc(coachMsg)+'</div><button type="button" class="cbtn" data-clogin>'+L('Unlock')+'</button></div></div>';
+  }
+  var t0=coachTeams.indexOf(TEAM.key)>-1?TEAM.key:coachTeams[0];
+  h+='<b>'+L('Coach')+' · '+coachTeams.map(function(k){return esc(TEAMS[k].label)}).join(', ')+'</b>';
+  if(cwrite===false) h+='<div class="cerr">'+L('Your account may not write entries. Ask the club to give you Contributor access.')+'</div>';
+  h+='<div class="cform"><div class="two"><select id="cteam" aria-label="Team">'+coachTeams.map(function(k){return '<option value="'+k+'"'+(k===t0?' selected':'')+'>'+esc(TEAMS[k].label)+'</option>'}).join('')+'</select>'
+    +'<select id="ckind" aria-label="'+L('Type')+'"><option value="training">'+L('Training')+'</option><option value="game">'+L('Game')+'</option><option value="event">'+L('Event')+'</option></select></div>'
+    +'<div class="two"><input id="cdate" type="date" value="'+dstr(today)+'" aria-label="'+L('Date')+'"><input id="ctime" type="time" aria-label="'+L('Time')+'"></div>'
+    +'<input id="ctitle" type="text" maxlength="80" placeholder="'+L('Title')+'" aria-label="'+L('Title')+'">'
+    +'<input id="cplace" type="text" maxlength="100" placeholder="'+L('Place')+'" aria-label="'+L('Place')+'">'
+    +'<input id="cnote" type="text" maxlength="200" placeholder="'+L('Note (optional)')+'" aria-label="'+L('Note (optional)')+'">'
+    +'<div class="cerr" role="alert">'+esc(coachMsg)+'</div><button type="button" class="cbtn" data-cadd>'+L('Add entry')+'</button> <button type="button" class="cbtn alt" data-clogout>'+L('Log out')+'</button></div>';
+  var mine=CEV.filter(function(e){return coachTeams.indexOf(e.team)>-1&&e.date>=dstr(today)}).sort(function(a,b){return (a.date+(a.time||''))<(b.date+(b.time||''))?-1:1});
+  if(mine.length) h+='<div style="margin-top:12px">'+mine.map(function(e){return coachRow(e,true)}).join('')+'</div>';
+  return h+'</div>';
+}
+document.addEventListener('click',function(e){
+  var t=e.target, q=function(s){return t.closest&&t.closest(s)};
+  if(q('[data-clogin]')){var v=document.getElementById('ccode').value;chash(v).then(function(r){if(r){coachTeams=r;coachMsg='';try{localStorage.setItem('ush-coach',v)}catch(x){}}else coachMsg=L('Invalid code.');render()});return}
+  if(q('[data-clogout]')){coachTeams=null;coachMsg='';try{localStorage.removeItem('ush-coach')}catch(x){}render();return}
+  if(q('[data-cadd]')){
+    var g=function(i){return document.getElementById(i).value.trim()}, ev={team:g('cteam'),kind:g('ckind'),date:g('cdate'),time:g('ctime'),title:g('ctitle'),place:g('cplace'),note:g('cnote')};
+    if(coachTeams.indexOf(ev.team)<0||!/^\d{4}-\d\d-\d\d$/.test(ev.date)||!ev.title){coachMsg=L('Please enter a date and a title.');render();return}
+    ev.ts=Date.now(); var id='e'+ev.ts.toString(36)+Math.random().toString(36).slice(2,6);
+    cdb.collection('coach_events').doc(id).set(ev).then(function(){coachMsg=L('Saved.');ev.id=id;if(!CEV.some(function(x){return x.id===id}))CEV.push(ev);render()},function(){coachMsg=L('Could not save. You may need Contributor access.');render()});return}
+  var dl=q('[data-cdel]');
+  if(dl){var id=dl.dataset.cdel,ce=CEV.filter(function(x){return x.id===id})[0]; if(ce&&coachTeams&&coachTeams.indexOf(ce.team)>-1){cdb.collection('coach_events').doc(id).delete().then(function(){CEV=CEV.filter(function(x){return x.id!==id});render()},function(){coachMsg=L('Could not delete.');render()})}return}
+  var st=q('.tabs a[data-tab="settings"]');
+  if(st){clearTimeout(st._t);st._n=(st._n||0)+1;if(st._n>=5){st._n=0;coachOpen=true;if(location.hash==='#settings')render()}else st._t=setTimeout(function(){st._n=0},2000)}
+},true);
+
 var VIEWS={home:vStart,club:vClub,games:vSpiele,standings:vTabelle,news:vNews,settings:vSettings,squad:vKader,training:vTraining};
 
 /* ---------- Rendern ---------- */
@@ -1173,6 +1268,7 @@ window.addEventListener('hashchange',function(){render();window.scrollTo(0,0)});
 
 /* ---------- Start ---------- */
 applyLang();
+coachInit();coachRestore();
 var savedTeam=null; try{savedTeam=localStorage.getItem('ush-team')}catch(e){}
 useTeam(TEAMS[savedTeam]?savedTeam:'men');
 render();
