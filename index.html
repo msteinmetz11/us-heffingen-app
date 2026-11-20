@@ -310,6 +310,8 @@ html.gta.gta .hero .meta,html.gta.gta .hero .meta a{text-shadow:0 1px 6px #0E032
 .row .sc{margin-left:auto;text-align:right;white-space:nowrap;font:700 20px/1.1 var(--f-display);display:flex;align-items:center;gap:8px}
 .filt{display:flex;gap:8px;margin-top:2px}
 .filt button{background:var(--surface);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font:600 13px var(--f-body);min-height:38px}
+.filt button:has(.flag){display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 10px;flex:0 1 auto}
+.filt button .flag{flex:none;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.18)}
 .filt button[aria-pressed="true"]{background:var(--soft);color:var(--ink);border-color:var(--accent)}
 /* ---------- GTA-Stil (optional, Knopf in der Kopfzeile) ---------- */
 #hc{display:none}#hc{margin:6px 16px 0;text-align:center;font:italic 700 34px/1 'Barlow Condensed',Arial Narrow,sans-serif;text-transform:uppercase;letter-spacing:.14em;color:#fff;
@@ -1177,11 +1179,17 @@ function applyLang(){
 }
 function calLink(t){return t.ics?'<a class="maplink" href="webcal://'+ICS_BASE+t.ics+'.ics" style="margin-right:14px">'+L('Subscribe')+'</a><a class="maplink" href="https://'+ICS_BASE+t.ics+'.ics" target="_blank" rel="noopener">'+L('Download .ics')+'</a>':''}
 function calSub(){return TEAM.ics?'<h2 class="sec">'+L('Calendar subscription')+'</h2><div class="card info"><b>'+esc(TEAM.label)+' · '+esc(TEAM.league)+'</b><span>'+L('Add all games to your phone calendar. It updates automatically.')+'</span><div style="margin-top:6px">'+calLink(TEAM)+'</div></div>':''}
+var FLAGS={
+  de:'<svg class="flag" viewBox="0 0 5 3" width="20" height="12" aria-hidden="true"><rect width="5" height="1" fill="#000"/><rect y="1" width="5" height="1" fill="#d00"/><rect y="2" width="5" height="1" fill="#ffce00"/></svg>',
+  fr:'<svg class="flag" viewBox="0 0 3 2" width="18" height="12" aria-hidden="true"><rect width="1" height="2" fill="#0055a4"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ef4135"/></svg>',
+  en:'<svg class="flag" viewBox="0 0 60 30" width="24" height="12" aria-hidden="true"><clipPath id="fgb"><rect width="60" height="30"/></clipPath><g clip-path="url(#fgb)"><rect width="60" height="30" fill="#012169"/><path d="M0 0L60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0L60 30M60 0L0 30" stroke="#c8102e" stroke-width="2.5"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#c8102e" stroke-width="6"/></g></svg>'
+};
 function vSettings(){
   return '<h2 class="sec">'+L('Settings')+'</h2>'
-    +'<div class="card info"><b>'+L('Language')+'</b><div class="filt" role="group" aria-label="'+L('Language')+'" style="margin-top:8px">'+[['de','Deutsch'],['fr','Français'],['en','English']].map(function(x){return '<button type="button" data-lang="'+x[0]+'" aria-pressed="'+(LANG===x[0])+'">'+x[1]+'</button>'}).join('')+'</div></div>'
     +'<div class="card info"><b>'+L('Team')+'</b><span>'+L('Choose the team shown when the app opens.')+'</span><div class="teampick" style="margin:8px 0 0"><div class="sel"><select data-setteam aria-label="'+L('Team')+'">'+TEAM_ORDER.map(function(k){return '<option value="'+k+'"'+(k===TEAM.key?' selected':'')+'>'+esc(TEAMS[k].label)+' · '+esc(TEAMS[k].league)+'</option>'}).join('')+'</select></div></div></div>'
-    +shareCard()+socialFoot();
+    +shareCard()
+    +'<div class="card info"><b>'+L('Language')+'</b><div class="filt" role="group" aria-label="'+L('Language')+'" style="margin-top:8px">'+[['de','Deutsch'],['fr','Français'],['en','English']].map(function(x){return '<button type="button" data-lang="'+x[0]+'" aria-pressed="'+(LANG===x[0])+'">'+FLAGS[x[0]]+x[1]+'</button>'}).join('')+'</div></div>'
+    +socialFoot();
 }
 function vNews(){var l=coachEvents('club',dstr(today));return '<h2 class="sec">'+L('Club events')+'</h2>'+(l.length?'<div class="card list">'+l.map(function(e){return coachRow(e,false)}).join('')+'</div>':'<div class="card empty"><b>'+L('No club events yet')+'</b><p>'+L('Events organised by the club will appear here.')+'</p></div>')+socialFoot()}
 function teamNote(){return TEAM.note?'<p class="note">'+esc(TEAM.note)+'</p>':''}
