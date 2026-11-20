@@ -594,7 +594,7 @@ html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:non
     <section class="view" id="v-squad" hidden></section>
     <section class="view" id="v-training" hidden></section>
   </main>
-  <p class="asof">As of 19 Nov 2026 · Data from luxembourg.basketball</p>
+  <p class="asof">As of 20 Nov 2026 · Data from luxembourg.basketball</p>
 </div>
 <div class="tabs">
   <nav aria-label="Main menu">
@@ -628,7 +628,7 @@ var PLAYED=[
   ['2026-10-26','CF','MM',50,89],['2026-10-28','CF','BS',107,45],['2026-10-30','BM','SC',103,56],['2026-10-31','NB','BH',67,91],['2026-10-31','AC','AM',92,82],
   ['2026-10-31','US','BS',116,77],['2026-11-01','MM','NF',89,90],['2026-11-04','NF','CF',75,64],['2026-11-07','NF','US',95,73],['2026-11-07','BH','MM',85,77],
   ['2026-11-07','SC','NB',91,97],['2026-11-07','AC','BM',99,71],['2026-11-08','AM','BS',108,45],['2026-11-10','AM','CF',84,61],
-  ['2026-11-13','BS','NF',53,100],['2026-11-13','NB','AC',60,113],['2026-11-15','MM','SC',104,56],['2026-11-15','BM','AM',73,86],['2026-11-15','US','BH',88,65]
+  ['2026-11-13','BS','NF',53,100],['2026-11-13','NB','AC',60,113],['2026-11-15','MM','SC',104,56],['2026-11-15','BM','AM',73,86],['2026-11-15','US','BH',88,65],['2026-11-20','US','SC',99,51]
 ];
 /* Anpfiff und Halle der gespielten Heffingen-Spiele (Kalender SH Heffingen), Schlüssel = Datum */
 var META={
@@ -641,7 +641,8 @@ var META={
   '2026-10-24':{time:'20:00',place:'Heffingen',addr:HALL},
   '2026-10-31':{time:'20:00',place:'Heffingen',addr:HALL},
   '2026-11-07':{time:'18:00',place:'Reuler',addr:'Hall Sportif, 9768 Reuler'},
-  '2026-11-15':{time:'17:00',place:'Heffingen',addr:HALL}
+  '2026-11-15':{time:'17:00',place:'Heffingen',addr:HALL},
+  '2026-11-20':{time:'20:30',place:'Heffingen',addr:HALL}
 };
 /* Pokalspiele (Loterie Nationale Coupe), Ergebnis aus Sicht von US Heffingen */
 var CUPGAMES=[
@@ -650,7 +651,6 @@ var CUPGAMES=[
 ];
 /* Kommende Spiele der ersten Herren-Mannschaft (Nationale 2 Hommes, Kürzel SH) */
 var FIXTURES=[
-  {id:'f8', date:'2026-11-20',time:'20:30',place:'Heffingen',   addr:HALL, h:'US Heffingen',       a:'Black Frogs Schieren', cat:'SH',lg:LEAGUE},
   {id:'f9', date:'2026-11-28',time:'20:00',place:'Contern',     addr:'Centre Scolaire et Sportif, 40 rue de Syren, 5316 Contern', h:'AB Contern', a:'US Heffingen', cat:'SH',lg:LEAGUE},
   {id:'f10',date:'2026-12-02',time:'19:00',place:'Luxembourg-Fetschenhof', addr:'Institut National des Sports, 66 route de Trèves, 2630 Luxembourg-Fetschenhof', h:'CFBB U18', a:'US Heffingen', cat:'SH',lg:LEAGUE},
   {id:'f11',date:'2026-12-05',time:'20:00',place:'Heffingen',   addr:HALL, h:'US Heffingen',       a:'BC Mess',              cat:'SH',lg:LEAGUE},
@@ -694,7 +694,8 @@ var BOX={
   '2026-10-24':{q:[[16,18],[20,20],[21,27],[31,24]],p:[['oly',4,8,3,1,1,1],['wil',5,32,10,8,2,1],['mel',6,0,0,0,0,1],['sch',7,25,6,2,5,0],['urw',8,4,1,0,1,0],['bou',9,6,2,2,0,1],['jun',11,2,0,1,0,0],['jac',12,7,0,2,1,1],['hes',13,1,1,0,0,0],['roc',14,3,3,0,0,0],['ste',15,0,0,0,0,0]]},
   '2026-10-31':{q:[[27,14],[28,18],[34,28],[27,17]],p:[['oly',4,16,3,5,1,1],['wil',5,33,2,11,3,1],['mel',6,3,0,0,1,1],['sch',7,21,4,4,3,1],['urw',8,4,2,1,0,0],['bou',9,14,2,6,0,1],['bri',10,5,0,1,1,0],['jun',11,2,0,1,0,0],['jac',12,8,4,2,0,0],['hes',13,5,3,1,0,0],['roc',14,5,1,2,0,0],['ste',15,0,0,0,0,0]]},
   '2026-11-07':{q:[[18,25],[17,24],[20,24],[18,22]],p:[['oly',4,12,1,1,3,1],['wil',5,23,7,8,0,1],['mel',6,2,0,1,0,0],['sch',7,0,0,0,0,1],['urw',8,0,0,0,0,0],['bou',9,4,0,2,0,1],['bri',10,0,0,0,0,0],['jun',11,0,0,0,0,0],['jac',12,2,0,1,0,0],['hes',13,2,0,1,0,0],['roc',14,3,0,0,1,0],['urb',15,25,2,10,1,1]]},
-  '2026-11-15':{q:[[23,17],[21,16],[17,15],[27,17]],p:[['oly',4,10],['wil',5,26],['mel',6,3],['sch',7,9],['ste',8,3],['bou',9,12],['bri',10,0],['jun',11,3],['jac',12,6],['hes',13,0],['roc',14,0],['urb',15,16]]}
+  '2026-11-15':{q:[[23,17],[21,16],[17,15],[27,17]],p:[['oly',4,10],['wil',5,26],['mel',6,3],['sch',7,9],['ste',8,3],['bou',9,12],['bri',10,0],['jun',11,3],['jac',12,6],['hes',13,0],['roc',14,0],['urb',15,16]]},
+  '2026-11-20':{q:[[34,10],[21,20],[17,8],[27,13]],p:[['oly',4,9],['wil',5,23],['mel',6,0],['ste',7,11],['urw',8,8],['bou',9,6],['bri',10,1],['jun',11,4],['jac',12,8],['hes',13,8],['roc',14,0],['urb',15,21]]}
 };
 
 /* ---------- Teams des Clubs: jedes Team hat eigene Daten; useTeam() schaltet die globalen Variablen um ---------- */
@@ -742,9 +743,9 @@ TEAMS.menc={key:'menc',ics:'SHHEFC',label:'Men C',club:'US Heffingen C',league:'
     {id:'cp3',date:'2026-10-11',time:'19:00',place:"Bertrange",addr:"salle Niki Bettendorf, 2, beim Schlass, 8058 Bertrange",h:"Sparta Bertrange C",a:"US Heffingen C",us:88,them:71,lg:'Division 2'},
     {id:'cp4',date:'2026-10-18',time:'17:00',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"T71 Dudelange B",us:64,them:87,lg:'Division 2'},
     {id:'cp5',date:'2026-10-24',time:'18:30',place:"Soleuvre",addr:"KUSS Scheierhaff, rue Jean Anen, 4413 Soleuvre",h:"AS Soleuvre C",a:"US Heffingen C",us:50,them:98,lg:'Division 2'},
-    {id:'cp6',date:'2026-11-08',time:'17:00',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Musel Pikes C",us:71,them:72,lg:'Division 2'}
+    {id:'cp6',date:'2026-11-08',time:'17:00',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Musel Pikes C",us:71,them:72,lg:'Division 2'},
+    {id:'cp7',date:'2026-11-20',time:'20:30',place:"Bettembourg",addr:"centre sportif hall, 30, rue J. H. Polk, 3275 Bettembourg",h:"Nitia Bettembourg B",a:"US Heffingen C",us:87,them:54,lg:'Division 2'}
   ],FIXTURES:[
-    {id:'cf1',date:'2026-11-20',time:'20:30',place:"Bettembourg",addr:"centre sportif hall, 30, rue J. H. Polk, 3275 Bettembourg",h:"Nitia Bettembourg B",a:"US Heffingen C",lg:'Division 2'},
     {id:'cf2',date:'2026-12-06',time:'18:30',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Bascharage Hedgehogs B",lg:'Division 2'},
     {id:'cf3',date:'2026-12-13',time:'18:30',place:"Luxembourg-Limpertsberg",addr:"Tramsschapp Luxembourg, 47a, rue Ermesinde, 1469 Luxembourg-Limpertsberg",h:"Racing Luxembourg D",a:"US Heffingen C",lg:'Division 2'},
     {id:'cf4',date:'2027-01-09',place:"Heffingen",addr:HALL,h:"US Heffingen C",a:"Amicale Steesel B",lg:'Division 2'},
@@ -764,9 +765,10 @@ TEAMS.menc={key:'menc',ics:'SHHEFC',label:'Men C',club:'US Heffingen C',league:'
     '2026-10-11':{q:[[16,19],[29,27],[19,12],[24,13]],p:[['maessim',4,4],['wagenejef',5,0],['banzerbob',7,4],['thesenjoe',8,42],['scholtman',9,25],['brinckrob',10,6],['agredaraf',14,4],['kunnerjea',15,3]]},
     '2026-10-18':{p:[['thesenjoe',4,32],['wagenejef',5,0],['banzerbob',7,0],['ludwigcla',8,2],['scholtman',9,13],['wampacdan',10,11],['kunnerjea',13,0],['agredaraf',14,4],['faberjoe',15,2]]},
     '2026-10-24':{q:[[13,22],[11,19],[12,27],[14,30]],p:[['clasenchr',5,0],['wagenejef',6,4],['banzerbob',7,6],['ludwigcla',8,11],['alvesngus',11,5],['elchertun',12,20],['agredaraf',14,4],['faberjoe',15,0]]},
-    '2026-11-08':{q:[[27,17],[20,21],[14,14],[10,20]],p:[['thesenjoe',4,33],['clasenchr',5,2],['wageneluc',6,9],['banzerbob',7,2],['maessim',8,0],['scholtman',9,15],['wampacdan',10,6],['faberjoe',15,4]]}
+    '2026-11-08':{q:[[27,17],[20,21],[14,14],[10,20]],p:[['thesenjoe',4,33],['clasenchr',5,2],['wageneluc',6,9],['banzerbob',7,2],['maessim',8,0],['scholtman',9,15],['wampacdan',10,6],['faberjoe',15,4]]},
+    '2026-11-20':{p:[['thesenjoe',4,37],['wagenejef','',0],['banzerbob',7,0],['maessim',8,4],['scholtman',9,30],['alvesngus',11,14],['agredaraf',14,0],['faberjoe',15,2]]}
   },
-  table:[["T71 Dudelange B", 6, 6, 0, 487, 336, 12], ["Black Star Mersch B", 6, 5, 1, 345, 266, 11], ["Musel Pikes C", 5, 4, 1, 291, 276, 9], ["Sparta Bertrange C", 6, 3, 3, 402, 368, 9], ["Racing Luxembourg D", 5, 3, 2, 272, 266, 8], ["US Heffingen C", 6, 2, 4, 389, 447, 8], ["Amicale Steesel B", 5, 2, 3, 247, 254, 6], ["Gréngewald Hueschtert C", 5, 1, 4, 286, 308, 6], ["AS Soleuvre C", 4, 2, 2, 272, 224, 6], ["Nitia Bettembourg B", 5, 1, 4, 194, 267, 5], ["Bascharage Hedgehogs B", 5, 0, 5, 256, 429, 5]]};
+  table:[["T71 Dudelange B", 6, 6, 0, 487, 336, 12], ["Black Star Mersch B", 6, 5, 1, 345, 266, 11], ["US Heffingen C", 7, 3, 4, 476, 501, 10], ["Musel Pikes C", 5, 4, 1, 291, 276, 9], ["Sparta Bertrange C", 6, 3, 3, 402, 368, 9], ["Racing Luxembourg D", 5, 3, 2, 272, 266, 8], ["AS Soleuvre C", 4, 2, 2, 272, 224, 6], ["Amicale Steesel B", 5, 2, 3, 247, 254, 6], ["Gréngewald Hueschtert C", 5, 1, 4, 286, 308, 6], ["Nitia Bettembourg B", 6, 1, 5, 248, 354, 6], ["Bascharage Hedgehogs B", 5, 0, 5, 256, 429, 5]]};
 TEAMS.women={key:'women',ics:'SDHEF',label:'Women A',club:'US Heffingen',league:'Nationale 2',heading:'Nationale 2 Women',sub:'Women A · Nationale 2 · 2026/27',live:false,
   T:{SO:"AS Soleuvre",AR:"Arantia Larochette",EP:"BBC East Side Pirates",ME:"BC Mess",BS:"Black Star Mersch",ET:"Etzella Ettelbruck",KS:"Kordall Steelers",RW:"Résidence Walferdange",TH:"Telstar Hesperange",US:"US Heffingen"},
   PLAYED:[
@@ -1176,7 +1178,7 @@ function applyLang(){
   TEAM_ORDER.forEach(function(k){var t=TEAMS[k]; if(!t.lab0) t.lab0=t.label; t.label=t.lab0.replace(/^Men/,L('Men')).replace(/^Women/,L('Women'))});
   var nm={home:LANG==='de'?'Start':LANG==='fr'?'Accueil':'Home',games:L('Calendar'),news:L('Club events'),settings:L('Settings')};
   document.querySelectorAll('.tabs a').forEach(function(a){var n=nm[a.dataset.tab]||'';if(n){a.setAttribute('aria-label',n);a.title=n}});
-  var af=document.querySelector('.asof'); if(af) af.textContent=L('As of')+' 19 Nov 2026 · '+L('Data from')+' luxembourg.basketball';
+  var af=document.querySelector('.asof'); if(af) af.textContent=L('As of')+' 20 Nov 2026 · '+L('Data from')+' luxembourg.basketball';
   var sel=document.getElementById('teamsel'); if(sel) sel.innerHTML='';
 }
 function calLink(t){return t.ics?'<a class="maplink" href="webcal://'+ICS_BASE+t.ics+'.ics" style="margin-right:14px">'+L('Subscribe')+'</a><a class="maplink" href="https://'+ICS_BASE+t.ics+'.ics" target="_blank" rel="noopener">'+L('Download .ics')+'</a>':''}
@@ -1389,7 +1391,7 @@ function vTabelle(){
   st.forEach(function(x,i){
     h+='<tr'+(x.me?' class="me"':'')+'><td>'+(i+1)+'</td><td class="tm">'+esc(x.t)+'</td><td>'+x.sp+'</td><td>'+x.w+'</td><td>'+x.l+'</td><td>'+signed(x.d)+'</td><td>'+x.pts+'</td></tr>';
   });
-  return h+'</tbody></table></div></div><p class="note">'+(TEAM.table?'Official table from luxembourg.basketball (as of 19 Nov 2026).':'Calculated from the results on luxembourg.basketball (as of 19 Nov 2026): two points for a win, one for a loss, ties broken by the head-to-head games of the teams involved, then by point difference (same rules as the official table).')+'</p>';
+  return h+'</tbody></table></div></div><p class="note">'+(TEAM.table?'Official table from luxembourg.basketball (as of 20 Nov 2026).':'Calculated from the results on luxembourg.basketball (as of 20 Nov 2026): two points for a win, one for a loss, ties broken by the head-to-head games of the teams involved, then by point difference (same rules as the official table).')+'</p>';
 }
 
 function squadStats(){
@@ -1411,7 +1413,7 @@ function vKader(){
     var p=PLAYERS[x.id];
     h+='<tr><td>'+x.n+'</td><td class="tm">'+esc(pname(p))+(p.pos?'<br><span class="sub">'+POS[p.pos]+(p.h?' · '+esc(p.h)+' m':'')+'</span>':'')+'</td><td>'+x.gp+'</td><td>'+x.pts+'</td><td>'+x.ppg.toFixed(1)+'</td><td>'+x.three+'</td></tr>';
   });
-  return h+'</tbody></table></div></div><p class="note">From the match reports available so far ('+Object.keys(BOX).length+' league games) (as of 19 Nov 2026). The number is each player’s shirt number in his latest game. GP = games played, PPG = points per game, 3PM = three-pointers made.</p>';
+  return h+'</tbody></table></div></div><p class="note">From the match reports available so far ('+Object.keys(BOX).length+' league games) (as of 20 Nov 2026). The number is each player’s shirt number in his latest game. GP = games played, PPG = points per game, 3PM = three-pointers made.</p>';
 }
 
 function vTraining(){
