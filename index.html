@@ -1533,11 +1533,13 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
 function clabel(k){return k==='club'?L('Club'):TEAMS[k]?TEAMS[k].label:k}
 function kindOpts(team){return team==='club'?'<option value="event">'+L('Event')+'</option>':'<option value="training">'+L('Training')+'</option><option value="game">'+L('Game')+'</option>'}
 function oppOpts(k){
-  var t=TEAMS[k]; if(!t) return '<option value="__o">'+L('Other opponent\u2026')+'</option>';
-  var set={}; Object.keys(t.T||{}).forEach(function(x){set[t.T[x]]=1});
-  (t.FIXTURES||[]).concat(t.CUPGAMES||[]).forEach(function(g){set[g.h]=1;set[g.a]=1});
-  delete set[t.club];
-  return Object.keys(set).sort().map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>'}).join('')+'<option value="__o">'+L('Other opponent\u2026')+'</option>';
+  var set={}, own={};
+  TEAM_ORDER.forEach(function(x){var t=TEAMS[x]; if(!t) return; own[t.club]=1;
+    Object.keys(t.T||{}).forEach(function(y){set[t.T[y]]=1});
+    (t.FIXTURES||[]).concat(t.CUPGAMES||[]).forEach(function(g){set[g.h]=1;set[g.a]=1});
+  });
+  Object.keys(own).forEach(function(n){delete set[n]});
+  return Object.keys(set).filter(Boolean).sort(function(x,y){return x.localeCompare(y)}).map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>'}).join('')+'<option value="__o">'+L('Other opponent\u2026')+'</option>';
 }
 function csync(){
   var k=document.getElementById('ckind'); if(!k) return; var g=k.value==='game', o=document.getElementById('copp');
