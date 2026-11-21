@@ -604,7 +604,7 @@ html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:non
     <section class="view" id="v-squad" hidden></section>
     <section class="view" id="v-training" hidden></section>
   </main>
-  <p class="asof">As of 20 Nov 2026 · Data from luxembourg.basketball</p>
+  <p class="asof">As of 21 Nov 2026 · Data from luxembourg.basketball</p>
 </div>
 <div class="tabs">
   <nav aria-label="Main menu">
@@ -638,7 +638,7 @@ var PLAYED=[
   ['2026-10-26','CF','MM',50,89],['2026-10-28','CF','BS',107,45],['2026-10-30','BM','SC',103,56],['2026-10-31','NB','BH',67,91],['2026-10-31','AC','AM',92,82],
   ['2026-10-31','US','BS',116,77],['2026-11-01','MM','NF',89,90],['2026-11-04','NF','CF',75,64],['2026-11-07','NF','US',95,73],['2026-11-07','BH','MM',85,77],
   ['2026-11-07','SC','NB',91,97],['2026-11-07','AC','BM',99,71],['2026-11-08','AM','BS',108,45],['2026-11-10','AM','CF',84,61],
-  ['2026-11-13','BS','NF',53,100],['2026-11-13','NB','AC',60,113],['2026-11-15','MM','SC',104,56],['2026-11-15','BM','AM',73,86],['2026-11-15','US','BH',88,65],['2026-11-20','US','SC',99,51]
+  ['2026-11-13','BS','NF',53,100],['2026-11-13','NB','AC',60,113],['2026-11-15','MM','SC',104,56],['2026-11-15','BM','AM',73,86],['2026-11-15','US','BH',88,65],['2026-11-18','BH','CF',78,68],['2026-11-20','US','SC',99,51]
 ];
 /* Anpfiff und Halle der gespielten Heffingen-Spiele (Kalender SH Heffingen), Schlüssel = Datum */
 var META={
@@ -1188,7 +1188,7 @@ function applyLang(){
   TEAM_ORDER.forEach(function(k){var t=TEAMS[k]; if(!t.lab0) t.lab0=t.label; t.label=t.lab0.replace(/^Men/,L('Men')).replace(/^Women/,L('Women'))});
   var nm={home:LANG==='de'?'Start':LANG==='fr'?'Accueil':'Home',games:L('Calendar'),news:L('Club events'),settings:L('Settings')};
   document.querySelectorAll('.tabs a').forEach(function(a){var n=nm[a.dataset.tab]||'';if(n){a.setAttribute('aria-label',n);a.title=n}});
-  var af=document.querySelector('.asof'); if(af) af.textContent=L('As of')+' 20 Nov 2026 · '+L('Data from')+' luxembourg.basketball';
+  var af=document.querySelector('.asof'); if(af) af.textContent=L('As of')+' 21 Nov 2026 · '+L('Data from')+' luxembourg.basketball';
   var sel=document.getElementById('teamsel'); if(sel) sel.innerHTML='';
 }
 function calLink(t){return t.ics?'<a class="maplink" href="webcal://'+ICS_BASE+t.ics+'.ics" style="margin-right:14px">'+L('Subscribe')+'</a><a class="maplink" href="https://'+ICS_BASE+t.ics+'.ics" target="_blank" rel="noopener">'+L('Download .ics')+'</a>':''}
@@ -1401,7 +1401,7 @@ function vTabelle(){
   st.forEach(function(x,i){
     h+='<tr'+(x.me?' class="me"':'')+'><td>'+(i+1)+'</td><td class="tm">'+esc(x.t)+'</td><td>'+x.sp+'</td><td>'+x.w+'</td><td>'+x.l+'</td><td>'+signed(x.d)+'</td><td>'+x.pts+'</td></tr>';
   });
-  return h+'</tbody></table></div></div><p class="note">'+(TEAM.table?'Official table from luxembourg.basketball (as of 20 Nov 2026).':'Calculated from the results on luxembourg.basketball (as of 20 Nov 2026): two points for a win, one for a loss, ties broken by the head-to-head games of the teams involved, then by point difference (same rules as the official table).')+'</p>';
+  return h+'</tbody></table></div></div><p class="note">'+(TEAM.table?'Official table from luxembourg.basketball (as of 21 Nov 2026).':'Calculated from the results on luxembourg.basketball (as of 21 Nov 2026): two points for a win, one for a loss, ties broken by the head-to-head games of the teams involved, then by point difference (same rules as the official table).')+'</p>';
 }
 
 function squadStats(){
@@ -1423,7 +1423,7 @@ function vKader(){
     var p=PLAYERS[x.id];
     h+='<tr><td>'+x.n+'</td><td class="tm">'+esc(pname(p))+(p.pos?'<br><span class="sub">'+POS[p.pos]+(p.h?' · '+esc(p.h)+' m':'')+'</span>':'')+'</td><td>'+x.gp+'</td><td>'+x.pts+'</td><td>'+x.ppg.toFixed(1)+'</td><td>'+x.three+'</td></tr>';
   });
-  return h+'</tbody></table></div></div><p class="note">From the match reports available so far ('+Object.keys(BOX).length+' league games) (as of 20 Nov 2026). The number is each player’s shirt number in his latest game. GP = games played, PPG = points per game, 3PM = three-pointers made.</p>';
+  return h+'</tbody></table></div></div><p class="note">From the match reports available so far ('+Object.keys(BOX).length+' league games) (as of 21 Nov 2026). The number is each player’s shirt number in his latest game. GP = games played, PPG = points per game, 3PM = three-pointers made.</p>';
 }
 
 function vTraining(){
