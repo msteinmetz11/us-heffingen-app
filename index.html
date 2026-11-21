@@ -22,6 +22,7 @@ img{max-width:100%}
 .cform{display:grid;gap:8px;margin-top:10px}
 .cform input,.cform select,.cform textarea{font:16px var(--f-body);padding:9px 10px;border:1.5px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);width:100%;box-sizing:border-box}
 .cform .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cform .two>*{min-width:0}.cform input[type=date],.cform input[type=time]{min-width:0;width:100%;box-sizing:border-box}
 .cbtn{font:600 15px var(--f-body);padding:10px 14px;border-radius:9px;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer}
 .cbtn.alt{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
 .cerr{color:var(--accent);font-size:13px;min-height:1em}
@@ -1641,7 +1642,7 @@ function coachCard(){
     +'<select id="ckind" aria-label="'+L('Type')+'">'+kindOpts(t0)+'</select></div>'
     +'<div class="two" id="cgame" style="display:none"><select id="choa" aria-label="'+L('Home game')+'"><option value="h">'+L('Home game')+'</option><option value="a">'+L('Away game')+'</option></select><select id="copp" aria-label="'+L('Opponent')+'">'+oppOpts(t0)+'</select></div>'
     +'<input id="copt" type="text" maxlength="60" style="display:none" placeholder="'+L('Opponent')+'" aria-label="'+L('Opponent')+'">'
-    +'<div class="two"><input id="cdate" type="date" value=""'+dstr(today)+'" aria-label="'+L('Date')+'"><input id="ctime" type="time" aria-label="'+L('Time')+'"></div>'
+    +'<div class="two"><label class="cl">'+L('Date')+'<input id="cdate" type="date" value="'+dstr(today)+'"></label><label class="cl">'+L('Time')+'<input id="ctime" type="time"></label></div>'
     +'<label class="cl">'+L('Repeat weekly until (optional)')+'<input id="cuntil" type="date"></label>'
     +'<input id="ctitle" type="text" maxlength="80" placeholder="'+L('Title')+'" aria-label="'+L('Title')+'">'
     +'<input id="cplace" type="text" maxlength="100" placeholder="'+L('Place')+'" aria-label="'+L('Place')+'">'
