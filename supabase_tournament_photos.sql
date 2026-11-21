@@ -1,4 +1,5 @@
 -- US Heffingen: Turnier-Fotos fuer Coach (Supabase: SQL Editor -> New query -> einfuegen -> Run). Einmal ausfuehren.
+-- Bewusst ohne $$-Quoting, ohne plpgsql und ohne SELECT INTO (der Dashboard-Editor verschluckt sich daran).
 create table if not exists public.coach_photos (
   id uuid primary key default gen_random_uuid(),
   event_id uuid not null references public.coach_events(id) on delete cascade,
@@ -12,22 +13,11 @@ revoke all on public.coach_photos from anon, authenticated;
 grant select on public.coach_photos to anon;
 
 create or replace function public.coach_add_photo(p_code text, p_event uuid, p_data text) returns void
-language plpgsql security definer set search_path = public, extensions as $fn$
-declare t text;
-begin
-  t := (select team from public.coach_events where id = p_event);
-  if t is null or not public._coach_ok(p_code, t) then raise exception 'invalid code'; end if;
-  if (select count(*) from public.coach_photos where event_id = p_event) >= 2 then raise exception 'max 2 photos'; end if;
-  insert into public.coach_photos(event_id, data) values (p_event, p_data);
-end $fn$;
+language sql security definer set search_path = public, extensions
+as 'insert into public.coach_photos(event_id, data) select p_event, p_data from public.coach_events e where e.id = p_event and public._coach_ok(p_code, e.team) and (select count(*) from public.coach_photos x where x.event_id = p_event) < 2';
 
 create or replace function public.coach_del_photo(p_code text, p_id uuid) returns void
-language plpgsql security definer set search_path = public, extensions as $fn$
-declare t text;
-begin
-  t := (select e.team from public.coach_photos p join public.coach_events e on e.id = p.event_id where p.id = p_id);
-  if t is null or not public._coach_ok(p_code, t) then raise exception 'invalid code'; end if;
-  delete from public.coach_photos where id = p_id;
-end $fn$;
+language sql security definer set search_path = public, extensions
+as 'delete from public.coach_photos p using public.coach_events e where p.id = p_id and e.id = p.event_id and public._coach_ok(p_code, e.team)';
 
 grant execute on function public.coach_add_photo(text,uuid,text), public.coach_del_photo(text,uuid) to anon;
