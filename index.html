@@ -710,7 +710,7 @@ var BOX={
 
 /* ---------- Teams des Clubs: jedes Team hat eigene Daten; useTeam() schaltet die globalen Variablen um ---------- */
 var TEAMS={};
-var TEAM_ORDER=['men','menb','menc','women','u22m','u19w','u16m','u16w','u14m','u14w','u12m','u12w'];
+var TEAM_ORDER=['men','menb','menc','women','u22m','u19w','u16m','u16w','u14m','u14w','u12m','u12w','u10'];
 TEAMS.men={key:'men',ics:'SHHEF',label:'Men A',club:'US Heffingen',league:'Nationale 2',heading:'Nationale 2 Men',sub:'Men A · Nationale 2 · 2026/27',live:true,
   T:T,PLAYED:PLAYED,META:META,CUPGAMES:CUPGAMES,FIXTURES:FIXTURES,TRAINING_WEEK:TRAINING_WEEK,PLAYERS:PLAYERS,BOX:BOX};
 TEAMS.menb={key:'menb',ics:'SHHEFB',label:'Men B',club:'US Heffingen B',league:'Division 1',heading:'Division 1 Men',sub:'Men B · Division 1 · 2026/27',live:false,
@@ -960,6 +960,13 @@ TEAMS.u12m={key:'u12m',ics:'PHHEF',label:'Men U12',club:'US Heffingen',league:'U
   ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
   table:[]};
 TEAMS.u12w={key:'u12w',ics:'PDHEF',label:'Women U12',club:'US Heffingen',league:'U12',heading:'U12 Women',sub:'Women U12 · 2026/27',live:false,
+  T:{},PLAYED:[],META:{},CUPGAMES:[
+    
+  ],FIXTURES:[
+    
+  ],TRAINING_WEEK:[],PLAYERS:{},BOX:{},
+  table:[]};
+TEAMS.u10={key:'u10',ics:'',label:'U10',club:'US Heffingen',league:'U10',heading:'U10',sub:'U10 · 2026/27',live:false,
   T:{},PLAYED:[],META:{},CUPGAMES:[
     
   ],FIXTURES:[
