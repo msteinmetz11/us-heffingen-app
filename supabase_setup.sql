@@ -35,6 +35,7 @@ insert into public.coach_codes (team, hash) values
   ('u14w','24236ae466c7c7cc8ab2e4d5220e9eacbf215f8c8adf1b39bf7412958aece030'),
   ('u12m','6013254209ac544482990cd00355fa51868ac312ed724d0dbdefa5f4040a39a0'),
   ('u12w','77f4ed1e90b0829091fca8eb373f32a317bf7090d59b74521ce5d2c7f65ec434'),
+  ('u10','2f060952e94ab8dd876ed0e6900e61dc6bfa0a5d2be011d394b0f8657e9cf407'),
   ('club','0a25f8be6c0fd9b35575711d83c20e8cb688410e00a99c59b8c80ae24a8b03c6'),
   ('*','ea66d847bef2bb8c7bf2e4fb84b9fd29511c129fc84ab940a6fc253655a2ab96')
 on conflict (team) do update set hash = excluded.hash;
