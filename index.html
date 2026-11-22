@@ -1755,6 +1755,11 @@ var LPMAX=12, LPK='ush-lineup', LRK='ush-roster-u10';
 function lrLoad(){try{var a=JSON.parse(localStorage.getItem(LRK)||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
 var LROSTER=lrLoad();
 function lrSave(){try{localStorage.setItem(LRK,JSON.stringify(LROSTER))}catch(e){}}
+/* Vorgegebene U10-Spielerliste (Vorname + Initial). Wird einmal pro Gerät ergänzt, ohne Doppelte; danach frei änderbar. */
+var LRSEED=['Adriano H.','Amy S.','Anna K.','Bob G.','Charlotte G.','Chris G.','Emily F.','Eva Z.','Jacques S.','Joris L.','June B.','Layla B.','Lee S.','Luana L.','Luss D.','Mats L.','Mats T.','Misch K.','Olivier K.','Philippe A.','Wesley M.'];
+(function(){try{if(localStorage.getItem(LRK+'-seed1'))return;
+  LRSEED.forEach(function(n,i){var k=n.toLowerCase();if(!LROSTER.some(function(x){return String(x.n).trim().toLowerCase()===k}))LROSTER.push({id:'rs'+i,n:n})});
+  lrSave();localStorage.setItem(LRK+'-seed1','1')}catch(e){}})();
 function lpTeam(){return TEAM.key==='u10'}
 function lpMax(){return lpTeam()?16:LPMAX}
 function lpSubj(){
