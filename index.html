@@ -605,7 +605,7 @@ html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:non
     <section class="view" id="v-squad" hidden></section>
     <section class="view" id="v-training" hidden></section>
   </main>
-  <p class="asof">As of 21 Nov 2026 · Data from luxembourg.basketball</p>
+  <p class="asof">As of 22 Nov 2026 · Data from luxembourg.basketball</p>
 </div>
 <div class="tabs">
   <nav aria-label="Main menu">
@@ -639,7 +639,8 @@ var PLAYED=[
   ['2026-10-26','CF','MM',50,89],['2026-10-28','CF','BS',107,45],['2026-10-30','BM','SC',103,56],['2026-10-31','NB','BH',67,91],['2026-10-31','AC','AM',92,82],
   ['2026-10-31','US','BS',116,77],['2026-11-01','MM','NF',89,90],['2026-11-04','NF','CF',75,64],['2026-11-07','NF','US',95,73],['2026-11-07','BH','MM',85,77],
   ['2026-11-07','SC','NB',91,97],['2026-11-07','AC','BM',99,71],['2026-11-08','AM','BS',108,45],['2026-11-10','AM','CF',84,61],
-  ['2026-11-13','BS','NF',53,100],['2026-11-13','NB','AC',60,113],['2026-11-15','MM','SC',104,56],['2026-11-15','BM','AM',73,86],['2026-11-15','US','BH',88,65],['2026-11-18','BH','CF',78,68],['2026-11-20','US','SC',99,51]
+  ['2026-11-13','BS','NF',53,100],['2026-11-13','NB','AC',60,113],['2026-11-15','MM','SC',104,56],['2026-11-15','BM','AM',73,86],['2026-11-15','US','BH',88,65],['2026-11-18','BH','CF',78,68],['2026-11-20','US','SC',99,51],
+  ['2026-11-21','BS','BH',60,87],['2026-11-21','NB','BM',72,121],['2026-11-21','NF','AM',103,90]
 ];
 /* Anpfiff und Halle der gespielten Heffingen-Spiele (Kalender SH Heffingen), Schlüssel = Datum */
 var META={
@@ -738,13 +739,14 @@ TEAMS.menb={key:'menb',ics:'SHHEFB',label:'Men B',club:'US Heffingen B',league:'
     {id:'bf13',date:'2027-04-17',h:"Racing Luxembourg C",a:"US Heffingen B",lg:'Division 1'},
     {id:'bf14',date:'2027-04-24',place:"Heffingen",addr:HALL,h:"US Heffingen B",a:"Racing Luxembourg B",lg:'Division 1'},
     {id:'bf15',date:'2027-05-01',h:"Gréngewald Hueschtert B",a:"US Heffingen B",lg:'Division 1'}
-  ],TRAINING_WEEK:[],PLAYERS:{thesenjoe:{s:'Thesen',g:'Joel'},brinckrob:{s:'Brinck',g:'Robert'},bourgelee:{s:'Bourgeois',g:'Lee'},reiterpit:{s:'Reiter',g:'Pit'},scholtman:{s:'Scholtus',g:'Manuel'},demuthlou:{s:'Demuth',g:'Lou'},schmitmax:{s:'Schmit',g:'Max'},jacobyfra:{s:'Jacoby',g:'Frank'},alvesngus:{s:'Alves Novaes',g:'Gustavo'},rocknil:{s:'Rock',g:'Nils'},wampacdan:{s:'Wampach',g:'Daniel'},maessim:{s:'Maes',g:'Simon'},hessdan:{s:'Hess',g:'Danilo'},kunnerjea:{s:'Kunnert',g:'Jean-Pierre'},kohnlou:{s:'Kohn',g:'Louis Michel'},ludwigcla:{s:'Ludwig',g:'Claude'},hettocha:{s:'Hetto',g:'Charel'},bellwayve:{s:'Bellwald',g:'Yves'}},BOX:{
+  ],TRAINING_WEEK:[],PLAYERS:{wageneluc:{s:'Wagener',g:'Luc'},thesenjoe:{s:'Thesen',g:'Joel'},brinckrob:{s:'Brinck',g:'Robert'},bourgelee:{s:'Bourgeois',g:'Lee'},reiterpit:{s:'Reiter',g:'Pit'},scholtman:{s:'Scholtus',g:'Manuel'},demuthlou:{s:'Demuth',g:'Lou'},schmitmax:{s:'Schmit',g:'Max'},jacobyfra:{s:'Jacoby',g:'Frank'},alvesngus:{s:'Alves Novaes',g:'Gustavo'},rocknil:{s:'Rock',g:'Nils'},wampacdan:{s:'Wampach',g:'Daniel'},maessim:{s:'Maes',g:'Simon'},hessdan:{s:'Hess',g:'Danilo'},kunnerjea:{s:'Kunnert',g:'Jean-Pierre'},kohnlou:{s:'Kohn',g:'Louis Michel'},ludwigcla:{s:'Ludwig',g:'Claude'},hettocha:{s:'Hetto',g:'Charel'},bellwayve:{s:'Bellwald',g:'Yves'}},BOX:{
     '2026-09-27':{q:[[25,24],[28,14],[19,15],[16,26]],p:[['thesenjoe',4,18],['brinckrob',5,0],['bourgelee',7,10],['reiterpit',8,9],['scholtman',9,2],['demuthlou',10,20],['schmitmax',11,9],['jacobyfra',12,4],['alvesngus',13,0],['rocknil',14,16]]},
     '2026-10-03':{q:[[18,20],[18,19],[23,9],[17,13]],p:[['thesenjoe',4,29],['wampacdan',7,0],['reiterpit',8,20],['scholtman',9,10],['maessim',10,1],['alvesngus',11,6],['hessdan',12,10]]},
     '2026-10-11':{q:[[38,20],[31,12],[32,17],[26,15]],p:[['thesenjoe',4,48],['kunnerjea',6,4],['bourgelee',7,19],['reiterpit',8,4],['scholtman',9,24],['brinckrob',12,14],['kohnlou',15,14]]},
     '2026-10-18':{q:[[22,8],[19,21],[15,19],[25,19]],p:[['thesenjoe',4,36],['ludwigcla',6,2],['bourgelee',7,16],['reiterpit',8,11],['scholtman',9,14],['kunnerjea',10,0],['hettocha',13,2]]},
     '2026-10-25':{q:[[21,18],[17,21],[22,18],[12,15],[6,11]],p:[['thesenjoe',4,19],['bourgelee',7,17],['reiterpit',8,9],['scholtman',9,10],['kunnerjea',10,0],['brinckrob',11,7],['jacobyfra',12,5],['demuthlou',15,11]]},
-    '2026-11-11':{q:[[26,14],[14,15],[23,21],[29,18]],p:[['thesenjoe',4,29],['bourgelee',5,31],['ludwigcla',6,2],['brinckrob',7,4],['reiterpit',8,9],['scholtman',9,8],['bellwayve',10,0],['hettocha',13,7],['kohnlou',15,2]]}
+    '2026-11-11':{q:[[26,14],[14,15],[23,21],[29,18]],p:[['thesenjoe',4,29],['bourgelee',5,31],['ludwigcla',6,2],['brinckrob',7,4],['reiterpit',8,9],['scholtman',9,8],['bellwayve',10,0],['hettocha',13,7],['kohnlou',15,2]]},
+    '2026-11-18':{q:[[17,24],[14,22],[18,17],[18,9]],p:[['thesenjoe',4,17],['wageneluc',5,0],['demuthlou',6,12],['reiterpit',8,0],['scholtman',9,6],['schmitmax',11,27],['bellwayve',12,0],['hettocha',13,3],['kohnlou',15,2]]}
   },
   table:[["Racing Luxembourg C", 6, 5, 1, 536, 376, 11], ["US Heffingen B", 6, 5, 1, 542, 422, 11], ["Mambra Mamer B", 6, 4, 2, 419, 406, 10], ["Racing Luxembourg B", 5, 4, 1, 413, 323, 9], ["AB Contern B", 5, 4, 1, 382, 334, 9], ["Musel Pikes B", 5, 3, 2, 386, 362, 8], ["BC Mess B", 6, 2, 4, 388, 432, 8], ["Arantia Larochette B", 5, 3, 2, 377, 385, 8], ["Sparta Bertrange B", 6, 0, 6, 353, 596, 6], ["Basket Esch B", 5, 0, 5, 346, 422, 5], ["Gréngewald Hueschtert B", 5, 0, 5, 313, 397, 5]]};
 TEAMS.menc={key:'menc',ics:'SHHEFC',label:'Men C',club:'US Heffingen C',league:'Division 2',heading:'Division 2 Men',sub:'Men C · Division 2 · 2026/27',live:false,
@@ -869,7 +871,8 @@ TEAMS.u16m={key:'u16m',ics:'SCHEF',label:'Men U16',club:'US Heffingen',league:'U
     '2026-10-03':{q:[[9,12],[20,20],[21,17],[15,15]],p:[['vyroubjan',5,2],['steinmmex',7,13],['seylerjim',9,10],['schlimbas',10,0],['fuchskale',11,6],['almeiddei',12,16],['dostermet',13,16],['harisim',15,2]]},
     '2026-10-11':{q:[[14,16],[15,19],[15,15],[17,23]],p:[['steinmmex',4,11],['vyroubjan',5,4],['kasstim',6,10],['vazperdie',7,6],['seylerjim',9,7],['schlimbas',10,2],['fuchskale',11,0],['almeiddei',12,4],['dostermet',13,15],['harisim',15,2]]},
     '2026-10-17':{q:[[16,17],[17,9],[17,17],[8,18]],p:[['steinmmex',5,14],['vazperdie',7,15],['kasstim',8,2],['seylerjim',9,12],['hostermic',11,0],['almeiddei',12,3],['dostermet',13,10],['fuchskale',15,2]]},
-    '2026-10-25':{q:[[9,19],[18,20],[11,15],[11,17]],p:[['vyroubjan',5,6],['steinmmex',7,15],['kasstim',8,11],['schlimbas',10,0],['almeiddei',12,6],['dostermet',13,11],['harisim',15,0]]}
+    '2026-10-25':{q:[[9,19],[18,20],[11,15],[11,17]],p:[['vyroubjan',5,6],['steinmmex',7,15],['kasstim',8,11],['schlimbas',10,0],['almeiddei',12,6],['dostermet',13,11],['harisim',15,0]]},
+    '2026-10-07':{q:[[6,30],[1,21],[10,22],[5,28]],p:[['vyroubjan',5,2],['kasstim',6,0],['vazperdie',7,8],['hostermic',8,0],['seylerjim',9,2],['schlimbas',10,0],['steinmmex',11,2],['almeiddei',12,3],['dostermet',13,1],['fuchskale',14,4],['harisim',15,0]]}
   },
   table:[]};
 TEAMS.u14m={key:'u14m',ics:'MIHEF',label:'Men U14',club:'US Heffingen',league:'U14 Division 4',heading:'U14 Division 4 Men',sub:'Men U14 · Division 4 · 2026/27',live:false,
@@ -916,9 +919,9 @@ TEAMS.u16w={key:'u16w',ics:'FSHEF',label:'Women U16',club:'US Heffingen',league:
     {id:'w162',date:'2026-10-03',time:'15:00',place:'Ettelbruck',addr:'Centre sportif du Deich, 9012 Ettelbruck',h:'Etzella Ettelbruck',a:'US Heffingen',us:52,them:64,lg:'U16 Division 2'},
     {id:'w163',date:'2026-10-11',time:'17:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'Basket Esch',us:47,them:57,lg:'U16 Division 2'},
     {id:'w164',date:'2026-10-17',time:'11:00',place:'Echternach',addr:'Hall Sportif, rue de la Chapelle, 6419 Echternach',h:'BBC East Side Pirates',a:'US Heffingen',us:49,them:74,lg:'U16 Division 2'},
-    {id:'w165',date:'2026-11-14',time:'14:30',place:'Bertrange',addr:'salle Niki Bettendorf, 2, beim Schlass, 8058 Bertrange',h:'Sparta Bertrange',a:'US Heffingen',us:34,them:59,lg:'U16 Division 2'}
+    {id:'w165',date:'2026-11-14',time:'14:30',place:'Bertrange',addr:'salle Niki Bettendorf, 2, beim Schlass, 8058 Bertrange',h:'Sparta Bertrange',a:'US Heffingen',us:34,them:59,lg:'U16 Division 2'},
+    {id:'w166',date:'2026-11-21',time:'18:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'T71 Dudelange B',us:54,them:65,lg:'U16 Division 2'}
   ],FIXTURES:[
-    {id:'w166',date:'2026-11-21',time:'18:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'T71 Dudelange B',lg:'U16 Division 2'},
     {id:'w167',date:'2026-11-26',time:'17:00',place:'Wasserbillig',addr:'Centre Sportif, route de Luxembourg, 6633 Wasserbillig',h:'BBC East Side Pirates',a:'US Heffingen',lg:CUP,round:'1/8 finals'},
     {id:'w168',date:'2026-11-28',time:'17:00',place:'Heffingen',addr:HALL,h:'US Heffingen',a:'BBC East Side Pirates',lg:'U16 Division 2'},
     {id:'w169',date:'2026-12-05',time:'15:45',place:'Walferdange',addr:'c.s.\'Prince Henri\' nouv. salle, Walferdange',h:'Résidence Walferdange',a:'US Heffingen',lg:'U16 Division 2'},
@@ -927,7 +930,8 @@ TEAMS.u16w={key:'u16w',ics:'FSHEF',label:'Women U16',club:'US Heffingen',league:
     '2026-09-27':{q:[[17,12],[19,3],[21,7],[17,17]],p:[['kriepslou',4,6],['glodencha',5,9],['dosterlei',6,16],['rolleshan',7,4],['meyersnin',8,2],['mortoname',9,10],['bendersar',10,5],['kieffeell',15,22]]},
     '2026-10-11':{q:[[15,13],[5,12],[16,8],[11,24]],p:[['kriepslou',4,0],['glodencha',5,10],['dosterlei',6,6],['kugenelen',7,7],['meyersnin',8,8],['mortoname',9,2],['bendersar',10,4],['hofliglor',11,0],['pooscha',12,0],['rolleshan',13,2],['kieffeell',15,8]]},
     '2026-10-17':{q:[[11,20],[5,12],[15,17],[18,25]],p:[['glodencha',5,6],['dosterlei',6,22],['kugenelen',7,2],['meyersnin',8,0],['mortoname',9,2],['bendersar',10,4],['hofliglor',11,0],['pooscha',12,4],['rolleshan',13,0],['kriepslou',14,2],['kieffeell',15,7]]},
-    '2026-11-14':{q:[[6,12],[6,16],[18,15],[4,16]],p:[['kriepslou',4,0],['glodencha',5,2],['dosterlei',6,12],['hofliglor',7,0],['pooscha',8,4],['mortoname',9,6],['bendersar',10,2],['alvesnisa',12,0],['kieffeell',15,8]]}
+    '2026-11-14':{q:[[6,12],[6,16],[18,15],[4,16]],p:[['kriepslou',4,0],['glodencha',5,2],['dosterlei',6,12],['hofliglor',7,0],['pooscha',8,4],['mortoname',9,6],['bendersar',10,2],['alvesnisa',12,0],['kieffeell',15,8]]},
+    '2026-11-21':{q:[[10,22],[12,7],[16,17],[16,19]],p:[['glodencha',5,4],['dosterlei',6,24],['meyersnin',8,0],['bendersar',10,4],['hofliglor',11,4],['alvesnisa',12,0],['pooscha',14,8],['kieffeell',15,10]]}
   },
   table:[]};
 TEAMS.u14w={key:'u14w',ics:'FIHEF',label:'Women U14',club:'US Heffingen',league:'U14 Division 1',heading:'U14 Division 1 Women',sub:'Women U14 · Division 1 · 2026/27',live:false,
@@ -1209,7 +1213,7 @@ function applyLang(){
   TEAM_ORDER.forEach(function(k){var t=TEAMS[k]; if(!t.lab0) t.lab0=t.label; t.label=t.lab0.replace(/^Men/,L('Men')).replace(/^Women/,L('Women'))});
   var nm={home:LANG==='de'?'Start':LANG==='fr'?'Accueil':'Home',games:L('Calendar'),news:L('Club events'),settings:L('Settings')};
   document.querySelectorAll('.tabs a').forEach(function(a){var n=nm[a.dataset.tab]||'';if(n){a.setAttribute('aria-label',n);a.title=n}});
-  var af=document.querySelector('.asof'); if(af) af.textContent=L('As of')+' 21 Nov 2026 · '+L('Data from')+' luxembourg.basketball';
+  var af=document.querySelector('.asof'); if(af) af.textContent=L('As of')+' 22 Nov 2026 · '+L('Data from')+' luxembourg.basketball';
   var sel=document.getElementById('teamsel'); if(sel) sel.innerHTML='';
 }
 function calLink(t){return t.ics?'<a class="maplink" href="webcal://'+ICS_BASE+t.ics+'.ics" style="margin-right:14px">'+L('Subscribe')+'</a><a class="maplink" href="https://'+ICS_BASE+t.ics+'.ics" target="_blank" rel="noopener">'+L('Download .ics')+'</a>':''}
@@ -1443,7 +1447,7 @@ function vTabelle(){
   st.forEach(function(x,i){
     h+='<tr'+(x.me?' class="me"':'')+'><td>'+(i+1)+'</td><td class="tm">'+esc(x.t)+'</td><td>'+x.sp+'</td><td>'+x.w+'</td><td>'+x.l+'</td><td>'+signed(x.d)+'</td><td>'+x.pts+'</td></tr>';
   });
-  return h+'</tbody></table></div></div><p class="note">'+(TEAM.table?'Official table from luxembourg.basketball (as of 21 Nov 2026).':'Calculated from the results on luxembourg.basketball (as of 21 Nov 2026): two points for a win, one for a loss, ties broken by the head-to-head games of the teams involved, then by point difference (same rules as the official table).')+'</p>';
+  return h+'</tbody></table></div></div><p class="note">'+(TEAM.table?'Official table from luxembourg.basketball (as of 22 Nov 2026).':'Calculated from the results on luxembourg.basketball (as of 22 Nov 2026): two points for a win, one for a loss, ties broken by the head-to-head games of the teams involved, then by point difference (same rules as the official table).')+'</p>';
 }
 
 function squadStats(){
@@ -1465,7 +1469,7 @@ function vKader(){
     var p=PLAYERS[x.id];
     h+='<tr><td>'+x.n+'</td><td class="tm">'+esc(pname(p))+(p.pos?'<br><span class="sub">'+POS[p.pos]+(p.h?' · '+esc(p.h)+' m':'')+'</span>':'')+'</td><td>'+x.gp+'</td><td>'+x.pts+'</td><td>'+x.ppg.toFixed(1)+'</td><td>'+x.three+'</td></tr>';
   });
-  return h+'</tbody></table></div></div><p class="note">From the match reports available so far ('+Object.keys(BOX).length+' league games) (as of 21 Nov 2026). The number is each player’s shirt number in his latest game. GP = games played, PPG = points per game, 3PM = three-pointers made.</p>';
+  return h+'</tbody></table></div></div><p class="note">From the match reports available so far ('+Object.keys(BOX).length+' league games) (as of 22 Nov 2026). The number is each player’s shirt number in his latest game. GP = games played, PPG = points per game, 3PM = three-pointers made.</p>';
 }
 
 function vTraining(){
