@@ -605,13 +605,13 @@ html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:non
 .ch .phs img{width:100%;height:100%;object-fit:cover;display:block}
 .ch .phs .ph{position:relative}.ch .phs .ph .cbtn{position:absolute;right:4px;top:4px;padding:2px 8px;font-size:13px;min-height:0;background:rgba(0,0,0,.65);color:#fff}
 .ch .sec2{display:flex;align-items:baseline;justify-content:space-between}
-#spband{position:fixed;left:0;right:0;bottom:var(--tabh,58px);z-index:4;height:52px;background:var(--surface);border-top:1px solid var(--line);overflow:hidden;display:none;align-items:center}
+#spband{position:fixed;left:0;right:0;bottom:var(--tabh,58px);z-index:4;height:58px;background:var(--surface);border-top:1px solid var(--line);overflow:hidden;display:none;align-items:center}
 html.tab-clubhome.has-band #spband{display:flex}
-html.tab-clubhome.has-band #v-clubhome{padding-bottom:64px}
+html.tab-clubhome.has-band #v-clubhome{padding-bottom:70px}
 #spband .trk{display:flex;width:max-content;animation:spmq 10s linear infinite}
 #spband .grp{display:flex;align-items:center;gap:34px;padding-right:34px;white-space:nowrap}
 #spband a,#spband span.i{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font:600 14px var(--f-body)}
-#spband img{height:40px;width:auto;max-width:130px;object-fit:contain;display:block}
+#spband img{height:46px;width:auto;max-width:130px;object-fit:contain;display:block}
 #spband .lb{font:600 11px var(--f-body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 @keyframes spmq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){#spband .trk{animation:none}}
@@ -1619,14 +1619,28 @@ function chAgo(ts){var d=new Date(ts),n=Math.floor((Date.now()-d)/864e5);if(isNa
 var homeEd=false;
 function homeSplit(r){homeEd=!!(r&&r.indexOf('home')>-1);var t=(r||[]).filter(function(k){return k!=='home'});return t.length?t:null}
 function clubEd(){return homeEd}
+var SPTRIM={};
+function spTrim(x){
+  if(!x.logo||SPTRIM[x.id]!==undefined) return; SPTRIM[x.id]=null;
+  var im=new Image(); im.onload=function(){try{
+    var w=im.naturalWidth,h=im.naturalHeight,c=document.createElement('canvas');c.width=w;c.height=h;var g=c.getContext('2d');g.drawImage(im,0,0);
+    var d=g.getImageData(0,0,w,h).data,x0=w,y0=h,x1=-1,y1=-1;
+    for(var y=0;y<h;y++)for(var xx=0;xx<w;xx++){var i=(y*w+xx)*4,a=d[i+3];if(a>20&&!(d[i]>238&&d[i+1]>238&&d[i+2]>238)){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(y<y0)y0=y;if(y>y1)y1=y}}
+    if(x1<0) return; var pd0=Math.round(Math.max(w,h)*.02); x0=Math.max(0,x0-pd0);y0=Math.max(0,y0-pd0);x1=Math.min(w-1,x1+pd0);y1=Math.min(h-1,y1+pd0);
+    var cw=x1-x0+1,ch=y1-y0+1; if(cw>=w*.97&&ch>=h*.97) return;
+    var o=document.createElement('canvas');o.width=cw;o.height=ch;o.getContext('2d').drawImage(im,x0,y0,cw,ch,0,0,cw,ch);
+    SPTRIM[x.id]=o.toDataURL('image/png');var el=document.getElementById('spband');if(el){el.dataset.k='';spBand()}
+  }catch(e){}}; im.src=x.logo;
+}
 function spBand(){
   var el=document.getElementById('spband'); if(!el) return;
   var all=spAll(), on=all.length>0;
   document.documentElement.classList.toggle('has-band',on);
   if(!on){el.innerHTML='';return}
-  var key=JSON.stringify(all.map(function(x){return x.id}));
+  all.forEach(spTrim);
+  var key=JSON.stringify(all.map(function(x){return x.id+(SPTRIM[x.id]?'t':'')}));
   if(el.dataset.k===key) return; el.dataset.k=key;
-  function item(x){var inner=(x.logo?'<img src="'+esc(x.logo)+'" alt="'+esc(x.name||x.alt||'')+'">':'')+(x.logo?'':'<span>'+esc(x.name)+'</span>');
+  function item(x){var inner=(x.logo?'<img src="'+esc(SPTRIM[x.id]||x.logo)+'" alt="'+esc(x.name||x.alt||'')+'">':'')+(x.logo?'':'<span>'+esc(x.name)+'</span>');
     return x.url&&/^https?:\/\//i.test(x.url)?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+inner+'</a>':'<span class="i">'+inner+'</span>'}
   var grp='<div class="grp"><span class="lb">'+L('Partners')+'</span>'+all.map(item).join('')+'</div>';
   el.innerHTML='<div class="trk" style="animation-duration:'+Math.max(7,all.length*3.5)+'s">'+grp+grp.replace('class="grp"','class="grp" aria-hidden="true"')+'</div>';
