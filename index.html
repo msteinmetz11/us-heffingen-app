@@ -559,7 +559,7 @@ details.lineup summary::-webkit-details-marker{display:none}
 .lpn{font:500 14px var(--f-body);color:var(--muted)}.lpn b{font:700 22px/1 var(--f-display);color:var(--accent)}
 .lpch{color:var(--accent);font-size:20px;line-height:1;transition:transform .2s}
 details.lineup[open] .lpch{transform:rotate(180deg)}
-.lpb{margin-top:8px}
+.lpb{margin-top:8px}.lpt{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.lpt button{flex:none;display:grid;gap:2px;text-align:left;min-width:150px;max-width:230px;padding:9px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:400 13px var(--f-body);cursor:pointer}.lpt button b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lpt button span{color:var(--muted)}.lpt button[aria-pressed=true]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.lpbusy{font-style:normal;font-size:12px;color:var(--muted);margin-left:6px;padding:1px 7px;border:1px solid var(--line);border-radius:10px;white-space:nowrap}
 .lpr{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:9px 0;font:400 16px var(--f-body);color:var(--ink);cursor:pointer}
 .lpr .lck{width:22px;height:22px;border-radius:7px;border:2px solid var(--line);display:grid;place-items:center;font:700 13px var(--f-body);flex:none;color:var(--accent-ink)}
 .lpr.on .lck{background:var(--accent);border-color:var(--accent)}
@@ -2036,11 +2036,19 @@ var LRSEED=['Adriano H.','Amy S.','Anna K.','Bob G.','Charlotte G.','Chris G.','
   lrSave();localStorage.setItem(LRK+'-seed1','1')}catch(e){}})();
 function lpTeam(){return TEAM.key==='u10'}
 function lpMax(){return lpTeam()?16:LPMAX}
+var LPSEL=null;try{LPSEL=localStorage.getItem('ush-lpsel')}catch(e){}
+function lpTour(e){return {id:'t'+e.id,eid:e.id,date:e.date,time:e.time||'',place:e.place||'',title:e.title,tourney:true}}
 function lpSubj(){
   if(!lpTeam()) return nextGame();
-  var e=tourneys()[0]; if(!e) return null;
-  return {id:'t'+e.id,date:e.date,time:e.time||'',place:e.place||'',title:e.title,tourney:true};
+  var l=tourneys(), e=l.filter(function(x){return String(x.id)===String(LPSEL)})[0]||l[0]; if(!e) return null;
+  return lpTour(e);
 }
+/* Spieler, die schon fuer ein anderes Turnier am selben Tag eingeteilt sind */
+function lpBusy(g){var m={}; if(!g||!g.tourney) return m;
+  tourneys().forEach(function(e){if(String(e.id)===String(g.eid)||e.date!==g.date)return;(LINEUP['t'+e.id]||[]).forEach(function(id){m[id]=e.title})}); return m}
+function lpPick(g){var l=tourneys(); if(!lpTeam()||l.length<2) return '';
+  return '<div class="lpt" role="group" aria-label="'+L('Tournament')+'">'+l.slice(0,8).map(function(e){var on=String(e.id)===String(g.eid), n=(LINEUP['t'+e.id]||[]).length;
+    return '<button type="button" data-lpt="'+esc(e.id)+'" aria-pressed="'+on+'"><b>'+esc(e.title)+'</b><span>'+esc(short(pd(e.date))+(e.time?' · '+e.time:''))+' · '+n+' '+L('players')+'</span></button>'}).join('')+'</div>'}
 function lpLoad(){try{return JSON.parse(localStorage.getItem(LPK)||'{}')||{}}catch(e){return {}}}
 var LINEUP=lpLoad(), LTXT={};
 function lpKey(g){return String(g.id!=null?g.id:g.date+g.h)}
@@ -2055,11 +2063,11 @@ function lpText(g){
   return '🏀 '+L('Squad')+' '+dateTop(pd(g.date))+(g.time?', '+g.time:'')+'\n'+(isHome(g)?L('Home game'):L('Away game'))+' vs '+opp(g)+'.\n'+L('Meeting point')+': \n'+L('Please everyone confirm!');
 }
 function lpInner(g){
-  var sel=lpSel(g), full=sel.length>=lpMax();
+  var sel=lpSel(g), full=sel.length>=lpMax(), busy=lpBusy(g);
   return '<summary><span class="lph">'+L('Squad')+cbadge()+'</span><span class="lpn"><b>'+sel.length+'</b> / '+lpMax()+'</span><span class="lpch" aria-hidden="true">&#8964;</span></summary>'
-    +'<div class="lpb">'+lpAll().map(function(id){
+    +'<div class="lpb">'+lpPick(g)+lpAll().map(function(id){
       var n=lpNm(id), on=sel.indexOf(id)>-1;
-      return '<button type="button" class="lpr'+(on?' on':'')+(!on&&full?' off':'')+'" data-lp="'+id+'" aria-pressed="'+on+'"><span class="lck">'+(on?'✓':'')+'</span><span><b>'+esc(n.s)+'</b> '+esc(n.g)+'</span></button>';
+      return '<button type="button" class="lpr'+(on?' on':'')+(!on&&full?' off':'')+'" data-lp="'+id+'" aria-pressed="'+on+'"><span class="lck">'+(on?'✓':'')+'</span><span><b>'+esc(n.s)+'</b> '+esc(n.g)+(busy[id]?' <i class="lpbusy">'+esc(busy[id])+'</i>':'')+'</span></button>';
     }).join('')
     +(lpTeam()?'<div class="lpadd"><input id="lpnew" type="text" maxlength="30" placeholder="'+L('Player name')+'" aria-label="'+L('Player name')+'"><button type="button" class="cbtn alt" data-lpadd>+ '+L('Add player')+'</button></div>'+(LROSTER.length?'<div class="lprm">'+L('Remove')+': '+lpAll().map(function(id){return '<button type="button" class="cbtn alt" data-lprm="'+esc(id)+'">'+esc(lpNm(id).s)+' ×</button>'}).join(' ')+'</div>':''):'')
     +'<textarea id="lptxt" rows="4" aria-label="Text">'+esc(lpText(g))+'</textarea>'
@@ -2108,6 +2116,9 @@ document.addEventListener('click',function(e){
   var t=e.target, r=t.closest&&t.closest('[data-lp]'), sh=t.closest&&t.closest('[data-lshare]');
   var ad=t.closest&&t.closest('[data-lpadd]'), rm=t.closest&&t.closest('[data-lprm]');
   if(sh){lpShare();return}
+  var pt=t.closest&&t.closest('[data-lpt]');
+  if(pt){var gp=lpSubj();if(gp){var tp=document.getElementById('lptxt');if(tp)LTXT[lpKey(gp)]=tp.value}LPSEL=pt.getAttribute('data-lpt');try{localStorage.setItem('ush-lpsel',LPSEL)}catch(x){}
+    var gn=lpSubj(), eln=document.getElementById('lineup'); if(gn&&eln) eln.innerHTML=lpInner(gn); return}
   if(ad||rm){var g0=lpSubj(); if(!g0||!lpOn()||!lpTeam()) return;
     if(ad){var inp=document.getElementById('lpnew'), nm=inp?inp.value.trim():''; if(!nm) return; LROSTER.push({id:'r'+Date.now().toString(36)+Math.random().toString(36).slice(2,4),n:nm}); lrSave()}
     else{var rid=rm.dataset.lprm; LROSTER=LROSTER.filter(function(x){return x.id!==rid}); lrSave(); Object.keys(LINEUP).forEach(function(k){LINEUP[k]=LINEUP[k].filter(function(x){return x!==rid})}); lpSave()}
