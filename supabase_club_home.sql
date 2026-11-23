@@ -34,7 +34,7 @@ create table if not exists public.club_news (
   id uuid primary key default gen_random_uuid(),
   team text not null default 'club',
   title text not null check (char_length(title) between 1 and 80),
-  body text not null default '' check (char_length(body) <= 400),
+  body text not null default '' check (char_length(body) <= 4000),
   image text not null default '' check (char_length(image) <= 300000),
   created_at timestamptz not null default now()
 );
@@ -64,13 +64,15 @@ create policy "alle lesen" on public.club_sponsors for select to anon using (tru
 revoke insert, update, delete on public.club_news, public.club_photos, public.club_sponsors from anon, authenticated;
 grant select on public.club_news, public.club_photos, public.club_sponsors to anon;
 
+alter table public.club_news drop constraint if exists club_news_body_check;
+alter table public.club_news add constraint club_news_body_check check (char_length(body) <= 4000);
 alter table public.club_news add column if not exists image text not null default '' check (char_length(image) <= 300000);
 drop function if exists public.club_news_add(text,text,text,text);
 create or replace function public.club_news_add(p_code text, p_team text, p_title text, p_body text, p_image text) returns void
 language plpgsql security definer set search_path = public, extensions as $$
 begin
   if not public._home_ok(p_code) then raise exception 'invalid code'; end if;
-  insert into public.club_news(team, title, body, image) values (coalesce(nullif(p_team,''),'club'), left(p_title,80), left(coalesce(p_body,''),400), coalesce(p_image,''));
+  insert into public.club_news(team, title, body, image) values (coalesce(nullif(p_team,''),'club'), left(p_title,80), left(coalesce(p_body,''),4000), coalesce(p_image,''));
 end $$;
 create or replace function public.club_news_del(p_code text, p_id uuid) returns void
 language plpgsql security definer set search_path = public, extensions as $$
