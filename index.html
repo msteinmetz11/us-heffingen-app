@@ -247,7 +247,7 @@ tbody tr:last-child td{border-bottom:0}
 /* tab bar */
 .tabs{position:fixed; left:0; right:0; bottom:0; z-index:5; background:var(--surface); border-top:1px solid var(--line);
   padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-.tabs nav{display:grid; grid-template-columns:repeat(5,1fr); gap:4px; max-width:640px; margin:0 auto}
+.tabs nav{display:grid; grid-template-columns:repeat(6,1fr); gap:4px; max-width:640px; margin:0 auto}
 .tabs a svg{display:block}
 html.gta.gta .hero .meta,html.gta.gta .hero .meta a{text-shadow:0 1px 6px #0E0320,0 0 10px #0E0320}
 .calhead{align-items:center}
@@ -581,6 +581,45 @@ details.lineup[open] .lpch{transform:rotate(180deg)}
 #cpop .cpbtns{display:flex;gap:10px;margin-top:8px}#cpop .cpbtns .cbtn{flex:1;padding:13px;border-radius:12px;font-weight:700}
 html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:none}html.coach-one .hsel select{opacity:.75;background-image:none}
 #cteam:disabled{opacity:.7}
+/* Club home */
+.ch{min-width:0;max-width:100%}
+.ch h2.sec{margin:14px 0 0}
+.ch .card{margin-top:8px}
+.ch .nrow{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line);align-items:flex-start;min-width:0}
+.ch .nrow:first-child{border-top:0}
+.ch .nrow>div{min-width:0;flex:1}
+.ch .nrow h3{margin:0;font:700 17px/1.2 var(--f-body)}
+.ch .nrow p{margin:3px 0 0;color:var(--muted);font-size:13px;line-height:1.35}
+.ch .nrow .nb{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ch .crow{display:flex;align-items:center;gap:10px;min-height:44px;border-top:1px solid var(--line);font-size:14px}
+.ch .crow:first-child{border-top:0}
+.ch .crow .t{width:64px;flex:none;font:700 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ch .crow .m{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ch .crow .m small{color:var(--muted);font-size:12px;margin-right:6px}
+.ch .crow .tm{font:700 22px var(--f-display);font-variant-numeric:tabular-nums}
+.ch .crow .ha{font-size:12px;font-weight:600;color:var(--muted);min-width:34px;text-align:right}
+.ch .crow .ha.h{color:var(--accent)}
+.ch .crow .dot{width:22px;height:22px;font-size:11px;flex:none}
+.ch .phs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}
+.ch .phs button{padding:0;border:0;border-radius:10px;overflow:hidden;aspect-ratio:4/3;background:var(--soft);cursor:pointer}
+.ch .phs img{width:100%;height:100%;object-fit:cover;display:block}
+.ch .phs .ph{position:relative}.ch .phs .ph .cbtn{position:absolute;right:4px;top:4px;padding:2px 8px;font-size:13px;min-height:0;background:rgba(0,0,0,.65);color:#fff}
+.ch .sec2{display:flex;align-items:baseline;justify-content:space-between}
+#spband{position:fixed;left:0;right:0;bottom:var(--tabh,58px);z-index:4;height:44px;background:var(--surface);border-top:1px solid var(--line);overflow:hidden;display:none;align-items:center}
+html.tab-clubhome.has-band #spband{display:flex}
+html.tab-clubhome.has-band #v-clubhome{padding-bottom:56px}
+#spband .trk{display:flex;width:max-content;animation:spmq 20s linear infinite}
+#spband .grp{display:flex;align-items:center;gap:34px;padding-right:34px;white-space:nowrap}
+#spband a,#spband span.i{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font:600 14px var(--f-body)}
+#spband img{height:26px;width:auto;max-width:90px;object-fit:contain;display:block}
+#spband .lb{font:600 11px var(--f-body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+@keyframes spmq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){#spband .trk{animation:none}}
+html.tab-clubhome .hsel{display:none}
+#lbx{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:16px}
+#lbx img{max-width:100%;max-height:100%;border-radius:10px}
+.ch .ced .cform{margin-top:8px}.ch .ced details{border-top:1px solid var(--line);padding:8px 0}.ch .ced summary{font-weight:700;cursor:pointer;min-height:36px;display:flex;align-items:center}
+.ch .ced .lr{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:6px 0;font-size:14px}.ch .ced .lr span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 
 </head>
@@ -595,7 +634,8 @@ html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:non
     <div class="hsel"><select id="teamsel" aria-label="Choose team"></select></div>
   </header>
   <main>
-    <section class="view" id="v-home"></section>
+    <section class="view" id="v-clubhome"></section>
+    <section class="view" id="v-home" hidden></section>
     <section class="view" id="v-club" hidden></section>
     <section class="view" id="v-games" hidden></section>
     <section class="view" id="v-standings" hidden></section>
@@ -607,9 +647,11 @@ html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:non
   </main>
   <p class="asof">As of 23 Nov 2026 · Data from luxembourg.basketball</p>
 </div>
+<div id="spband" aria-label="Partners"></div>
 <div class="tabs">
   <nav aria-label="Main menu">
-    <a href="#home" data-tab="home" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></a>
+    <a href="#clubhome" data-tab="clubhome" aria-label="Club" title="Club"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></a>
+    <a href="#home" data-tab="home" aria-label="Team" title="Team"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3C8 6.5 6.2 8.2 4.8 9.3V21h14.4V9.3C17.8 8.2 16 6.5 16 3h-2c0 1.9-.9 3.1-2 3.1S10 4.9 10 3z"/><text x="12" y="17.2" text-anchor="middle" font-family="Barlow Condensed,Barlow,sans-serif" font-weight="700" font-size="9" fill="currentColor" stroke="none">7</text></svg></a>
     <a href="#games" data-tab="games" aria-label="Calendar" title="Calendar"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"/></svg></a>
     <a href="#news" data-tab="news" aria-label="Club events" title="Club events"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h13v14a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v10a2 2 0 0 1-2 2"/><path d="M8 9h5M8 13h5M8 17h5"/></svg></a>
     <a href="#coach" data-tab="coach" aria-label="Coach" title="Coach" hidden><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12l2 2 4-4M9 18h6"/></svg><span class="tcb">C</span></a>
@@ -1008,6 +1050,8 @@ var I18N={
  fr:{'Player name':'Nom du joueur','Add player':'Ajouter un joueur','Remove':'Retirer','Add a tournament first to prepare the squad.':'Ajoutez d’abord un tournoi pour préparer la sélection.','Select team':'Choisir l’équipe','Other team\u2026':'Autre équipe…','Tournament photos':'Photos du tournoi','Add photo':'Ajouter une photo','Max. 2 photos':'Max. 2 photos','Uploading…':'Envoi en cours…','Could not save the photo.':'Impossible d’enregistrer la photo.','No more tournaments':'Plus de tournois','There are no upcoming tournaments in the schedule.':'Aucun tournoi à venir.','Next tournament':'Prochain tournoi','Tournament':'Tournoi','Tournament name':'Nom du tournoi','Team name':'Nom de l’équipe','Add team':'Ajouter une équipe','Please add at least one team.':'Veuillez ajouter au moins une équipe.','Too many team names (max. 200 characters).':'Trop de noms d’équipes (max. 200 caractères).','Opponent':'Adversaire','Other opponent\u2026':'Autre adversaire\u2026','Training this week':'Entraînement cette semaine','Cancel':'Annuler','Select Men A in the team menu to prepare the squad.':'Choisis « Men A » en haut pour préparer la sélection.','Home game':'Match à domicile','Away game':'Match à l’extérieur','Meeting point':'Rendez-vous','Please everyone confirm!':'Merci de confirmer à tous !','players':'joueurs','Squad':'Sélection','Image for WhatsApp':'Image pour WhatsApp','Only visible to you, saved on this phone.':'Visible uniquement par toi, enregistré sur ce téléphone.','Tip-off in':'Coup d’envoi dans','Show month':'Afficher le mois','Show week':'Afficher la semaine','Previous week':'Semaine précédente','Next week':'Semaine suivante','Final':'Final','Welcome to US Heffingen':'Bienvenue à l’US Heffingen','Games, results and news of all our teams.':'Matchs, résultats et actualités de toutes nos équipes.','Choose your team':'Choisis ton équipe','Get started':'C’est parti','Tip: open the share menu and choose “Add to Home Screen”.':'Astuce : ouvre le menu Partager et choisis « Sur l’écran d’accueil ».','Show more':'Voir plus','Show less':'Voir moins','Pull to refresh':'Tirer pour actualiser','Release to refresh':'Relâcher pour actualiser','Refreshing…':'Actualisation…','Home':'Domicile','Points by player':'Points par joueur','Follow us':'Suivez-nous','Repeat weekly until (optional)':'Répéter chaque semaine jusqu’au (facultatif)','Delete series':'Supprimer la série','Share the app':'Partager l’app','Send the link to players and parents.':'Envoie le lien aux joueurs et aux parents.','Share':'Partager','Link copied.':'Lien copié.','Copy this link':'Copier ce lien','US Heffingen – games, results and club events':'US Heffingen – matchs, résultats et événements du club','Club events':'Événements du club','No club events yet':'Pas encore d’événements du club','Events organised by the club will appear here.':'Les événements du club apparaîtront ici.','Club':'Club','From the coach':'Du coach','Coach area':'Espace coach','Coach code':'Code coach','Enter the code you received from the club.':'Saisis le code reçu du club.','Unlock':'Déverrouiller','Invalid code.':'Code invalide.','Coach':'Coach','Training':'Entraînement','Game':'Match','Event':'Événement','Type':'Type','Date':'Date','Time':'Heure','Title':'Titre','Place':'Lieu','Note (optional)':'Note (facultatif)','Add entry':'Ajouter','Log out':'Se déconnecter','Delete':'Supprimer','Saved.':'Enregistré.','Please enter a date and a title.':'Saisis une date et un titre.','Could not save. You may need Contributor access.':'Échec de l\'enregistrement. Un accès Contributor est peut-être nécessaire.','Could not delete.':'Suppression impossible.','Entered by the coach':'Saisi par le coach','Coach entries need the shared app and a signed-in account. They are not available in this view.':'Les entrées coach nécessitent l\'app partagée et un compte connecté. Indisponible dans cette vue.','Your account may not write entries. Ask the club to give you Contributor access.':'Ton compte ne peut peut-être pas écrire. Demande l\'accès Contributor au club.','entries':'entrées','entry':'entrée','Last games':'Derniers matchs','Score by quarter':'Points par quart-temps','Total':'Total','Final score':'Score final','Margin':'Écart','Points by player (* started)':'Points par joueur (* titulaire)','Player':'Joueur','No detailed statistics for this game yet.':'Pas encore de statistiques détaillées pour ce match.','Away':'Extérieur','Watch live on YouTube':'Regarder en direct sur YouTube','Game day':'Jour de match','Opponent preview':'Aperçu de l’adversaire','Standings':'Classement','Record':'Bilan','Points / game':'Points / match','Allowed / game':'Points encaissés / match','Last 5':'5 derniers','This season vs':'Cette saison contre','No meeting yet this season.':'Pas encore de rencontre cette saison.','Cup':'Coupe','Subscribe':'S’abonner','Download .ics':'Télécharger .ics','Calendar subscription':'Abonnement au calendrier','Add all games to your phone calendar. It updates automatically.':'Ajoutez tous les matchs à votre calendrier. Mise à jour automatique.','Settings':'Réglages','Team':'Équipe','Choose the team shown when the app opens.':'L’équipe affichée à l’ouverture de l’application.','About':'À propos','Schedule and results of US Heffingen. Data from luxembourg.basketball, updated daily.':'Calendrier et résultats de l’US Heffingen. Données de luxembourg.basketball, mises à jour chaque jour.','Language':'Langue','Club news':'Actualités du club','Coming soon':'Bientôt disponible','News from US Heffingen will appear here.':'Les actualités de l’US Heffingen apparaîtront ici.','Next game':'Prochain match','Time tbc':'Heure à confirmer','day':'jour','days':'jours','hour':'heure','hours':'heures','min':'min','sec':'s','No more games':'Plus de matchs','There are no upcoming games in the schedule.':'Aucun match à venir au calendrier.','Next':'Ensuite','Today':'Aujourd’hui','game':'match','games':'matchs','All':'Tous','Previous month':'Mois précédent','Next month':'Mois suivant','No games':'Aucun match','Nothing scheduled on this day.':'Rien de prévu ce jour-là.','TBC':'à conf.','Calendar':'Calendrier','News':'Actualités','W':'V','L':'D','Round of 32':'16es de finale','Round of 16':'8es de finale','1/16 finals':'1/16 de finale','1/8 finals':'1/8 de finale','As of':'État au','Data from':'Données de','Men':'Hommes','Women':'Dames'}
 };
 function L(s){var d=I18N[LANG];return (d&&d[s])||s}
+Object.assign(I18N.de,{'Team':'Team','This week':'Diese Woche','Latest results':'Letzte Resultate','Photos':'Fotos','News':'News','No news yet':'Noch keine News','Club editor':'Club-Editor','Add news':'News hinzufügen','Add photo':'Foto hinzufügen','Add partner':'Partner hinzufügen','Headline':'Titel','Text (optional)':'Text (optional)','Name':'Name','Website (optional)':'Website (optional)','Logo (optional)':'Logo (optional)','Publish':'Veröffentlichen','Delete':'Löschen','Club event':'Club-Event','Partners':'Partner','Nothing planned this week.':'Diese Woche ist nichts geplant.','Club content could not be loaded. Run supabase_club_home.sql once in Supabase.':'Club-Inhalte konnten nicht geladen werden. Führe supabase_club_home.sql einmal in Supabase aus.','Photo':'Foto'});
+Object.assign(I18N.fr,{'Team':'Équipe','This week':'Cette semaine','Latest results':'Derniers résultats','Photos':'Photos','News':'Actualités','No news yet':'Pas encore d’actualités','Club editor':'Éditeur du club','Add news':'Ajouter une actualité','Add photo':'Ajouter une photo','Add partner':'Ajouter un partenaire','Headline':'Titre','Text (optional)':'Texte (facultatif)','Name':'Nom','Website (optional)':'Site web (facultatif)','Logo (optional)':'Logo (facultatif)','Publish':'Publier','Delete':'Supprimer','Club event':'Événement du club','Partners':'Partenaires','Nothing planned this week.':'Rien de prévu cette semaine.','Club content could not be loaded. Run supabase_club_home.sql once in Supabase.':'Le contenu du club n’a pas pu être chargé. Exécutez supabase_club_home.sql une fois dans Supabase.','Photo':'Photo'});
 var LANGDATA={
  en:{WD:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MO:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],MONTH:['January','February','March','April','May','June','July','August','September','October','November','December']},
  de:{WD:['So','Mo','Di','Mi','Do','Fr','Sa'],MO:['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'],MONTH:['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember']},
@@ -1015,7 +1059,7 @@ var LANGDATA={
 };
 
 var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-var TABS=['home','games','news','coach','settings'];
+var TABS=['clubhome','home','games','news','coach','settings'];
 function tabOk(t){return t==='coach'?!!coachTeams:t==='squad'?Object.keys(PLAYERS||{}).length>0:t==='training'?TRAINING_WEEK.length>0:true}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function pd(s){var p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2])}
@@ -1214,7 +1258,7 @@ function applyLang(){
   var d=LANGDATA[LANG]||LANGDATA.en; WD=d.WD; MO=d.MO; MONTH=d.MONTH;
   document.documentElement.lang=LANG;
   TEAM_ORDER.forEach(function(k){var t=TEAMS[k]; if(!t.lab0) t.lab0=t.label; t.label=t.lab0.replace(/^Men/,L('Men')).replace(/^Women/,L('Women'))});
-  var nm={home:LANG==='de'?'Start':LANG==='fr'?'Accueil':'Home',games:L('Calendar'),news:L('Club events'),settings:L('Settings')};
+  var nm={clubhome:'Club',home:L('Team'),games:L('Calendar'),news:L('Club events'),settings:L('Settings')};
   document.querySelectorAll('.tabs a').forEach(function(a){var n=nm[a.dataset.tab]||'';if(n){a.setAttribute('aria-label',n);a.title=n}});
   var af=document.querySelector('.asof'); if(af) af.textContent=L('As of')+' 23 Nov 2026 · '+L('Data from')+' luxembourg.basketball';
   var sel=document.getElementById('teamsel'); if(sel) sel.innerHTML='';
@@ -1499,11 +1543,11 @@ function clubData(){
     var t=TEAMS[k]; applyTeam(t);
     upcoming().forEach(function(g){
       var d=pd(g.date); if(d>lim) return;
-      ahead.push({k:k,t:t,g:g,d:d,home:isHome(g),key:g.date+(g.time||'99:99'),html:{title:vsTitle(g),sub:sub(g)}});
+      ahead.push({k:k,t:t,g:g,d:d,o:opp(g),home:isHome(g),key:g.date+(g.time||'99:99'),html:{title:vsTitle(g),sub:sub(g)}});
     });
     results().forEach(function(g){
       var d=pd(g.date); if(d<back||d>today) return;
-      ahead.length; past.push({k:k,t:t,g:g,d:d,key:g.date+(g.time||''),html:{title:vsTitle(g),score:score(g),win:g.us>g.them}});
+      ahead.length; past.push({k:k,t:t,g:g,d:d,o:opp(g),home:isHome(g),key:g.date+(g.time||''),html:{title:vsTitle(g),score:score(g),win:g.us>g.them}});
     });
   });
   applyTeam(cur);
@@ -1551,6 +1595,87 @@ function sbLoad(){var old=new Date(today.getFullYear(),today.getMonth(),today.ge
     var ids=CEV.filter(ctourn).map(function(e){return e.id});
     if(ids.length) sb('coach_photos?select=id,event_id,data&order=created_at&event_id=in.('+ids.join(',')+')').then(function(ps){PH={};(ps||[]).forEach(function(p){(PH[p.event_id]=PH[p.event_id]||[]).push(p)});if(!document.activeElement||!document.activeElement.closest||!document.activeElement.closest('.cform'))render()}).catch(function(){});
     ;var ae=document.activeElement;if(ae&&ae.closest&&ae.closest('.cform'))return;render()}).catch(function(){})}
+
+/* ---------- Club-Startseite ---------- */
+var CNEWS=[], CPH=[], CSP=[], clubErr=false;
+function clubLoad(){
+  if(!sbOn()) return;
+  var n=0,bad=0;
+  function done(){n++; if(n<3) return; clubErr=bad>0; var ae=document.activeElement; if(ae&&ae.closest&&ae.closest('.cform')) {spBand();return} if(current()==='clubhome') render(); else spBand()}
+  sb('club_news?select=*&order=created_at.desc&limit=12').then(function(a){CNEWS=a||[]}).catch(function(){bad++}).then(done);
+  sb('club_photos?select=*&order=created_at.desc&limit=8').then(function(a){CPH=a||[]}).catch(function(){bad++}).then(done);
+  sb('club_sponsors?select=*&order=pos.asc,created_at.asc&limit=30').then(function(a){CSP=a||[]}).catch(function(){bad++}).then(done);
+}
+function chAgo(ts){var d=new Date(ts),n=Math.floor((Date.now()-d)/864e5);if(isNaN(n))return '';
+  if(LANG==='de')return n<=0?'heute':n===1?'gestern':'vor '+n+' Tagen';
+  if(LANG==='fr')return n<=0?'aujourd’hui':n===1?'hier':'il y a '+n+' jours';
+  return n<=0?'today':n===1?'yesterday':n+' days ago'}
+function clubEd(){return !!(coachTeams&&(coachTeams.indexOf('club')>-1))}
+function spBand(){
+  var el=document.getElementById('spband'); if(!el) return;
+  var on=CSP.length>0;
+  document.documentElement.classList.toggle('has-band',on);
+  if(!on){el.innerHTML='';return}
+  var key=JSON.stringify(CSP.map(function(x){return x.id}));
+  if(el.dataset.k===key) return; el.dataset.k=key;
+  function item(x){var inner=(x.logo?'<img src="'+esc(x.logo)+'" alt="">':'')+(x.logo&&!x.name?'':'<span>'+esc(x.name)+'</span>');
+    return x.url&&/^https?:\/\//i.test(x.url)?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+inner+'</a>':'<span class="i">'+inner+'</span>'}
+  var grp='<div class="grp"><span class="lb">'+L('Partners')+'</span>'+CSP.map(item).join('')+'</div>';
+  el.innerHTML='<div class="trk" style="animation-duration:'+Math.max(14,CSP.length*7)+'s">'+grp+grp.replace('class="grp"','class="grp" aria-hidden="true"')+'</div>';
+}
+function vClubHome(){
+  var c=clubData(), ed=clubEd(), h='<div class="ch">';
+  /* News */
+  h+='<h2 class="sec">'+L('News')+'</h2>';
+  if(CNEWS.length) h+='<div class="card">'+CNEWS.slice(0,3).map(function(x,i){return '<div class="nrow"><div><h3>'+esc(x.title)+'</h3>'+(x.body?'<p class="nb">'+esc(x.body)+'</p>':'')+'<p>'+(x.team&&x.team!=='club'&&TEAMS[x.team]?'<span class="chip">'+esc(TEAMS[x.team].label)+'</span>':'')+chAgo(x.created_at)+'</p></div></div>'}).join('')+'</div>';
+  else h+='<div class="card empty"><b>'+L('No news yet')+'</b></div>';
+  /* This week */
+  var lim=new Date(today.getFullYear(),today.getMonth(),today.getDate()+7), wk=[];
+  c.ahead.forEach(function(x){if(x.d<=lim) wk.push({d:x.d,key:x.key,html:'<div class="crow"><span class="t">'+short(x.d)+'</span><span class="m"><small>'+esc(x.t.label)+'</small>'+(x.home?'vs. ':'@ ')+esc(x.o)+'</span><span class="tm">'+(x.g.time||L('TBC'))+'</span><span class="ha'+(x.home?' h':'')+'">'+L(x.home?'Home':'Away')+'</span></div>'})});
+  coachEvents('club',dstr(today)).forEach(function(e){var d=pd(e.date); if(d<=lim) wk.push({d:d,key:e.date+(e.time||'99:99'),html:'<div class="crow"><span class="t">'+short(d)+'</span><span class="m"><small>'+L('Club')+'</small>'+esc(e.title)+'</span><span class="tm">'+esc(e.time||'')+'</span><span class="ha h">'+L('Club event')+'</span></div>'})});
+  wk.sort(function(a,b){return a.key<b.key?-1:1});
+  h+='<h2 class="sec">'+L('This week')+'</h2>';
+  h+=wk.length?'<div class="card">'+wk.slice(0,4).map(function(x){return x.html}).join('')+'</div>':'<div class="card empty"><b>'+L('Nothing planned this week.')+'</b></div>';
+  /* Results */
+  if(c.past.length) h+='<h2 class="sec">'+L('Latest results')+'</h2><div class="card">'+c.past.slice(0,4).map(function(x){return '<div class="crow"><span class="t">'+esc(x.t.label)+'</span><span class="m">'+(x.home?'vs. ':'@ ')+esc(x.o)+'</span><span class="tm">'+x.html.score+'</span><span class="dot '+(x.html.win?'w':'l')+'">'+(x.html.win?'W':'L')+'</span></div>'}).join('')+'</div>';
+  /* Photos */
+  if(CPH.length||ed){
+    h+='<h2 class="sec">'+L('Photos')+'</h2>';
+    h+=CPH.length?'<div class="phs">'+CPH.slice(0,4).map(function(x){return '<div class="ph"><button type="button" data-chimg="'+esc(x.id)+'" aria-label="'+L('Photo')+'"><img src="'+esc(x.data)+'" alt="" loading="lazy"></button>'+(ed?'<button type="button" class="cbtn" data-chpdel="'+esc(x.id)+'" aria-label="'+L('Delete')+'">×</button>':'')+'</div>'}).join('')+'</div>':'';
+  }
+  if(ed) h+=clubEditor();
+  return h+'</div>';
+}
+function clubEditor(){
+  var h='<h2 class="sec">'+L('Club editor')+'</h2><div class="card info ced">';
+  if(clubErr) h+='<div class="cerr" role="alert">'+L('Club content could not be loaded. Run supabase_club_home.sql once in Supabase.')+'</div>';
+  h+='<details data-key="ced-news"><summary>'+L('Add news')+'</summary><div class="cform"><input id="cnt" type="text" maxlength="80" placeholder="'+L('Headline')+'" aria-label="'+L('Headline')+'"><textarea id="cnb" rows="3" maxlength="400" placeholder="'+L('Text (optional)')+'" aria-label="'+L('Text (optional)')+'"></textarea>'
+    +'<select id="cnteam" aria-label="Team"><option value="club">'+L('Club')+'</option>'+TEAM_ORDER.map(function(k){return '<option value="'+k+'">'+esc(TEAMS[k].label)+'</option>'}).join('')+'</select><button type="button" class="cbtn" data-chnadd>'+L('Publish')+'</button></div>'
+    +CNEWS.map(function(x){return '<div class="lr"><span>'+esc(x.title)+'</span><button type="button" class="cbtn alt" data-chndel="'+esc(x.id)+'" aria-label="'+L('Delete')+'">×</button></div>'}).join('')+'</details>';
+  h+='<details data-key="ced-photo"><summary>'+L('Add photo')+'</summary><div class="cform"><input id="chpf" type="file" accept="image/*" data-chpfile aria-label="'+L('Add photo')+'"></div></details>';
+  h+='<details data-key="ced-sp"><summary>'+L('Add partner')+'</summary><div class="cform"><input id="csn" type="text" maxlength="60" placeholder="'+L('Name')+'" aria-label="'+L('Name')+'"><input id="csu" type="url" maxlength="200" placeholder="'+L('Website (optional)')+'" aria-label="'+L('Website (optional)')+'"><label class="cl">'+L('Logo (optional)')+'<input id="csl" type="file" accept="image/*"></label><button type="button" class="cbtn" data-chsadd>'+L('Add partner')+'</button></div>'
+    +CSP.map(function(x){return '<div class="lr"><span>'+esc(x.name)+'</span><button type="button" class="cbtn alt" data-chsdel="'+esc(x.id)+'" aria-label="'+L('Delete')+'">×</button></div>'}).join('')+'</details>';
+  return h+'<div class="cerr" role="status">'+esc(coachMsg)+'</div></div>';
+}
+function chRpc(fn,args,ok){return sb('rpc/'+fn,args).then(function(){coachMsg=L('Saved.');clubLoad();if(ok)ok()},function(){coachMsg=L('Could not save.');render()})}
+function chShrink(file,max,q){return new Promise(function(res,rej){var fr=new FileReader();fr.onerror=rej;fr.onload=function(){var im=new Image();im.onerror=rej;im.onload=function(){var k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);var x=c.getContext('2d');x.drawImage(im,0,0,c.width,c.height);res(c.toDataURL(q?'image/jpeg':'image/png',q||undefined))};im.src=fr.result};fr.readAsDataURL(file)})}
+document.addEventListener('click',function(e){
+  var t=e.target, q=function(s){return t.closest&&t.closest(s)}, g, v;
+  if(g=q('[data-chimg]')){var ph=CPH.filter(function(x){return String(x.id)===g.getAttribute('data-chimg')})[0];if(ph){var o=document.createElement('div');o.id='lbx';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.innerHTML='<img src="'+esc(ph.data)+'" alt="">';o.addEventListener('click',function(){o.remove()});document.body.appendChild(o)}return}
+  if(!clubEd()) return;
+  if(q('[data-chnadd]')){var ti=document.getElementById('cnt').value.trim();if(!ti){coachMsg=L('Headline');render();return}chRpc('club_news_add',{p_code:coachCode,p_team:document.getElementById('cnteam').value,p_title:ti,p_body:document.getElementById('cnb').value.trim()});return}
+  if(g=q('[data-chndel]')){chRpc('club_news_del',{p_code:coachCode,p_id:g.getAttribute('data-chndel')});return}
+  if(g=q('[data-chpdel]')){chRpc('club_photo_del',{p_code:coachCode,p_id:g.getAttribute('data-chpdel')});return}
+  if(g=q('[data-chsdel]')){chRpc('club_sponsor_del',{p_code:coachCode,p_id:g.getAttribute('data-chsdel')});return}
+  if(q('[data-chsadd]')){var nm=document.getElementById('csn').value.trim();if(!nm){coachMsg=L('Name');render();return}
+    var uf=document.getElementById('csl').files[0], url=document.getElementById('csu').value.trim();
+    (uf?chShrink(uf,220,0):Promise.resolve('')).then(function(logo){if(logo.length>200000)throw 0;return chRpc('club_sponsor_add',{p_code:coachCode,p_name:nm,p_url:url,p_logo:logo})}).catch(function(){coachMsg=L('Could not save.');render()});return}
+});
+document.addEventListener('change',function(e){var t=e.target;if(!t||!t.hasAttribute||!t.hasAttribute('data-chpfile')||!clubEd())return;var f=t.files&&t.files[0];if(!f)return;
+  coachMsg=L('Uploading…');render();
+  chShrink(f,1000,.72).then(function(d){if(d.length>550000)throw 0;return chRpc('club_photo_add',{p_code:coachCode,p_data:d})}).catch(function(){coachMsg=L('Could not save the photo.');render()});
+});
+
 var coachCode='';
 var CEV=[], coachOpen=false, coachTeams=null, coachMsg='', cdb=null, cuser=null, cwrite=null;
 var SOCIAL={youtube:'https://youtube.com/@usheffingen1677',instagram:'https://www.instagram.com/usheffingen/',facebook:'https://www.facebook.com/USHeffingen'};
@@ -1622,7 +1747,7 @@ function coachPop(open){
 function coachCheck(c){return sbOn()?sb('rpc/coach_teams',{p_code:c}).then(function(t){return t&&t.length?t:null}).catch(function(){return null}):chash(c)}
 function coachRestore(){var c=null;try{c=localStorage.getItem('ush-coach')}catch(e){} if(c) coachCheck(c).then(function(t){if(t){coachTeams=t;coachCode=c;render()}})}
 function coachInit(){
-  if(sbOn()){cdb={sb:true};sbLoad();setInterval(sbLoad,60000);cwrite=true;return}
+  if(sbOn()){cdb={sb:true};sbLoad();clubLoad();setInterval(sbLoad,60000);setInterval(clubLoad,120000);cwrite=true;return}
   if(!window.claude||!claude.use) return;
   claude.use('db').then(function(db){
     if(!db) return; cdb=db;
@@ -1720,7 +1845,7 @@ document.addEventListener('click',function(e){
   var pdl=q('[data-cpdel]'); if(pdl){var pid=pdl.getAttribute('data-cpdel');sb('rpc/coach_del_photo',{p_code:coachCode,p_id:pid}).then(function(){Object.keys(PH).forEach(function(k){PH[k]=PH[k].filter(function(p){return p.id!==pid})});render()},function(){coachMsg=L('Could not delete.');render()});return}
   if(q('[data-ctadd]')){var cw=document.getElementById('cteams');if(cw){cw.insertAdjacentHTML('beforeend',teamSel())}return}
   if(q('[data-clogin]')){var v=document.getElementById('ccode').value;coachCheck(v).then(function(r){if(r){coachTeams=r;coachCode=v;coachMsg='';try{localStorage.setItem('ush-coach',v)}catch(x){}coachPop(false);location.hash='#coach';render()}else{var er=document.querySelector('#cpop .cerr');if(er)er.textContent=L('Invalid code.')}});return}
-  if(q('[data-clogout]')){coachTeams=null;coachMsg='';try{localStorage.removeItem('ush-coach')}catch(x){}if(location.hash==='#coach')location.hash='#home';render();return}
+  if(q('[data-clogout]')){coachTeams=null;coachMsg='';try{localStorage.removeItem('ush-coach')}catch(x){}if(location.hash==='#coach')location.hash='#clubhome';render();return}
   if(q('[data-cadd]')){
     var g=function(i){return document.getElementById(i).value.trim()}, ev={team:g('cteam'),kind:g('ckind'),date:g('cdate'),time:g('ctime'),title:g('ctitle'),place:g('cplace'),note:g('cnote')};
     if(ev.kind==='tournament'){var tms=[].map.call(document.querySelectorAll('#cteams .ctm'),function(x){return x.value.trim()}).filter(Boolean);
@@ -1849,10 +1974,10 @@ document.addEventListener('click',function(e){
 },true);
 document.addEventListener('input',function(e){var t=e.target;if(t&&t.id==='lptxt'){var g=lpSubj();if(g)LTXT[lpKey(g)]=t.value}},true);
 
-var VIEWS={coach:vCoach,home:vStart,club:vClub,games:vSpiele,standings:vTabelle,news:vNews,settings:vSettings,squad:vKader,training:vTraining};
+var VIEWS={coach:vCoach,clubhome:vClubHome,home:vStart,club:vClub,games:vSpiele,standings:vTabelle,news:vNews,settings:vSettings,squad:vKader,training:vTraining};
 
 /* ---------- Rendern ---------- */
-function current(){var v=location.hash.slice(1);return TABS.indexOf(v)>-1&&tabOk(v)?v:'home'}
+function current(){var v=location.hash.slice(1);return TABS.indexOf(v)>-1&&tabOk(v)?v:'clubhome'}
 var lastView=null;
 var coachPrev=null;
 function render(){
@@ -1870,6 +1995,10 @@ function render(){
   var nv=document.querySelector('.tabs nav'); if(nv) nv.style.gridTemplateColumns='repeat('+document.querySelectorAll('.tabs a:not([hidden])').length+',1fr)';
   var el=document.getElementById('v-'+v);
   document.documentElement.classList.toggle('tab-games',v==='games');
+  document.documentElement.classList.toggle('tab-clubhome',v==='clubhome');
+  var sm0=document.querySelector('.brand small'); if(sm0) sm0.textContent=(v==='clubhome'?'Club':TEAM.league)+' · 2026/27';
+  var tb0=document.querySelector('.tabs'); if(tb0) document.documentElement.style.setProperty('--tabh',tb0.offsetHeight+'px');
+  spBand();
   var tp=document.querySelector('.top'); if(tp) document.documentElement.style.setProperty('--toph',tp.offsetHeight+'px');
   el.innerHTML=VIEWS[v]();
   if(v!==lastView){ el.classList.remove('vin'); void el.offsetWidth; el.classList.add('vin'); lastView=v; }
