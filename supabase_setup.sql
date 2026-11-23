@@ -22,23 +22,7 @@ revoke all on public.coach_codes from anon, authenticated;
 revoke insert, update, delete on public.coach_events from anon, authenticated;
 grant select on public.coach_events to anon;
 
-insert into public.coach_codes (team, hash) values
-  ('men','abdbc18fb3631c5ee2aaafd6036ecb1a8d83201fefe2e1302e65276be206f76a'),
-  ('menb','a3c2d1808cde387d6e365ec57208cab0dc80de70159203705e68cc2e50e5d863'),
-  ('menc','10000e5d6b774491d63286e5674f2348d64148ea68d18cee2a50172cf57a2cb3'),
-  ('women','173ee18d1866158eeca7f5502c0c69fab30c0324e9476735acc9b7c453980531'),
-  ('u22m','af7d002c7e5b0d9a790b55f64ee53086f14b144526cdf9bd0ce7ff0a0051b5bb'),
-  ('u19w','521712af46e42e7b8a78de1bf605165bfa345d749ed0467e724df457b5798e1b'),
-  ('u16m','30bb93b0b191651b0177053a5a30163ac4472d964123cbd6c74d399c4211095f'),
-  ('u16w','54b170857c03f2a52af83c73ef65a692bd5508b6c659a2d472987e3a8eaca67f'),
-  ('u14m','53a1179e8a24fdb02b66faeef2fe3e2a78bc1f8c0453d8c7c3691d1c4cfbf92d'),
-  ('u14w','24236ae466c7c7cc8ab2e4d5220e9eacbf215f8c8adf1b39bf7412958aece030'),
-  ('u12m','6013254209ac544482990cd00355fa51868ac312ed724d0dbdefa5f4040a39a0'),
-  ('u12w','77f4ed1e90b0829091fca8eb373f32a317bf7090d59b74521ce5d2c7f65ec434'),
-  ('u10','2f060952e94ab8dd876ed0e6900e61dc6bfa0a5d2be011d394b0f8657e9cf407'),
-  ('club','0a25f8be6c0fd9b35575711d83c20e8cb688410e00a99c59b8c80ae24a8b03c6'),
-  ('*','ea66d847bef2bb8c7bf2e4fb84b9fd29511c129fc84ab940a6fc253655a2ab96')
-on conflict (team) do update set hash = excluded.hash;
+-- (Code-Hashes absichtlich entfernt: die Codes sind bereits in Supabase gespeichert und sollen nicht oeffentlich im Repo stehen.)
 
 create or replace function public._coach_ok(p_code text, p_team text) returns boolean
 language sql security definer set search_path = public, extensions as $$

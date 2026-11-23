@@ -3,8 +3,7 @@
 -- Schreiben darf NUR, wer den Home-Code (Team 'home') kennt. Alle anderen Codes (Teams, Club, Gesamt-Code) bleiben unveraendert
 -- und oeffnen den Home-Editor nicht.
 
-insert into public.coach_codes (team, hash) values ('home','73604ac0b2112243895f2f31449e3c5d44fdf1b2918cd2c990bdbf37306e62a0')
-on conflict (team) do update set hash = excluded.hash;
+-- (Code-Hashes absichtlich entfernt: die Codes sind bereits in Supabase gespeichert und sollen nicht oeffentlich im Repo stehen.)
 
 create or replace function public._home_ok(p_code text) returns boolean
 language sql security definer set search_path = public, extensions as $$
