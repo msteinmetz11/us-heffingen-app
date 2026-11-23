@@ -187,7 +187,7 @@ h2.sec{font:600 13px var(--f-body); letter-spacing:.08em; text-transform:upperca
 .calhead{display:flex; align-items:baseline; justify-content:space-between; gap:12px}
 .calhead b{font:700 30px/1 var(--f-display); letter-spacing:.01em}
 .calhead span{font-size:13px; color:var(--muted)}
-.strip{display:flex; gap:8px; overflow-x:auto; padding:4px 2px 10px; scroll-snap-type:x proximity; scrollbar-width:none}
+.strip{display:flex; gap:8px; overflow-x:auto; padding:4px 2px 10px; scroll-snap-type:x proximity;scroll-padding:0 max(16px,env(safe-area-inset-left,0px)); scrollbar-width:none}
 .strip::-webkit-scrollbar{display:none}
 .day{flex:none; width:54px; height:72px; border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:18px; display:grid; align-content:center; justify-items:center; gap:2px; cursor:pointer; position:relative; font-family:var(--f-body); scroll-snap-align:center; padding:0}
 .day b{font:700 21px/1 var(--f-display); font-variant-numeric:tabular-nums}
@@ -480,7 +480,7 @@ html.gta.gta .stylebtn{background:linear-gradient(160deg,#14052B,#3A1470);color:
 .grl{border-top:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
 .grl .gr:first-child{border-top:0}
 .grl{margin:0 16px}
-.wstrip{display:flex;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;position:relative;margin:6px -4px 4px;-webkit-overflow-scrolling:touch}
+.wstrip{display:flex;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding:0 max(16px,env(safe-area-inset-left,0px));scrollbar-width:none;position:relative;margin:6px -4px 4px;-webkit-overflow-scrolling:touch}
 .wstrip::-webkit-scrollbar{display:none}
 .wstrip .wd{flex:0 0 calc(100% / 7);scroll-snap-align:center}
 .gr .sbt{margin-bottom:6px}
@@ -585,6 +585,18 @@ html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:non
 .ch{min-width:0;max-width:100%}
 .ch h2.sec{margin:14px 0 0}
 .ch .card{margin-top:8px}
+.ch .swipe{display:flex;gap:8px;overflow-x:auto;margin:8px calc(-1*max(16px,env(safe-area-inset-right,0px))) 0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:0 max(16px,env(safe-area-inset-right,0px)) 4px max(16px,env(safe-area-inset-left,0px));scroll-snap-type:x proximity;scroll-padding:0 max(16px,env(safe-area-inset-left,0px));scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.ch .swipe::-webkit-scrollbar{display:none}
+.ch .sc{flex:none;width:150px;box-sizing:border-box;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;scroll-snap-align:start;min-width:0}
+.ch .sc .sd{font:600 10.5px var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.ch .sc .st{font:700 12px var(--f-body);letter-spacing:.04em;text-transform:uppercase}
+.ch .sc .so{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch .sc .sb2{display:flex;align-items:baseline;justify-content:space-between;margin-top:4px}
+.ch .sc .stm{font:700 26px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.ch .sc .sh{font-size:11px;font-weight:700;color:var(--muted)}.ch .sc .sh.h{color:var(--accent)}
+.ch .sc.rc{width:132px;border-top:3px solid var(--win)}.ch .sc.rc.l{border-top-color:var(--loss)}
+.ch .sc.rc .rs{font:700 28px/1.05 var(--f-display);font-variant-numeric:tabular-nums}
+.ch .sc.rc .so{color:var(--muted);font-size:12px}
 .ch .nrow{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line);align-items:flex-start;min-width:0}
 .ch .nrow:first-child{border-top:0}
 .ch .nrow>div{min-width:0;flex:1}
@@ -1653,13 +1665,14 @@ function vClubHome(){
   else h+='<div class="card empty"><b>'+L('No news yet')+'</b></div>';
   /* This week */
   var lim=new Date(today.getFullYear(),today.getMonth(),today.getDate()+7), wk=[];
-  c.ahead.forEach(function(x){if(x.d<=lim) wk.push({d:x.d,key:x.key,html:'<div class="crow"><span class="t">'+short(x.d)+'</span><span class="m"><small>'+esc(x.t.label)+'</small>'+(x.home?'vs. ':'@ ')+esc(x.o)+'</span><span class="tm">'+(x.g.time||L('TBC'))+'</span><span class="ha'+(x.home?' h':'')+'">'+L(x.home?'Home':'Away')+'</span></div>'})});
-  coachEvents('club',dstr(today)).forEach(function(e){var d=pd(e.date); if(d<=lim) wk.push({d:d,key:e.date+(e.time||'99:99'),html:'<div class="crow"><span class="t">'+short(d)+'</span><span class="m"><small>'+L('Club')+'</small>'+esc(e.title)+'</span><span class="tm">'+esc(e.time||'')+'</span><span class="ha h">'+L('Club event')+'</span></div>'})});
+  function wcard(d,team,line,time,tag,home){return '<div class="sc"><span class="sd">'+esc(short(d))+'</span><span class="st">'+esc(team)+'</span><span class="so">'+line+'</span><div class="sb2"><span class="stm">'+esc(time)+'</span><span class="sh'+(home?' h':'')+'">'+esc(tag)+'</span></div></div>'}
+  c.ahead.forEach(function(x){if(x.d<=lim) wk.push({key:x.key,html:wcard(x.d,x.t.label,(x.home?'vs. ':'@ ')+esc(x.o),x.g.time||L('TBC'),L(x.home?'Home':'Away'),x.home)})});
+  coachEvents('club',dstr(today)).forEach(function(e){var d=pd(e.date); if(d<=lim) wk.push({key:e.date+(e.time||'99:99'),html:wcard(d,L('Club'),esc(e.title),e.time||'',L('Club event'),true)})});
   wk.sort(function(a,b){return a.key<b.key?-1:1});
   h+='<h2 class="sec">'+L('This week')+'</h2>';
-  h+=wk.length?'<div class="card">'+wk.slice(0,4).map(function(x){return x.html}).join('')+'</div>':'<div class="card empty"><b>'+L('Nothing planned this week.')+'</b></div>';
+  h+=wk.length?'<div class="swipe">'+wk.slice(0,10).map(function(x){return x.html}).join('')+'</div>':'<div class="card empty"><b>'+L('Nothing planned this week.')+'</b></div>';
   /* Results */
-  if(c.past.length) h+='<h2 class="sec">'+L('Latest results')+'</h2><div class="card">'+c.past.slice(0,4).map(function(x){return '<div class="crow"><span class="t">'+esc(x.t.label)+'</span><span class="m">'+(x.home?'vs. ':'@ ')+esc(x.o)+'</span><span class="tm">'+x.html.score+'</span><span class="dot '+(x.html.win?'w':'l')+'">'+(x.html.win?'W':'L')+'</span></div>'}).join('')+'</div>';
+  if(c.past.length) h+='<h2 class="sec">'+L('Latest results')+'</h2><div class="swipe">'+c.past.slice(0,8).map(function(x){return '<div class="sc rc '+(x.html.win?'w':'l')+'"><span class="st">'+esc(x.t.label)+'</span><span class="rs">'+x.html.score+'</span><span class="so">'+(x.home?'vs. ':'@ ')+esc(x.o)+'</span></div>'}).join('')+'</div>';
   /* Photos */
   if(CPH.length){
     h+='<h2 class="sec">'+L('Photos')+'</h2>';
