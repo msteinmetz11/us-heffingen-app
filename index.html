@@ -1656,7 +1656,7 @@ function chAgo(ts){var d=new Date(ts),n=Math.floor((Date.now()-d)/864e5);if(isNa
   if(LANG==='fr')return n<=0?'aujourd’hui':n===1?'hier':'il y a '+n+' jours';
   return n<=0?'today':n===1?'yesterday':n+' days ago'}
 var homeEd=false;
-function homeSplit(r){homeEd=!!(r&&r.indexOf('home')>-1);var t=(r||[]).filter(function(k){return k!=='home'});return t.length?t:null}
+function homeSplit(r){homeEd=!!(r&&r.indexOf('home')>-1);var t=(r||[]).filter(function(k){return k!=='home'&&k!=='club'});return t.length?t:null}
 function clubEd(){return homeEd}
 var SPTRIM={};
 function spTrim(x){
@@ -1732,7 +1732,7 @@ function vHomeEdit(){
     +'<div class="ced">'+CSP.map(function(x){return '<div class="lr"><span>'+esc(x.name)+'</span><button type="button" class="cbtn alt" data-chsdel="'+esc(x.id)+'" aria-label="'+L('Delete')+'">×</button></div>'}).join('')+'</div></div>';
   return h;
 }
-function chRpc(fn,args,ok){return sb('rpc/'+fn,args).then(function(){coachMsg=L('Saved.');clubLoad();if(ok)ok()},function(){coachMsg=L('Could not save.');render()})}
+function chRpc(fn,args,ok){return sb('rpc/'+fn,args).then(function(){coachMsg=L('Saved.');var ae=document.activeElement;if(ae&&ae.blur)ae.blur();render();clubLoad();if(ok)ok()},function(){coachMsg=L('Could not save.');render()})}
 function chShrink(file,max,q){return new Promise(function(res,rej){var fr=new FileReader();fr.onerror=rej;fr.onload=function(){var im=new Image();im.onerror=rej;im.onload=function(){var k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);var x=c.getContext('2d');x.drawImage(im,0,0,c.width,c.height);res(c.toDataURL(q?'image/jpeg':'image/png',q||undefined))};im.src=fr.result};fr.readAsDataURL(file)})}
 function eventOpen(id){
   var x=CEV.filter(function(n){return String(n.id)===String(id)})[0]; if(!x) return;
@@ -1858,7 +1858,7 @@ function coachPop(open){
   o.addEventListener('click',function(e){if(e.target===o)coachPop(false)});
 }
 function coachCheck(c){return sbOn()?sb('rpc/coach_teams',{p_code:c}).then(function(t){return t&&t.length?t:null}).catch(function(){return null}):chash(c)}
-function coachRestore(){var c=null;try{c=localStorage.getItem('ush-coach')}catch(e){} if(c) coachCheck(c).then(function(t){if(t){coachTeams=homeSplit(t);coachCode=c;render()}})}
+function coachRestore(){var c=null;try{c=localStorage.getItem('ush-coach')}catch(e){} if(c) coachCheck(c).then(function(t){if(t){coachTeams=homeSplit(t);if(!coachTeams&&!homeEd){try{localStorage.removeItem('ush-coach')}catch(e){}return}coachCode=c;render()}})}
 function coachInit(){
   if(sbOn()){cdb={sb:true};sbLoad();clubLoad();setInterval(sbLoad,60000);setInterval(clubLoad,120000);cwrite=true;return}
   if(!window.claude||!claude.use) return;
@@ -1957,7 +1957,7 @@ document.addEventListener('click',function(e){
   var pa=q('[data-cpadd]'); if(pa){var fi=pa.parentNode.querySelector('input[type=file]');if(fi)fi.click();return}
   var pdl=q('[data-cpdel]'); if(pdl){var pid=pdl.getAttribute('data-cpdel');sb('rpc/coach_del_photo',{p_code:coachCode,p_id:pid}).then(function(){Object.keys(PH).forEach(function(k){PH[k]=PH[k].filter(function(p){return p.id!==pid})});render()},function(){coachMsg=L('Could not delete.');render()});return}
   if(q('[data-ctadd]')){var cw=document.getElementById('cteams');if(cw){cw.insertAdjacentHTML('beforeend',teamSel())}return}
-  if(q('[data-clogin]')){var v=document.getElementById('ccode').value;coachCheck(v).then(function(r){if(r){coachTeams=homeSplit(r);coachCode=v;coachMsg='';try{localStorage.setItem('ush-coach',v)}catch(x){}coachPop(false);location.hash=coachTeams?'#coach':homeEd?'#homeedit':'#clubhome';render()}else{var er=document.querySelector('#cpop .cerr');if(er)er.textContent=L('Invalid code.')}});return}
+  if(q('[data-clogin]')){var v=document.getElementById('ccode').value;coachCheck(v).then(function(r){if(r&&!homeSplit(r)&&!homeEd)r=null;if(r){coachTeams=homeSplit(r);coachCode=v;coachMsg='';try{localStorage.setItem('ush-coach',v)}catch(x){}coachPop(false);location.hash=coachTeams?'#coach':homeEd?'#homeedit':'#clubhome';render()}else{var er=document.querySelector('#cpop .cerr');if(er)er.textContent=L('Invalid code.')}});return}
   if(q('[data-clogout]')){coachTeams=null;homeEd=false;coachMsg='';try{localStorage.removeItem('ush-coach')}catch(x){}if(location.hash==='#coach'||location.hash==='#homeedit')location.hash='#clubhome';render();return}
   if(q('[data-cadd]')){
     var g=function(i){return document.getElementById(i).value.trim()}, ev={team:g('cteam'),kind:g('ckind'),date:g('cdate'),time:g('ctime'),title:g('ctitle'),place:g('cplace'),note:g('cnote')};
