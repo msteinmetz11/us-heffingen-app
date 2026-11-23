@@ -104,3 +104,19 @@ grant execute on function
   public.club_news_add(text,text,text,text), public.club_news_del(text,uuid),
   public.club_photo_add(text,text), public.club_photo_del(text,uuid),
   public.club_sponsor_add(text,text,text,text), public.club_sponsor_del(text,uuid) to anon;
+
+-- Club-Events (erscheinen auf der Club-Startseite unter "This week" und im Tab "Club events")
+create or replace function public.club_event_add(p_code text, p_date date, p_time text, p_title text, p_place text, p_note text) returns void
+language plpgsql security definer set search_path = public, extensions as $$
+begin
+  if not public._home_ok(p_code) then raise exception 'invalid code'; end if;
+  insert into public.coach_events(team, kind, date, time, title, place, note)
+  values ('club', 'event', p_date, coalesce(p_time,''), left(p_title,80), left(coalesce(p_place,''),100), left(coalesce(p_note,''),200));
+end $$;
+create or replace function public.club_event_del(p_code text, p_id uuid) returns void
+language plpgsql security definer set search_path = public, extensions as $$
+begin
+  if not public._home_ok(p_code) then raise exception 'invalid code'; end if;
+  delete from public.coach_events where id = p_id and team = 'club';
+end $$;
+grant execute on function public.club_event_add(text,date,text,text,text,text), public.club_event_del(text,uuid) to anon;
