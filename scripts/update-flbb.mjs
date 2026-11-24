@@ -39,6 +39,9 @@ function parseIcs(text, clubNames) {
     let main = line1.trim(), hs = null, as = null;
     const sc = main.match(/\((\d+)\s*-\s*(\d+)\)\s*$/);
     if (sc) { hs = +sc[1]; as = +sc[2]; main = main.slice(0, sc.index).trim(); }
+    let ff = null; // Forfait: FLBB haengt "(forfeit A)" bzw. "(forfeit B)" an den Namen
+    const fm = main.match(/\s*\((?:forfeit|forfait)\s*([AB])?\)\s*$/i);
+    if (fm) { ff = fm[1] || 'X'; main = main.slice(0, fm.index).trim(); }
     // Teams trennen: am Bindestrich neben dem eigenen Vereinsnamen (Teamnamen koennen selbst Bindestriche haben)
     let home = null, away = null;
     for (const c of clubNames) {
@@ -50,7 +53,7 @@ function parseIcs(text, clubNames) {
     out.push({
       no, comp: no.slice(0, 4),
       date: `${st[1]}-${st[2]}-${st[3]}`, time: st[4] ? `${st[4]}:${st[5]}` : '',
-      home: home.trim(), away: away.trim(), hs, as,
+      home: home.trim(), away: away.trim(), hs, as, ...(ff ? { ff } : {}),
       round: comp.split(':').slice(1).join(':').trim(), league: comp.split(':')[0].replace(/^[MFX]-/, '').trim(),
       addr: loc.join(', '),
     });
