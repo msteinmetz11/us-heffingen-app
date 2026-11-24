@@ -1734,7 +1734,7 @@ function vHomeEdit(){
   if(clubErr) h+='<div class="card info"><div class="cerr" role="alert">'+L('Club content could not be loaded. Run supabase_club_home.sql once in Supabase.')+'</div></div>';
   h+='<div class="cerr" role="status">'+esc(coachMsg)+'</div>';
   /* News */
-  h+='<h2 class="sec">'+L('News')+'</h2><div class="card info"><div class="cform"><input id="cnt" type="text" maxlength="80" placeholder="'+L('Headline')+'" aria-label="'+L('Headline')+'"><textarea id="cnb" rows="7" maxlength="4000" placeholder="'+L('Text (optional)')+'" aria-label="'+L('Text (optional)')+'"></textarea>'
+  h+='<h2 class="sec">'+L('Latest')+'</h2><div class="card info"><div class="cform"><input id="cnt" type="text" maxlength="80" placeholder="'+L('Headline')+'" aria-label="'+L('Headline')+'"><textarea id="cnb" rows="7" maxlength="4000" placeholder="'+L('Text (optional)')+'" aria-label="'+L('Text (optional)')+'"></textarea>'
     +'<label class="cl">'+L('Photo (optional)')+'<input id="cnimg" type="file" accept="image/*"></label>'
     +'<select id="cnteam" aria-label="Team"><option value="club">'+L('Club')+'</option>'+TEAM_ORDER.map(function(k){return '<option value="'+k+'">'+esc(TEAMS[k].label)+'</option>'}).join('')+'</select><button type="button" class="cbtn" data-chnadd>'+L('Publish')+'</button></div>'
     +'<div class="ced">'+CNEWS.map(function(x){return '<div class="lr"><span>'+(x.image?'📷 ':'')+esc(x.title)+'</span><div class="lrb">'+editBtn('news',x.id)+'<button type="button" class="cbtn alt" data-chndel="'+esc(x.id)+'" aria-label="'+L('Delete')+'">×</button></div></div>'}).join('')+'</div></div>';
