@@ -583,7 +583,7 @@ html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:non
 #cteam:disabled{opacity:.7}
 /* Club home */
 .ch{min-width:0;max-width:100%}
-.ch h2.sec{margin:14px 0 0}
+.ch h2.sec{margin:24px 0 0}.ch h2.sec:first-child{margin-top:8px}.ch h2.sec+*{margin-top:12px!important}
 .ch .card{margin-top:8px}
 .ch .swipe{display:flex;gap:8px;overflow-x:auto;margin:8px calc(-1*max(16px,env(safe-area-inset-right,0px))) 0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:0 max(16px,env(safe-area-inset-right,0px)) 4px max(16px,env(safe-area-inset-left,0px));scroll-snap-type:x proximity;scroll-padding:0 max(16px,env(safe-area-inset-left,0px));scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .ch .swipe::-webkit-scrollbar{display:none}
@@ -599,10 +599,10 @@ html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:non
 .ch .sc.rc .so{color:var(--muted);font-size:12px}
 .ch .card.nl{padding:0 14px}
 .nhero{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -16px;padding:0 16px;scroll-padding:0 16px}.nhero::-webkit-scrollbar{display:none}
-.ch button.nhc{all:unset;display:block;box-sizing:border-box;position:relative;flex:0 0 100%;height:210px;border-radius:18px;overflow:hidden;scroll-snap-align:start;cursor:pointer;background:#8F0311;transition:transform .15s}.nhc:active{transform:scale(.985)}.nhc:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ch button.nhc{all:unset;display:block;box-sizing:border-box;position:relative;flex:0 0 100%;height:170px;border-radius:18px;overflow:hidden;scroll-snap-align:start;cursor:pointer;background:#8F0311;transition:transform .15s}.nhc:active{transform:scale(.985)}.nhc:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .nhc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .nhc.noimg{background:linear-gradient(135deg,#6E020D,#A30514)}.nhlogo{position:absolute;right:-30px;top:-30px;width:170px;height:170px;border-radius:50%;border:3px dashed rgba(253,171,26,.25)}
-.nhov{position:absolute;left:0;right:0;bottom:0;padding:40px 52px 14px 16px;background:linear-gradient(to top,rgba(30,6,8,.88) 0%,rgba(30,6,8,.55) 60%,rgba(30,6,8,0));color:#fff;display:flex;flex-direction:column;gap:6px}
+.nhov{position:absolute;left:0;right:0;bottom:0;padding:34px 52px 12px 16px;background:linear-gradient(to top,rgba(30,6,8,.88) 0%,rgba(30,6,8,.55) 60%,rgba(30,6,8,0));color:#fff;display:flex;flex-direction:column;gap:6px}
 .nhov b{font:700 24px/1.05 var(--f-display);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .nhm{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.85)}.nhtag{background:#FDAB1A;color:#3a2200;font:700 10px var(--f-body);letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:6px}
 .nhgo{position:absolute;right:14px;bottom:16px;width:30px;height:30px;border-radius:50%;background:#FDAB1A}.nhgo::after{content:"";position:absolute;left:9px;top:10px;width:8px;height:8px;border-top:2.5px solid #3a2200;border-right:2.5px solid #3a2200;transform:rotate(45deg)}
