@@ -598,6 +598,15 @@ html.coach-one .hsel{pointer-events:none}html.coach-one .hsel::after{display:non
 .ch .sc.rc .rs{font:700 28px/1.05 var(--f-display);font-variant-numeric:tabular-nums}
 .ch .sc.rc .so{color:var(--muted);font-size:12px}
 .ch .card.nl{padding:0 14px}
+.nhero{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -16px;padding:0 16px;scroll-padding:0 16px}.nhero::-webkit-scrollbar{display:none}
+.ch button.nhc{all:unset;display:block;box-sizing:border-box;position:relative;flex:0 0 100%;height:210px;border-radius:18px;overflow:hidden;scroll-snap-align:start;cursor:pointer;background:#8F0311;transition:transform .15s}.nhc:active{transform:scale(.985)}.nhc:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.nhc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.nhc.noimg{background:linear-gradient(135deg,#6E020D,#A30514)}.nhlogo{position:absolute;right:-30px;top:-30px;width:170px;height:170px;border-radius:50%;border:3px dashed rgba(253,171,26,.25)}
+.nhov{position:absolute;left:0;right:0;bottom:0;padding:40px 52px 14px 16px;background:linear-gradient(to top,rgba(30,6,8,.88) 0%,rgba(30,6,8,.55) 60%,rgba(30,6,8,0));color:#fff;display:flex;flex-direction:column;gap:6px}
+.nhov b{font:700 24px/1.05 var(--f-display);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nhm{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.85)}.nhtag{background:#FDAB1A;color:#3a2200;font:700 10px var(--f-body);letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:6px}
+.nhgo{position:absolute;right:14px;bottom:16px;width:30px;height:30px;border-radius:50%;background:#FDAB1A}.nhgo::after{content:"";position:absolute;left:9px;top:10px;width:8px;height:8px;border-top:2.5px solid #3a2200;border-right:2.5px solid #3a2200;transform:rotate(45deg)}
+.nhdots{display:flex;justify-content:center;gap:5px;margin:9px 0 2px}.nhdots i{width:6px;height:6px;border-radius:3px;background:var(--line);transition:width .2s,background .2s}.nhdots i.on{width:18px;background:var(--accent)}
 .ch button.nrow{all:unset;box-sizing:border-box;width:100%;display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line);cursor:pointer;color:inherit}
 .ch button.nrow:first-child{border-top:0}
 .ch button.nrow:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}button.nrow::after{content:"";flex:none;align-self:center;width:9px;height:9px;margin:0 6px 0 2px;border-top:2.5px solid var(--accent);border-right:2.5px solid var(--accent);transform:rotate(45deg);opacity:.9}button.nrow{transition:background .15s,transform .15s;border-radius:10px}button.nrow:active{background:var(--soft);transform:scale(.985)}
@@ -1696,7 +1705,9 @@ function vClubHome(){
   var c=clubData(), h='<div class="ch">';
   /* News */
   h+='<h2 class="sec">'+L('News')+'</h2>';
-  if(CNEWS.length) h+='<div class="card nl">'+CNEWS.slice(0,4).map(function(x){return '<button type="button" class="nrow" data-nopen="'+esc(x.id)+'">'+(x.image?'<img class="nimg" src="'+esc(x.image)+'" alt="" loading="lazy">':'')+'<span class="nt"><b>'+esc(x.title)+'</b><span class="nm">'+(x.team&&x.team!=='club'&&TEAMS[x.team]?'<span class="chip">'+esc(TEAMS[x.team].label)+'</span>':'')+chAgo(x.created_at)+'</span></span></button>'}).join('')+'</div>';
+  if(CNEWS.length){var nl=CNEWS.slice(0,5);
+    h+='<div class="nhero" id="nhero">'+nl.map(function(x){return '<button type="button" class="nhc'+(x.image?'':' noimg')+'" data-nopen="'+esc(x.id)+'">'+(x.image?'<img src="'+esc(x.image)+'" alt="" loading="lazy">':'<span class="nhlogo" aria-hidden="true"></span>')+'<span class="nhov"><span class="nhm">'+(x.team&&x.team!=='club'&&TEAMS[x.team]?'<span class="nhtag">'+esc(TEAMS[x.team].label)+'</span>':'<span class="nhtag">'+L('Club')+'</span>')+'<span>'+chAgo(x.created_at)+'</span></span><b>'+esc(x.title)+'</b></span><span class="nhgo" aria-hidden="true"></span></button>'}).join('')+'</div>'
+      +(nl.length>1?'<div class="nhdots" aria-hidden="true">'+nl.map(function(x,i){return '<i'+(i?'':' class="on"')+'></i>'}).join('')+'</div>':'');}
   else h+='<div class="card empty"><b>'+L('No news yet')+'</b></div>';
   /* This week */
   var lim=new Date(today.getFullYear(),today.getMonth(),today.getDate()+7), wk=[];
@@ -2132,6 +2143,7 @@ document.addEventListener('click',function(e){
 },true);
 document.addEventListener('input',function(e){var t=e.target;if(t&&t.id==='lptxt'){var g=lpSubj();if(g)LTXT[lpKey(g)]=t.value}},true);
 
+document.addEventListener('scroll',function(e){var t=e.target;if(!t||t.id!=='nhero')return;var i=Math.round(t.scrollLeft/(t.firstChild?t.firstChild.offsetWidth+10:1)),d=document.querySelectorAll('.nhdots i');d.forEach(function(x,j){x.classList.toggle('on',j===i)})},true);
 var VIEWS={coach:vCoach,homeedit:vHomeEdit,clubhome:vClubHome,home:vStart,club:vClub,games:vSpiele,standings:vTabelle,news:vNews,settings:vSettings,squad:vKader,training:vTraining};
 
 /* ---------- Rendern ---------- */
