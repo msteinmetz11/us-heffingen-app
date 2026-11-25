@@ -695,7 +695,7 @@ html.tab-clubhome .hsel,html.tab-homeedit .hsel{display:none}
     <section class="view" id="v-squad" hidden></section>
     <section class="view" id="v-training" hidden></section>
   </main>
-  <p class="asof">As of 24 Nov 2026 · Data from luxembourg.basketball</p>
+  <p class="asof">As of 25 Nov 2026 · Data from luxembourg.basketball</p>
 </div>
 <div id="spband" aria-label="Partners"></div>
 <div class="tabs">
@@ -792,6 +792,7 @@ var BOX={
   '2026-09-19':{q:[[28,8],[20,11],[40,6],[25,12]],p:[['oly',4,3,0,0,1,1],['wil',5,30,1,7,5,1],['mel',6,5,2,0,1,1],['net',7,28,4,12,0,1],['urw',8,5,0,1,1,0],['bou',9,9,0,3,1,1],['bri',10,3,0,0,1,0],['jun',11,13,0,2,3,0],['jac',12,4,0,2,0,0],['hes',13,3,0,0,1,0],['roc',14,2,0,1,0,0],['ste',15,8,0,1,2,0]]},
   '2026-09-23':{q:[[21,8],[18,12],[28,15],[20,23]],p:[['oly',4,5,0,1,1,1],['wil',5,22,3,8,1,1],['mel',6,0,0,0,0,1],['net',7,26,6,10,0,1],['urw',8,5,2,0,1,0],['bou',9,20,3,7,1,1],['elc',10,0,0,0,0,0],['alv',11,0,0,0,0,0],['jac',12,4,0,2,0,0],['bri',13,3,1,1,0,0],['roc',14,2,0,1,0,0],['ste',15,0,0,0,0,0]]},
   '2026-09-26':{q:[[26,22],[17,29],[19,17],[21,32]],p:[['oly',4,2,0,1,0,1],['wil',5,34,2,13,2,1],['mel',6,3,0,0,1,1],['net',7,25,6,5,3,1],['urw',8,5,2,0,1,0],['bou',9,14,1,5,1,1],['jac',12,0,0,0,0,0],['bri',13,0,0,0,0,0]]},
+  '2026-09-30':{q:[[21,9],[14,23],[16,17],[15,10]],p:[['hes',4,0],['wil',5,17],['mel',6,0],['net',7,22],['urw',8,11],['bou',9,11],['jac',12,2],['bri',13,3]]},
   '2026-10-04':{q:[[8,19],[17,25],[23,12],[17,14]],p:[['oly',4,1,1,0,0,1],['wil',5,15,2,5,1,1],['mel',6,6,0,0,2,1],['net',7,20,3,7,1,1],['urw',8,5,0,1,1,0],['bou',9,9,2,2,1,1],['jac',12,6,3,0,1,0],['hes',13,3,1,1,0,0]]},
   '2026-10-10':{q:[[30,15],[21,24],[20,26],[26,24]],p:[['wil',5,27,1,7,4,1],['mel',6,2,0,1,0,1],['net',7,27,5,11,0,1],['urw',8,4,0,2,0,0],['bou',9,10,2,4,0,1],['jun',11,6,0,0,2,0],['jac',12,14,1,5,1,1],['hes',13,7,0,2,1,0]]},
   '2026-10-16':{q:[[19,19],[27,16],[16,16],[17,23]],p:[['oly',4,8,3,1,1,0],['wil',5,23,5,3,4,1],['mel',6,5,2,0,1,1],['net',7,11,3,4,0,1],['urw',8,8,0,1,2,0],['bou',9,17,0,7,1,1],['jun',11,5,0,1,1,0],['jac',12,2,0,1,0,1]]},
@@ -2261,7 +2262,7 @@ function welcomeInit(){
 }
 
 /* ---------- Naechtliche Daten von luxembourg.basketball (data/flbb.json, siehe scripts/update-flbb.mjs) ---------- */
-var ASOF_D=new Date(2026,10,24);
+var ASOF_D=new Date(2026,10,25);
 function asof(){try{return ASOF_D.toLocaleDateString(LANG==='en'?'en-GB':LANG,{day:'numeric',month:'short',year:'numeric'})}catch(e){return ASOF_D.toDateString()}}
 var RND={'1/32 finales':'Round of 64','1/16 finales':'Round of 32','1/8 finales':'Round of 16','1/4 finales':'Quarter-finals','1/2 finales':'Semi-finals','finale':'Cup final'};
 function isCup(x){return /coupe|clux|cup/i.test(x.league||'')}
