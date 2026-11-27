@@ -695,7 +695,7 @@ html.tab-clubhome .hsel,html.tab-homeedit .hsel{display:none}
     <section class="view" id="v-squad" hidden></section>
     <section class="view" id="v-training" hidden></section>
   </main>
-  <p class="asof">As of 26 Nov 2026 · Data from luxembourg.basketball</p>
+  <p class="asof">As of 27 Nov 2026 · Data from luxembourg.basketball</p>
 </div>
 <div id="spband" aria-label="Partners"></div>
 <div class="tabs">
@@ -991,7 +991,7 @@ TEAMS.u14m={key:'u14m',ics:'MIHEF',label:'Men U14',club:'US Heffingen',league:'U
     '2026-10-24':{q:[[3,32],[4,32],[10,29],[8,22]],p:[['oestreeli',4,0],['truffoleo',6,7],['schlampie',8,7],['peschosc',11,3],['michelosc',13,4],['anthonjul',14,4]]},
     '2026-11-21':{q:[[12,18],[7,26],[4,14],[5,18]],p:[['oestreeli',4,2],['dostermil',5,2],['steinmmex',7,20],['schlampie',8,2],['michelosc',10,0],['peschosc',11,0],['truffoleo',12,0],['bauschleo',13,0],['anthonjul',14,2]]}
   },
-  table:[["T71 Dudelange B", 2, 2, 0, 180, 58, 4], ["Bascharage Hedgehogs", 1, 1, 0, 110, 20, 2], ["US Heffingen", 1, 0, 1, 28, 76, 1], ["Sparta Bertrange C", 1, 0, 1, 30, 104, 1], ["AS Soleuvre B", 1, 0, 1, 20, 110, 1]]};
+  table:[["T71 Dudelange B", 2, 2, 0, 180, 58, 4], ["Sparta Bertrange C", 2, 1, 1, 104, 168, 3], ["Bascharage Hedgehogs", 2, 1, 1, 174, 94, 3], ["US Heffingen", 1, 0, 1, 28, 76, 1], ["AS Soleuvre B", 1, 0, 1, 20, 110, 1]]};
 TEAMS.u19w={key:'u19w',ics:'CDHEF',label:'Women U19',club:'US Heffingen',league:'U19 Division 4',heading:'U19 Division 4 Women',sub:'Women U19 · Division 4 · 2026/27',live:false,
   T:{},PLAYED:[],META:{},CUPGAMES:[
     {id:'u191',date:'2026-09-26',time:'15:00',place:'Beggen',addr:'Ecole primaire, 26 rue de Rochefort, 2431 Beggen',h:'Zesummen Aktiv',a:'US Heffingen',us:72,them:23,lg:'U19 Division 4'},
@@ -2263,7 +2263,7 @@ function welcomeInit(){
 }
 
 /* ---------- Naechtliche Daten von luxembourg.basketball (data/flbb.json, siehe scripts/update-flbb.mjs) ---------- */
-var ASOF_D=new Date(2026,10,26);
+var ASOF_D=new Date(2026,10,27);
 function asof(){try{return ASOF_D.toLocaleDateString(LANG==='en'?'en-GB':LANG,{day:'numeric',month:'short',year:'numeric'})}catch(e){return ASOF_D.toDateString()}}
 var RND={'1/32 finales':'Round of 64','1/16 finales':'Round of 32','1/8 finales':'Round of 16','1/4 finales':'Quarter-finals','1/2 finales':'Semi-finals','finale':'Cup final'};
 function isCup(x){return /coupe|clux|cup/i.test(x.league||'')}
